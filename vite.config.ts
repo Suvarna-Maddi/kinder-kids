@@ -14,7 +14,7 @@ export default defineConfig({
   },
   // ADD THIS DOWN HERE:
   vite: {
-    base: '/kinder-kids/',
+    base: '/',
   },
 });
 
