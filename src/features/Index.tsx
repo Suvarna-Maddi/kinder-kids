@@ -94,9 +94,6 @@ const Index = () => {
                 Start Your Adventure 🚀
               </button>
             </Link>
-            <button onClick={playClick} className="bg-white/80 backdrop-blur text-[#475569] border-2 border-[#E2E8F0] px-8 py-4 rounded-full font-bold shadow-sm flex items-center gap-2 hover:bg-white transition-all">
-              <Play className="w-5 h-5 text-[#7C3AED] fill-current" /> Watch Story
-            </button>
           </motion.div>
 
           <motion.div 
