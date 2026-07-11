@@ -22,9 +22,14 @@ const wordBank = [
 ];
 
 const gradients = [
-  "from-kid-blue to-kid-teal", "from-kid-green to-kid-teal", "from-kid-orange to-kid-yellow",
-  "from-kid-purple to-kid-pink", "from-kid-pink to-kid-red", "from-kid-teal to-kid-green",
-  "from-kid-red to-kid-orange", "from-kid-yellow to-kid-green",
+  "from-kid-blue to-kid-teal",
+  "from-kid-green to-kid-teal",
+  "from-kid-orange to-kid-yellow",
+  "from-kid-purple to-kid-pink",
+  "from-kid-pink to-kid-red",
+  "from-kid-teal to-kid-green",
+  "from-kid-red to-kid-orange",
+  "from-kid-yellow to-kid-green",
 ];
 
 const SpellingGame = () => {
@@ -89,7 +94,8 @@ const SpellingGame = () => {
     setAvailable(shuffleWord(currentWord.word));
   };
 
-  const isCorrect = guessed.join("") === currentWord.word && guessed.length === currentWord.word.length;
+  const isCorrect =
+    guessed.join("") === currentWord.word && guessed.length === currentWord.word.length;
   const isWrong = guessed.length === currentWord.word.length && !isCorrect;
 
   return (
@@ -108,8 +114,12 @@ const SpellingGame = () => {
         {/* Progress */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-body text-muted-foreground">Word {wordIndex + 1} of {wordBank.length}</span>
-            <span className="text-sm font-body text-muted-foreground">{Math.round((score / Math.max(totalAttempts, 1)) * 100)}% accuracy</span>
+            <span className="text-sm font-body text-muted-foreground">
+              Word {wordIndex + 1} of {wordBank.length}
+            </span>
+            <span className="text-sm font-body text-muted-foreground">
+              {Math.round((score / Math.max(totalAttempts, 1)) * 100)}% accuracy
+            </span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <motion.div
@@ -139,11 +149,14 @@ const SpellingGame = () => {
                   key={i}
                   whileHover={guessed[i] ? { scale: 1.05 } : {}}
                   className={`w-12 h-14 md:w-16 md:h-20 rounded-xl border-2 flex items-center justify-center text-2xl md:text-4xl font-display font-bold shadow-md cursor-pointer transition-all
-                    ${guessed[i]
-                      ? isCorrect ? "bg-accent text-accent-foreground border-accent shadow-lg"
-                      : isWrong ? "bg-destructive text-destructive-foreground border-destructive"
-                      : "bg-primary text-primary-foreground border-primary"
-                      : "bg-muted border-border border-dashed"
+                    ${
+                      guessed[i]
+                        ? isCorrect
+                          ? "bg-accent text-accent-foreground border-accent shadow-lg"
+                          : isWrong
+                            ? "bg-destructive text-destructive-foreground border-destructive"
+                            : "bg-primary text-primary-foreground border-primary"
+                        : "bg-muted border-border border-dashed"
                     }`}
                   onClick={() => guessed[i] && handleRemoveLetter(i)}
                 >
@@ -155,8 +168,8 @@ const SpellingGame = () => {
             <AnimatePresence>
               {showSuccess && (
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   exit={{ scale: 0 }}
                   className="text-3xl md:text-5xl font-display font-bold text-accent mb-4 flex items-center justify-center gap-2"
                 >
@@ -167,7 +180,7 @@ const SpellingGame = () => {
               )}
               {isWrong && (
                 <motion.div
-                  initial={{ scale: 0 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ scale: [1, 1.1, 1] }}
                   className="text-2xl font-display text-destructive mb-4"
                 >
@@ -181,8 +194,8 @@ const SpellingGame = () => {
               {available.map((letter, i) => (
                 <motion.button
                   key={`${letter}-${i}`}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ scale: 1.1, y: -3 }}
                   whileTap={{ scale: 0.9 }}
@@ -206,7 +219,10 @@ const SpellingGame = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { playClick(); nextWord(); }}
+                onClick={() => {
+                  playClick();
+                  nextWord();
+                }}
                 className="bg-secondary text-secondary-foreground px-6 py-2 rounded-full font-display font-bold shadow-lg"
               >
                 Skip →

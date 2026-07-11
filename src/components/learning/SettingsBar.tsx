@@ -46,10 +46,16 @@ const SettingsBar = () => {
               className="w-full flex items-center justify-between gap-2 py-2 px-3 rounded-xl hover:bg-muted transition-colors"
             >
               <span className="flex items-center gap-2 font-body text-sm text-foreground">
-                {settings.voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                {settings.voiceEnabled ? (
+                  <Volume2 className="w-4 h-4" />
+                ) : (
+                  <VolumeX className="w-4 h-4" />
+                )}
                 Voice
               </span>
-              <span className={`text-xs font-bold ${settings.voiceEnabled ? "text-accent" : "text-muted-foreground"}`}>
+              <span
+                className={`text-xs font-bold ${settings.voiceEnabled ? "text-accent" : "text-muted-foreground"}`}
+              >
                 {settings.voiceEnabled ? "ON" : "OFF"}
               </span>
             </button>
@@ -59,10 +65,16 @@ const SettingsBar = () => {
               className="w-full flex items-center justify-between gap-2 py-2 px-3 rounded-xl hover:bg-muted transition-colors"
             >
               <span className="flex items-center gap-2 font-body text-sm text-foreground">
-                {settings.soundEnabled ? <Music className="w-4 h-4" /> : <Music2 className="w-4 h-4" />}
+                {settings.soundEnabled ? (
+                  <Music className="w-4 h-4" />
+                ) : (
+                  <Music2 className="w-4 h-4" />
+                )}
                 Sound effects
               </span>
-              <span className={`text-xs font-bold ${settings.soundEnabled ? "text-accent" : "text-muted-foreground"}`}>
+              <span
+                className={`text-xs font-bold ${settings.soundEnabled ? "text-accent" : "text-muted-foreground"}`}
+              >
                 {settings.soundEnabled ? "ON" : "OFF"}
               </span>
             </button>
@@ -70,7 +82,9 @@ const SettingsBar = () => {
             <div className="py-2 px-3">
               <label className="flex items-center justify-between text-sm font-body text-foreground mb-1">
                 Speech speed
-                <span className="text-xs font-bold text-muted-foreground">{settings.speechRate.toFixed(2)}×</span>
+                <span className="text-xs font-bold text-muted-foreground">
+                  {settings.speechRate.toFixed(2)}×
+                </span>
               </label>
               <input
                 type="range"

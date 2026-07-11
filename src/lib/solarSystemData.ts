@@ -19,6 +19,14 @@ export type PlanetData = {
   };
 };
 
+import moonImg from "@/assets/half_moon.png";
+import asteroidsImg from "@/assets/astroids.png";
+import cometsImg from "@/assets/commet.png";
+import satellitesImg from "@/assets/satellite.png";
+import milkywayImg from "@/assets/milkyway.png";
+import blackholeImg from "@/assets/blackhole.png";
+import starsImg from "@/assets/stars.png";
+
 export const SOLAR_SYSTEM: PlanetData[] = [
   {
     id: "sun",
@@ -30,7 +38,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "27 Earth days",
     yearLength: "N/A",
     avgTemp: "5,500°C / 9,932°F",
-    description: "The Sun is a huge ball of hot, glowing gas at the center of our solar system. Its gravity holds everything together, from the biggest planets to the smallest asteroids.",
+    description:
+      "The Sun is a huge ball of hot, glowing gas at the center of our solar system. Its gravity holds everything together, from the biggest planets to the smallest asteroids.",
     funFact: "You could fit over one million Earths inside the Sun!",
     color: "text-kid-yellow",
     gradient: "from-kid-orange to-kid-yellow",
@@ -50,7 +59,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "59 Earth days",
     yearLength: "88 Earth days",
     avgTemp: "167°C / 333°F",
-    description: "Mercury is the smallest planet and the closest one to the Sun. It has a rocky surface covered in craters, just like our Moon.",
+    description:
+      "Mercury is the smallest planet and the closest one to the Sun. It has a rocky surface covered in craters, just like our Moon.",
     funFact: "Even though it's closest to the Sun, it's not the hottest planet!",
     color: "text-gray-400",
     gradient: "from-gray-400 to-gray-600",
@@ -70,7 +80,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "243 Earth days",
     yearLength: "225 Earth days",
     avgTemp: "464°C / 867°F",
-    description: "Venus is Earth's closest planetary neighbor. It is covered in thick, toxic clouds that trap heat, making it the hottest planet in the solar system.",
+    description:
+      "Venus is Earth's closest planetary neighbor. It is covered in thick, toxic clouds that trap heat, making it the hottest planet in the solar system.",
     funFact: "Venus spins backward compared to most other planets!",
     color: "text-orange-400",
     gradient: "from-orange-300 to-orange-500",
@@ -90,7 +101,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "24 Hours",
     yearLength: "365 Days",
     avgTemp: "15°C / 59°F",
-    description: "Earth is our home planet! It is the only planet we know of that has life. About 71% of Earth is covered with water.",
+    description:
+      "Earth is our home planet! It is the only planet we know of that has life. About 71% of Earth is covered with water.",
     funFact: "Earth is sometimes called the Blue Planet.",
     color: "text-kid-blue",
     gradient: "from-kid-blue to-kid-green",
@@ -110,7 +122,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "24.6 Hours",
     yearLength: "687 Earth days",
     avgTemp: "-65°C / -85°F",
-    description: "Mars is a cold desert world. It is called the Red Planet because of rusty iron in the ground. It has seasons, polar ice caps, and weather.",
+    description:
+      "Mars is a cold desert world. It is called the Red Planet because of rusty iron in the ground. It has seasons, polar ice caps, and weather.",
     funFact: "Mars has the largest volcano in the solar system, Olympus Mons!",
     color: "text-kid-red",
     gradient: "from-kid-red to-orange-600",
@@ -130,7 +143,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "10 Hours",
     yearLength: "12 Earth years",
     avgTemp: "-110°C / -166°F",
-    description: "Jupiter is the biggest planet in our solar system! It is a gas giant covered in swirling cloud stripes and massive storms.",
+    description:
+      "Jupiter is the biggest planet in our solar system! It is a gas giant covered in swirling cloud stripes and massive storms.",
     funFact: "Jupiter's Great Red Spot is a giant storm bigger than Earth!",
     color: "text-orange-300",
     gradient: "from-yellow-600 to-orange-400",
@@ -150,7 +164,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "10.7 Hours",
     yearLength: "29 Earth years",
     avgTemp: "-140°C / -220°F",
-    description: "Saturn is a gas giant famous for its beautiful, bright rings made of ice and rock. It is the second-largest planet.",
+    description:
+      "Saturn is a gas giant famous for its beautiful, bright rings made of ice and rock. It is the second-largest planet.",
     funFact: "Saturn's rings are as wide as 21 Earths side by side!",
     color: "text-yellow-200",
     gradient: "from-yellow-200 to-yellow-500",
@@ -170,7 +185,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "17 Hours",
     yearLength: "84 Earth years",
     avgTemp: "-195°C / -320°F",
-    description: "Uranus is an ice giant. It is very cold and windy, and it has a pale blue color because of the methane gas in its atmosphere.",
+    description:
+      "Uranus is an ice giant. It is very cold and windy, and it has a pale blue color because of the methane gas in its atmosphere.",
     funFact: "Uranus spins on its side like a rolling barrel!",
     color: "text-cyan-300",
     gradient: "from-cyan-300 to-blue-400",
@@ -190,7 +206,8 @@ export const SOLAR_SYSTEM: PlanetData[] = [
     dayLength: "16 Hours",
     yearLength: "165 Earth years",
     avgTemp: "-200°C / -330°F",
-    description: "Neptune is the farthest planet from the Sun. It is dark, cold, and very windy. It's an ice giant with a bright blue color.",
+    description:
+      "Neptune is the farthest planet from the Sun. It is dark, cold, and very windy. It's an ice giant with a bright blue color.",
     funFact: "Winds on Neptune can blow up to 1,200 miles per hour!",
     color: "text-blue-600",
     gradient: "from-blue-500 to-indigo-800",
@@ -199,15 +216,57 @@ export const SOLAR_SYSTEM: PlanetData[] = [
       options: ["Saturn", "Uranus", "Neptune"],
       correct: "Neptune",
     },
-  }
+  },
 ];
 
 export const UNLOCKABLES = [
-  { id: "moon", name: "Moon", emoji: "🌙" },
-  { id: "asteroids", name: "Asteroids", emoji: "☄" },
-  { id: "comets", name: "Comets", emoji: "🌠" },
-  { id: "satellites", name: "Satellites", emoji: "🛰" },
-  { id: "milkyway", name: "Milky Way Galaxy", emoji: "🌌" },
-  { id: "blackhole", name: "Black Holes", emoji: "🕳" },
-  { id: "stars", name: "Stars", emoji: "⭐" },
+  {
+    id: "moon",
+    name: "Moon",
+    emoji: "🌙",
+    image: moonImg,
+    fact: "The Moon is Earth's only natural satellite. It causes the tides in our oceans!",
+  },
+  {
+    id: "asteroids",
+    name: "Asteroids",
+    emoji: "☄",
+    image: asteroidsImg,
+    fact: "Asteroids are rocky remnants left over from the early formation of our solar system!",
+  },
+  {
+    id: "comets",
+    name: "Comets",
+    emoji: "🌠",
+    image: cometsImg,
+    fact: "Comets are cosmic snowballs of frozen gases, rock, and dust that orbit the Sun.",
+  },
+  {
+    id: "satellites",
+    name: "Satellites",
+    emoji: "🛰",
+    image: satellitesImg,
+    fact: "Thousands of artificial satellites orbit Earth, helping with internet, weather, and GPS!",
+  },
+  {
+    id: "milkyway",
+    name: "Milky Way Galaxy",
+    emoji: "🌌",
+    image: milkywayImg,
+    fact: "Our solar system is just a tiny speck inside the giant spiral Milky Way Galaxy.",
+  },
+  {
+    id: "blackhole",
+    name: "Black Holes",
+    emoji: "🕳",
+    image: blackholeImg,
+    fact: "A black hole has gravity so strong that nothing, not even light, can escape it!",
+  },
+  {
+    id: "stars",
+    name: "Stars",
+    emoji: "⭐",
+    image: starsImg,
+    fact: "Every star you see in the night sky is a giant, glowing ball of gas, just like our Sun!",
+  },
 ];

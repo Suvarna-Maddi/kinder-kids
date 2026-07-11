@@ -34,7 +34,9 @@ function persist() {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(KEY, JSON.stringify(current));
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 }
 
 export const getSettings = (): LearningSettings => current;

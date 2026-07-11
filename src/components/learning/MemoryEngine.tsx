@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { speak, recordAttempt } from "@/lib/tts";
+import { speak } from "@/lib/tts";
 import { playSuccess, playError, playClick } from "@/lib/sounds";
-import { useReward } from "@/components/Reward"; // adjust import if needed
+import { recordAttempt } from "@/lib/progress";
+import { useReward, kidColor, pickRotatingCategory, MEMORY_CATEGORIES } from "@/features/PlayZone";
 import { CardFace } from "./CardFace";
 import { shuffle } from "@/lib/quizEngine";
-import { kidColor, pickRotatingCategory, MEMORY_CATEGORIES } from "@/features/PlayZone";
 
 type MemItem = { key: string; label: string; color: string };
 
@@ -107,7 +107,7 @@ export const MemoryEngine = ({
       {phase === "show" && (
         <div>
           <p className="text-center font-display font-bold mb-4 text-xl">Remember these!</p>
-          <div className={`grid ${count <= 4 ? "grid-cols-2" : "grid-cols-3 md:grid-cols-4"} gap-3`)}>
+          <div className={`grid ${count <= 4 ? "grid-cols-2" : "grid-cols-3 md:grid-cols-4"} gap-3`}>
             {items.map((it) => (
               <motion.div key={it.key} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="aspect-square">
                 <CardFace item={it} />

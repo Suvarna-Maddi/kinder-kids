@@ -1,8 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import NumbersGame from "@/features/NumbersGame";
+import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/numbers")({
-  component: NumbersGame,
+  component: lazyRouteComponent(() => import("@/features/NumbersGame")),
   head: () => ({
     meta: [
       { title: "Numbers — Count and Learn" },

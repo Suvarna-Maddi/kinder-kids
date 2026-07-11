@@ -11,21 +11,47 @@ import SettingsBar from "@/components/learning/SettingsBar";
 type Op = "add" | "sub" | "mul" | "div";
 type Level = "easy" | "medium" | "hard";
 
-const OP_META: Record<Op, { label: string; symbol: string; icon: typeof Plus; verb: string; color: string }> = {
-  add: { label: "Addition", symbol: "+", icon: Plus, verb: "plus", color: "from-kid-green to-kid-teal" },
-  sub: { label: "Subtraction", symbol: "−", icon: Minus, verb: "minus", color: "from-kid-orange to-kid-yellow" },
-  mul: { label: "Multiplication", symbol: "×", icon: XIcon, verb: "times", color: "from-kid-purple to-kid-pink" },
-  div: { label: "Division", symbol: "÷", icon: Divide, verb: "divided by", color: "from-kid-blue to-kid-teal" },
+const OP_META: Record<
+  Op,
+  { label: string; symbol: string; icon: typeof Plus; verb: string; color: string }
+> = {
+  add: {
+    label: "Addition",
+    symbol: "+",
+    icon: Plus,
+    verb: "plus",
+    color: "from-kid-green to-kid-teal",
+  },
+  sub: {
+    label: "Subtraction",
+    symbol: "−",
+    icon: Minus,
+    verb: "minus",
+    color: "from-kid-orange to-kid-yellow",
+  },
+  mul: {
+    label: "Multiplication",
+    symbol: "×",
+    icon: XIcon,
+    verb: "times",
+    color: "from-kid-purple to-kid-pink",
+  },
+  div: {
+    label: "Division",
+    symbol: "÷",
+    icon: Divide,
+    verb: "divided by",
+    color: "from-kid-blue to-kid-teal",
+  },
 };
 
 const LEVELS: Record<Level, { min: number; max: number; label: string }> = {
-  easy:   { min: 1, max: 10,  label: "Easy (1–10)" },
-  medium: { min: 1, max: 25,  label: "Medium (1–25)" },
-  hard:   { min: 2, max: 50,  label: "Hard (2–50)" },
+  easy: { min: 1, max: 10, label: "Easy (1–10)" },
+  medium: { min: 1, max: 25, label: "Medium (1–25)" },
+  hard: { min: 2, max: 50, label: "Hard (2–50)" },
 };
 
-const rand = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
+const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 type Question = { a: number; b: number; op: Op; answer: number };
 
@@ -36,9 +62,12 @@ const buildGenerator = (op: Op, level: Level) => {
     let b: number;
     let answer: number;
     if (op === "add") {
-      a = rand(min, max); b = rand(min, max); answer = a + b;
+      a = rand(min, max);
+      b = rand(min, max);
+      answer = a + b;
     } else if (op === "sub") {
-      a = rand(min, max); b = rand(min, Math.min(a, max));
+      a = rand(min, max);
+      b = rand(min, Math.min(a, max));
       answer = a - b;
     } else if (op === "mul") {
       a = rand(min, Math.min(max, 12));
@@ -47,7 +76,9 @@ const buildGenerator = (op: Op, level: Level) => {
     } else {
       const divisor = rand(Math.max(2, min), Math.min(max, 12));
       const quotient = rand(Math.max(1, min), Math.min(max, 12));
-      a = divisor * quotient; b = divisor; answer = quotient;
+      a = divisor * quotient;
+      b = divisor;
+      answer = quotient;
     }
     return { key: `${a}-${op}-${b}`, value: { a, b, op, answer } };
   }, 20);
@@ -62,7 +93,10 @@ const buildOptions = (answer: number, level: Level) => {
     pool.push(Math.max(0, answer - d));
     if (d > spread * 2) break;
   }
-  const distractors = sampleUnique(pool.filter((n) => n !== answer), 3);
+  const distractors = sampleUnique(
+    pool.filter((n) => n !== answer),
+    3,
+  );
   const all = [answer, ...distractors];
   // pad if pool too small
   while (all.length < 4) all.push(answer + all.length);
@@ -99,7 +133,9 @@ const MathGame = () => {
   useEffect(() => {
     if (!question) return;
     const meta = OP_META[question.op];
-    speak(`${numberToWords(question.a)} ${meta.verb} ${numberToWords(question.b)}?`, { profile: "girl" });
+    speak(`${numberToWords(question.a)} ${meta.verb} ${numberToWords(question.b)}?`, {
+      profile: "girl",
+    });
   }, [question]);
 
   const handleAnswer = (ans: number) => {
@@ -153,8 +189,8 @@ const MathGame = () => {
           <div className="ml-auto flex items-center gap-2">
             {streak >= 3 && (
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
                 className="flex items-center gap-1 bg-kid-orange/10 px-3 py-1 rounded-full"
               >
                 <Sparkles className="w-4 h-4 text-kid-orange" />
@@ -163,7 +199,9 @@ const MathGame = () => {
             )}
             <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-lg border border-border">
               <Trophy className="w-5 h-5 text-kid-yellow" />
-              <span className="font-display font-bold text-foreground">{score}/{total}</span>
+              <span className="font-display font-bold text-foreground">
+                {score}/{total}
+              </span>
             </div>
           </div>
         </div>
@@ -179,9 +217,15 @@ const MathGame = () => {
                 key={o}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { playPop(); setOp(o); markGameCompleted(); }}
+                onClick={() => {
+                  playPop();
+                  setOp(o);
+                  markGameCompleted();
+                }}
                 className={`rounded-2xl p-3 md:p-4 font-display font-bold shadow-lg transition-colors bg-gradient-to-br ${M.color} ${
-                  active ? "ring-4 ring-foreground text-primary-foreground" : "text-primary-foreground opacity-80"
+                  active
+                    ? "ring-4 ring-foreground text-primary-foreground"
+                    : "text-primary-foreground opacity-80"
                 }`}
               >
                 <Icon className="w-5 h-5 mx-auto mb-1" />
@@ -196,7 +240,10 @@ const MathGame = () => {
           {(Object.keys(LEVELS) as Level[]).map((lv) => (
             <button
               key={lv}
-              onClick={() => { playClick(); setLevel(lv); }}
+              onClick={() => {
+                playClick();
+                setLevel(lv);
+              }}
               className={`px-4 py-2 rounded-full font-display font-semibold text-sm transition-colors ${
                 level === lv
                   ? "bg-primary text-primary-foreground shadow-md"
@@ -214,7 +261,9 @@ const MathGame = () => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           className="bg-card rounded-bubble shadow-2xl p-6 md:p-10 border border-border relative overflow-hidden"
         >
-          <div className={`absolute inset-0 bg-gradient-to-br ${opMeta.color} opacity-10 pointer-events-none`} />
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${opMeta.color} opacity-10 pointer-events-none`}
+          />
           <div className="relative z-10 text-center">
             <AnimatePresence mode="wait">
               {question && (
@@ -225,9 +274,8 @@ const MathGame = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="text-5xl md:text-7xl font-display font-bold text-foreground mb-8"
                 >
-                  {question.a}{" "}
-                  <span className="text-primary">{opMeta.symbol}</span>{" "}
-                  {question.b} = ?
+                  {question.a} <span className="text-primary">{opMeta.symbol}</span> {question.b} =
+                  ?
                 </motion.div>
               )}
             </AnimatePresence>
@@ -243,7 +291,7 @@ const MathGame = () => {
                   return (
                     <motion.button
                       key={`${opt}-${question?.a}-${question?.b}`}
-                      initial={{ scale: 0, opacity: 0 }}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.9, opacity: 0 }}
                       whileHover={!showResult ? { scale: 1.05 } : {}}
@@ -252,8 +300,12 @@ const MathGame = () => {
                       className={`${cls} rounded-2xl p-4 md:p-5 text-2xl md:text-3xl font-display font-bold shadow-md transition-colors`}
                     >
                       {opt}
-                      {showResult && question && opt === question.answer && <Check className="inline ml-2 w-6 h-6" />}
-                      {showResult && opt === selected && question && opt !== question.answer && <X className="inline ml-2 w-6 h-6" />}
+                      {showResult && question && opt === question.answer && (
+                        <Check className="inline ml-2 w-6 h-6" />
+                      )}
+                      {showResult && opt === selected && question && opt !== question.answer && (
+                        <X className="inline ml-2 w-6 h-6" />
+                      )}
                     </motion.button>
                   );
                 })}

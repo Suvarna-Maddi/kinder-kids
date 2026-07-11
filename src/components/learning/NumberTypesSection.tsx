@@ -13,7 +13,9 @@ const NumberTypesSection = () => {
     setSelectedType(data);
     // Scroll a little bit to focus on the modal, if needed
     setTimeout(() => {
-      document.getElementById("number-type-view")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document
+        .getElementById("number-type-view")
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
   };
 

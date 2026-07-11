@@ -3,17 +3,19 @@
 import { useEffect, useState } from "react";
 
 export type Progress = {
-  lettersLearned: string[];      // e.g. ["A", "B"]
-  numbersLearned: number[];      // e.g. [1, 2, 15]
-  tablesCompleted: number[];     // e.g. [2, 5]
+  lettersLearned: string[]; // e.g. ["A", "B"]
+  numbersLearned: number[]; // e.g. [1, 2, 15]
+  tablesCompleted: number[]; // e.g. [2, 5]
   gamesCompleted: number;
   stars: number;
   coins: number;
-  badges: string[];              // slugs
+  badges: string[]; // slugs
   streakDays: number;
   lastActiveDate: string | null; // YYYY-MM-DD
   correct: number;
   attempts: number;
+  isPremium: boolean;
+  premiumPopupShown: boolean;
 };
 
 const KEY = "lp.progress.v1";
@@ -29,6 +31,8 @@ const DEFAULTS: Progress = {
   lastActiveDate: null,
   correct: 0,
   attempts: 0,
+  isPremium: false,
+  premiumPopupShown: false,
 };
 
 let state: Progress = load();
@@ -47,7 +51,9 @@ function load(): Progress {
 function persist() {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(state));
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 }
 function set(patch: Partial<Progress>) {
   state = { ...state, ...patch };
@@ -62,32 +68,49 @@ export const touchStreak = () => {
   if (state.lastActiveDate === t) return;
   const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
   const streak = state.lastActiveDate === yesterday ? state.streakDays + 1 : 1;
-  set({ lastActiveDate: t, streakDays: streak });
+  
+  // Check for 11-day premium unlock
+  let premiumPatch = {};
+  if (streak >= 11 && !state.isPremium) {
+    premiumPatch = { isPremium: true, premiumPopupShown: false };
+  }
+
+  set({ lastActiveDate: t, streakDays: streak, ...premiumPatch });
+};
+
+export const dismissPremiumPopup = () => {
+  if (!state.premiumPopupShown) {
+    set({ premiumPopupShown: true });
+  }
 };
 
 export const getProgress = () => state;
 export const awardStar = (n = 1) => set({ stars: state.stars + n });
 export const awardCoin = (n = 1) => set({ coins: state.coins + n });
 export const markLetter = (letter: string) => {
-  if (!state.lettersLearned.includes(letter)) {
-    set({ lettersLearned: [...state.lettersLearned, letter] });
+  const arr = state.lettersLearned || [];
+  if (!arr.includes(letter)) {
+    set({ lettersLearned: [...arr, letter] });
   }
   touchStreak();
 };
 export const markNumber = (n: number) => {
-  if (!state.numbersLearned.includes(n)) {
-    set({ numbersLearned: [...state.numbersLearned, n] });
+  const arr = state.numbersLearned || [];
+  if (!arr.includes(n)) {
+    set({ numbersLearned: [...arr, n] });
   }
   touchStreak();
 };
 export const markTable = (t: number) => {
-  if (!state.tablesCompleted.includes(t)) {
-    set({ tablesCompleted: [...state.tablesCompleted, t] });
+  const arr = state.tablesCompleted || [];
+  if (!arr.includes(t)) {
+    set({ tablesCompleted: [...arr, t] });
   }
 };
 export const markGameCompleted = () => set({ gamesCompleted: state.gamesCompleted + 1 });
 export const awardBadge = (slug: string) => {
-  if (!state.badges.includes(slug)) set({ badges: [...state.badges, slug] });
+  const arr = state.badges || [];
+  if (!arr.includes(slug)) set({ badges: [...arr, slug] });
 };
 export const recordAttempt = (isCorrect: boolean) =>
   set({ correct: state.correct + (isCorrect ? 1 : 0), attempts: state.attempts + 1 });

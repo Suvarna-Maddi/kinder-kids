@@ -80,13 +80,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "KinderKids — Fun Learning for Little Champions" },
+      { title: "KinderKidsSpace — Fun Learning for Little Champions" },
       {
         name: "description",
         content:
           "Learn alphabets, numbers, times tables and play fun educational games. Interactive learning for kids with voice, tracing, and rewards.",
       },
-      { property: "og:title", content: "KinderKids — Fun Learning for Little Champions" },
+      { property: "og:title", content: "KinderKidsSpace — Fun Learning for Little Champions" },
       {
         property: "og:description",
         content: "Alphabets, numbers, times tables and playful games for kids.",

@@ -12,12 +12,28 @@ import SettingsBar from "@/components/learning/SettingsBar";
 import { IMG_MAP } from "@/lib/images";
 import NumberTypesSection from "@/components/learning/NumberTypesSection";
 
-const NUMBER_IMAGE_KEYS = ["Apple", "Banana", "Orange", "Grapes", "Mango", "Lemon", "Ice cream", "Cake", "Pizza", "Egg"];
+const NUMBER_IMAGE_KEYS = [
+  "Apple",
+  "Banana",
+  "Orange",
+  "Grapes",
+  "Mango",
+  "Lemon",
+  "Ice cream",
+  "Cake",
+  "Pizza",
+  "Egg",
+];
 
 const gradients = [
-  "from-kid-blue to-kid-teal", "from-kid-green to-kid-teal", "from-kid-orange to-kid-yellow",
-  "from-kid-purple to-kid-pink", "from-kid-pink to-kid-red", "from-kid-teal to-kid-green",
-  "from-kid-red to-kid-orange", "from-kid-yellow to-kid-green",
+  "from-kid-blue to-kid-teal",
+  "from-kid-green to-kid-teal",
+  "from-kid-orange to-kid-yellow",
+  "from-kid-purple to-kid-pink",
+  "from-kid-pink to-kid-red",
+  "from-kid-teal to-kid-green",
+  "from-kid-red to-kid-orange",
+  "from-kid-yellow to-kid-green",
 ];
 
 const numberName = (n: number) => numberToWords(n);
@@ -49,23 +65,40 @@ const LearnPanel = ({ num }: { num: number }) => {
       <div className="text-3xl md:text-4xl mb-3 font-display text-foreground">
         The number <span className="text-secondary font-bold">{numberName(num)}</span>
       </div>
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => {
-          playClick();
-          recordAndSpeak([
-            { text: `This is the number ${numberToWords(num)}.`, profile: "girl", pauseAfterMs: 200 },
-            { text: `${numberToWords(num)}.`, profile: "girl" },
-          ]);
-        }}
-        className="mt-2 p-3 rounded-full bg-primary text-primary-foreground shadow-lg"
+      <div className="flex items-center justify-center gap-4 mt-2">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            playClick();
+            recordAndSpeak([
+              {
+                text: `This is the number ${numberToWords(num)}.`,
+                profile: "girl",
+                pauseAfterMs: 200,
+              },
+              { text: `${numberToWords(num)}.`, profile: "girl" },
+            ]);
+          }}
+          className="p-3 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
+        >
+          <Volume2 className="w-6 h-6" />
+        </motion.button>
+      </div>
+      <div
+        className="mt-6 flex overflow-x-auto gap-3 pb-4 max-w-full snap-x scrollbar-thin scrollbar-thumb-primary/20 px-2"
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        <Volume2 className="w-6 h-6" />
-      </motion.button>
-      <div className="mt-6 flex overflow-x-auto gap-3 pb-4 max-w-full snap-x scrollbar-thin scrollbar-thumb-primary/20 px-2" style={{ WebkitOverflowScrolling: 'touch' }}>
         {Array.from({ length: num }).map((_, i) => (
-          <img key={i} src={IMG_MAP[imgKey]} className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 snap-center" draggable={false} alt={imgKey} loading="lazy" decoding="async" />
+          <img
+            key={i}
+            src={IMG_MAP[imgKey]}
+            className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 snap-center"
+            draggable={false}
+            alt={imgKey}
+            loading="lazy"
+            decoding="async"
+          />
         ))}
       </div>
     </div>
@@ -103,10 +136,13 @@ const WritePanel = ({ num }: { num: number }) => {
               digits.length > 1
                 ? `Let's write ${num}. First, the digit ${digits[activeDigit]}.`
                 : `Let's write the number ${num}.`,
-              { profile: "girl", pauseAfterMs: 120 }
+              { profile: "girl", pauseAfterMs: 120 },
             );
           } else if (i === 0 && activeDigit > 0) {
-            await speakAsync(`Now the digit ${digits[activeDigit]}.`, { profile: "girl", pauseAfterMs: 120 });
+            await speakAsync(`Now the digit ${digits[activeDigit]}.`, {
+              profile: "girl",
+              pauseAfterMs: 120,
+            });
           }
           await speakAsync(guidance, { profile: "girl", pauseAfterMs: 120 });
         }}
@@ -126,7 +162,16 @@ const WritePanel = ({ num }: { num: number }) => {
       {digits.length > 1 && (
         <div className="flex gap-2 text-2xl font-display font-bold">
           {digits.map((d, i) => (
-            <span key={i} className={i === activeDigit ? "text-primary" : i < activeDigit ? "text-accent" : "text-muted-foreground"}>
+            <span
+              key={i}
+              className={
+                i === activeDigit
+                  ? "text-primary"
+                  : i < activeDigit
+                    ? "text-accent"
+                    : "text-muted-foreground"
+              }
+            >
               {d}
             </span>
           ))}
@@ -165,10 +210,19 @@ const TracePanel = ({ num }: { num: number }) => {
         glyph={DIGIT_GLYPHS[digits[activeDigit]]}
         onProgress={(pct) => {
           const m = milestonesRef.current;
-          if (!m.started && pct > 0.05) { m.started = true; speak("Good start.", { profile: "girl" }); }
-          else if (!m.quarter && pct >= 0.25) { m.quarter = true; speak("Nice, keep going.", { profile: "girl" }); }
-          else if (!m.half && pct >= 0.5) { m.half = true; speak("Halfway there!", { profile: "girl" }); }
-          else if (!m.three && pct >= 0.75) { m.three = true; speak("Almost finished!", { profile: "girl" }); }
+          if (!m.started && pct > 0.05) {
+            m.started = true;
+            speak("Good start.", { profile: "girl" });
+          } else if (!m.quarter && pct >= 0.25) {
+            m.quarter = true;
+            speak("Nice, keep going.", { profile: "girl" });
+          } else if (!m.half && pct >= 0.5) {
+            m.half = true;
+            speak("Halfway there!", { profile: "girl" });
+          } else if (!m.three && pct >= 0.75) {
+            m.three = true;
+            speak("Almost finished!", { profile: "girl" });
+          }
         }}
         onSuccess={() => {
           if (activeDigit + 1 < digits.length) {
@@ -185,7 +239,11 @@ const TracePanel = ({ num }: { num: number }) => {
             markNumber(num);
             recordAndSpeak([
               { text: praise(), profile: "girl", pauseAfterMs: 150 },
-              { text: `You finished writing the number ${num}!`, profile: "girl", pauseAfterMs: 120 },
+              {
+                text: `You finished writing the number ${num}!`,
+                profile: "girl",
+                pauseAfterMs: 120,
+              },
               { text: "Amazing work!", profile: "girl" },
             ]);
           }
@@ -195,8 +253,8 @@ const TracePanel = ({ num }: { num: number }) => {
       <AnimatePresence>
         {allDone && (
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             className="flex items-center gap-2 bg-kid-yellow/15 px-4 py-2 rounded-full font-display font-bold"
           >
@@ -217,7 +275,10 @@ const CountPanel = ({ num }: { num: number }) => {
   const play = async () => {
     setStep(0);
     cancelSpeech();
-    await speakAsync(`Let's count to ${numberToWords(num)}.`, { profile: "girl", pauseAfterMs: 150 });
+    await speakAsync(`Let's count to ${numberToWords(num)}.`, {
+      profile: "girl",
+      pauseAfterMs: 150,
+    });
     for (let i = 1; i <= num; i++) {
       setStep(i);
       await speakAsync(`${numberToWords(i)}`, { profile: "girl", pauseAfterMs: 80 });
@@ -231,11 +292,18 @@ const CountPanel = ({ num }: { num: number }) => {
         {Array.from({ length: num }, (_, i) => (
           <motion.div
             key={i}
-            initial={{ scale: 0 }}
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ scale: step > i ? 1.2 : 1, opacity: step >= i + 1 ? 1 : 0.3 }}
             transition={{ type: "spring", stiffness: 250 }}
           >
-            <img src={IMG_MAP[imgKey]} className="w-12 h-12 md:w-16 md:h-16 object-contain" draggable={false} alt="" loading="lazy" decoding="async" />
+            <img
+              src={IMG_MAP[imgKey]}
+              className="w-12 h-12 md:w-16 md:h-16 object-contain"
+              draggable={false}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
           </motion.div>
         ))}
       </div>
@@ -275,12 +343,11 @@ const QuizPanel = ({ num }: { num: number }) => {
       if (d !== count) distractors.add(d);
     }
     const options = [count, ...distractors].sort(() => Math.random() - 0.5);
-    
+
     // Randomize the image for each round!
     const imgKey = NUMBER_IMAGE_KEYS[Math.floor(Math.random() * NUMBER_IMAGE_KEYS.length)];
-    
+
     return { count, options, imgKey };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num, round]);
 
   useEffect(() => {
@@ -310,17 +377,34 @@ const QuizPanel = ({ num }: { num: number }) => {
       setFeedback("wrong");
       playError();
       speak(retryHint(), { profile: "girl" });
-      setTimeout(() => { setFeedback(null); setPicked(null); }, 1400);
+      setTimeout(() => {
+        setFeedback(null);
+        setPicked(null);
+      }, 1400);
     }
   };
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-center font-display text-xl md:text-2xl text-foreground">How many do you see?</p>
+      <p className="text-center font-display text-xl md:text-2xl text-foreground">
+        How many do you see?
+      </p>
       <div className="flex flex-wrap justify-center gap-3 max-w-lg">
         {Array.from({ length: question.count }, (_, i) => (
-          <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.05 }}>
-            <img src={IMG_MAP[question.imgKey]} className="w-12 h-12 md:w-16 md:h-16 object-contain" draggable={false} alt="" loading="lazy" decoding="async" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.05 }}
+          >
+            <img
+              src={IMG_MAP[question.imgKey]}
+              className="w-12 h-12 md:w-16 md:h-16 object-contain"
+              draggable={false}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
           </motion.div>
         ))}
       </div>
@@ -351,7 +435,9 @@ const QuizPanel = ({ num }: { num: number }) => {
 
 // --- Main -------------------------------------------------------------------
 const NumbersGame = () => {
-  const [numbers, setNumbers] = useState<number[]>(() => Array.from({ length: 20 }, (_, i) => i + 1));
+  const [numbers, setNumbers] = useState<number[]>(() =>
+    Array.from({ length: 20 }, (_, i) => i + 1),
+  );
   const [selected, setSelected] = useState<number | null>(null);
   const [tab, setTab] = useState<Tab>("learn");
 
@@ -364,6 +450,9 @@ const NumbersGame = () => {
       { text: `${n}.`, profile: "girl" },
     ]);
     markNumber(n);
+    
+    // Smoothly scroll back to the top where the details panel is displayed
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const loadMore = () => {
@@ -394,7 +483,9 @@ const NumbersGame = () => {
               exit={{ scale: 0.95, opacity: 0 }}
               className="mb-8 bg-card rounded-bubble shadow-2xl border border-border relative overflow-hidden"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 pointer-events-none`} />
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 pointer-events-none`}
+              />
               <div className="relative z-10 flex flex-wrap gap-1 md:gap-2 px-4 pt-4 border-b border-border">
                 {TABS.map((t) => {
                   const Icon = t.icon;
@@ -402,10 +493,16 @@ const NumbersGame = () => {
                   return (
                     <button
                       key={t.id}
-                      onClick={() => { playClick(); cancelSpeech(); setTab(t.id); }}
+                      onClick={() => {
+                        playClick();
+                        cancelSpeech();
+                        setTab(t.id);
+                      }}
                       aria-pressed={active}
                       className={`flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-t-xl font-display font-semibold text-sm md:text-base transition-colors ${
-                        active ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        active
+                          ? "bg-primary text-primary-foreground shadow-md"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -439,8 +536,8 @@ const NumbersGame = () => {
           {numbers.map((n, i) => (
             <motion.button
               key={n}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: Math.min(i, 20) * 0.02, type: "spring", stiffness: 300 }}
               whileHover={{ scale: 1.15, y: -5 }}
               whileTap={{ scale: 0.9 }}

@@ -9,17 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TeluguRouteImport } from './routes/telugu'
 import { Route as TablesRouteImport } from './routes/tables'
 import { Route as SpellingRouteImport } from './routes/spelling'
 import { Route as SolarsystemRouteImport } from './routes/solarsystem'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ShapesRouteImport } from './routes/shapes'
 import { Route as RewardsRouteImport } from './routes/rewards'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PlayzoneRouteImport } from './routes/playzone'
 import { Route as NumbersRouteImport } from './routes/numbers'
 import { Route as MathRouteImport } from './routes/math'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AlphabetsRouteImport } from './routes/alphabets'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TeluguRoute = TeluguRouteImport.update({
+  id: '/telugu',
+  path: '/telugu',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TablesRoute = TablesRouteImport.update({
   id: '/tables',
   path: '/tables',
@@ -35,6 +44,11 @@ const SolarsystemRoute = SolarsystemRouteImport.update({
   path: '/solarsystem',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShapesRoute = ShapesRouteImport.update({
   id: '/shapes',
   path: '/shapes',
@@ -43,6 +57,11 @@ const ShapesRoute = ShapesRouteImport.update({
 const RewardsRoute = RewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayzoneRoute = PlayzoneRouteImport.update({
@@ -60,6 +79,11 @@ const MathRoute = MathRouteImport.update({
   path: '/math',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlphabetsRoute = AlphabetsRouteImport.update({
   id: '/alphabets',
   path: '/alphabets',
@@ -74,94 +98,129 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alphabets': typeof AlphabetsRoute
+  '/login': typeof LoginRoute
   '/math': typeof MathRoute
   '/numbers': typeof NumbersRoute
   '/playzone': typeof PlayzoneRoute
+  '/profile': typeof ProfileRoute
   '/rewards': typeof RewardsRoute
   '/shapes': typeof ShapesRoute
+  '/signup': typeof SignupRoute
   '/solarsystem': typeof SolarsystemRoute
   '/spelling': typeof SpellingRoute
   '/tables': typeof TablesRoute
+  '/telugu': typeof TeluguRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alphabets': typeof AlphabetsRoute
+  '/login': typeof LoginRoute
   '/math': typeof MathRoute
   '/numbers': typeof NumbersRoute
   '/playzone': typeof PlayzoneRoute
+  '/profile': typeof ProfileRoute
   '/rewards': typeof RewardsRoute
   '/shapes': typeof ShapesRoute
+  '/signup': typeof SignupRoute
   '/solarsystem': typeof SolarsystemRoute
   '/spelling': typeof SpellingRoute
   '/tables': typeof TablesRoute
+  '/telugu': typeof TeluguRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alphabets': typeof AlphabetsRoute
+  '/login': typeof LoginRoute
   '/math': typeof MathRoute
   '/numbers': typeof NumbersRoute
   '/playzone': typeof PlayzoneRoute
+  '/profile': typeof ProfileRoute
   '/rewards': typeof RewardsRoute
   '/shapes': typeof ShapesRoute
+  '/signup': typeof SignupRoute
   '/solarsystem': typeof SolarsystemRoute
   '/spelling': typeof SpellingRoute
   '/tables': typeof TablesRoute
+  '/telugu': typeof TeluguRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/alphabets'
+    | '/login'
     | '/math'
     | '/numbers'
     | '/playzone'
+    | '/profile'
     | '/rewards'
     | '/shapes'
+    | '/signup'
     | '/solarsystem'
     | '/spelling'
     | '/tables'
+    | '/telugu'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/alphabets'
+    | '/login'
     | '/math'
     | '/numbers'
     | '/playzone'
+    | '/profile'
     | '/rewards'
     | '/shapes'
+    | '/signup'
     | '/solarsystem'
     | '/spelling'
     | '/tables'
+    | '/telugu'
   id:
     | '__root__'
     | '/'
     | '/alphabets'
+    | '/login'
     | '/math'
     | '/numbers'
     | '/playzone'
+    | '/profile'
     | '/rewards'
     | '/shapes'
+    | '/signup'
     | '/solarsystem'
     | '/spelling'
     | '/tables'
+    | '/telugu'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlphabetsRoute: typeof AlphabetsRoute
+  LoginRoute: typeof LoginRoute
   MathRoute: typeof MathRoute
   NumbersRoute: typeof NumbersRoute
   PlayzoneRoute: typeof PlayzoneRoute
+  ProfileRoute: typeof ProfileRoute
   RewardsRoute: typeof RewardsRoute
   ShapesRoute: typeof ShapesRoute
+  SignupRoute: typeof SignupRoute
   SolarsystemRoute: typeof SolarsystemRoute
   SpellingRoute: typeof SpellingRoute
   TablesRoute: typeof TablesRoute
+  TeluguRoute: typeof TeluguRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/telugu': {
+      id: '/telugu'
+      path: '/telugu'
+      fullPath: '/telugu'
+      preLoaderRoute: typeof TeluguRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tables': {
       id: '/tables'
       path: '/tables'
@@ -183,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SolarsystemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shapes': {
       id: '/shapes'
       path: '/shapes'
@@ -195,6 +261,13 @@ declare module '@tanstack/react-router' {
       path: '/rewards'
       fullPath: '/rewards'
       preLoaderRoute: typeof RewardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/playzone': {
@@ -218,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MathRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alphabets': {
       id: '/alphabets'
       path: '/alphabets'
@@ -238,14 +318,18 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlphabetsRoute: AlphabetsRoute,
+  LoginRoute: LoginRoute,
   MathRoute: MathRoute,
   NumbersRoute: NumbersRoute,
   PlayzoneRoute: PlayzoneRoute,
+  ProfileRoute: ProfileRoute,
   RewardsRoute: RewardsRoute,
   ShapesRoute: ShapesRoute,
+  SignupRoute: SignupRoute,
   SolarsystemRoute: SolarsystemRoute,
   SpellingRoute: SpellingRoute,
   TablesRoute: TablesRoute,
+  TeluguRoute: TeluguRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

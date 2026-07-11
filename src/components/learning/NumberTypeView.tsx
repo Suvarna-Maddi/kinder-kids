@@ -146,10 +146,13 @@ const NumberTypeView = ({ data, onClose }: Props) => {
       setFeedback("wrong");
       speak("Oops, try again!", { profile: "girl" });
       setTimeout(() => {
-        if (feedback !== "correct") {
-          setPicked(null);
-          setFeedback(null);
-        }
+        setFeedback((prev) => {
+          if (prev === "wrong") {
+            setPicked(null);
+            return null;
+          }
+          return prev;
+        });
       }, 1500);
     }
   };
@@ -182,7 +185,10 @@ const NumberTypeView = ({ data, onClose }: Props) => {
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <h2 className="text-3xl md:text-5xl font-display font-bold shadow-sm">{data.title}</h2>
-            <button onClick={handleRead} className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors">
+            <button
+              onClick={handleRead}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+            >
               <PlayCircle className="w-6 h-6" />
             </button>
           </div>
@@ -194,7 +200,10 @@ const NumberTypeView = ({ data, onClose }: Props) => {
           <h3 className="text-2xl font-display font-bold mb-3">Examples</h3>
           <div className="flex flex-col gap-2">
             {data.examples.map((ex, i) => (
-              <div key={i} className="bg-white/10 rounded-xl px-4 py-3 text-lg md:text-xl font-medium shadow-sm">
+              <div
+                key={i}
+                className="bg-white/10 rounded-xl px-4 py-3 text-lg md:text-xl font-medium shadow-sm"
+              >
                 {ex}
               </div>
             ))}
@@ -204,13 +213,14 @@ const NumberTypeView = ({ data, onClose }: Props) => {
         <div className="flex-1 w-full bg-white text-foreground rounded-3xl p-6 shadow-xl">
           <h3 className="text-2xl font-display font-bold mb-4 text-primary">Mini Quiz!</h3>
           <p className="text-lg font-medium mb-6 text-muted-foreground">{data.quiz.question}</p>
-          
+
           <div className="grid grid-cols-2 gap-3">
             {data.quiz.options.map((opt) => {
               const isCorrect = feedback === "correct" && opt === data.quiz.correct;
               const isWrong = feedback === "wrong" && opt === picked;
               let btnClass = "bg-muted hover:bg-muted/80 text-foreground";
-              if (isCorrect) btnClass = "bg-green-500 text-white shadow-lg scale-105 ring-4 ring-green-500/30";
+              if (isCorrect)
+                btnClass = "bg-green-500 text-white shadow-lg scale-105 ring-4 ring-green-500/30";
               else if (isWrong) btnClass = "bg-red-500 text-white";
 
               return (

@@ -20,7 +20,9 @@ export const playClick = () => {
     gain.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.15);
     osc.start(c.currentTime);
     osc.stop(c.currentTime + 0.15);
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 };
 
 export const playSuccess = () => {
@@ -38,7 +40,9 @@ export const playSuccess = () => {
       osc.start(c.currentTime + i * 0.12);
       osc.stop(c.currentTime + i * 0.12 + 0.3);
     });
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 };
 
 export const playError = () => {
@@ -55,7 +59,9 @@ export const playError = () => {
     gain.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
     osc.start(c.currentTime);
     osc.stop(c.currentTime + 0.3);
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 };
 
 export const playPop = () => {
@@ -71,5 +77,7 @@ export const playPop = () => {
     gain.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.1);
     osc.start(c.currentTime);
     osc.stop(c.currentTime + 0.1);
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 };

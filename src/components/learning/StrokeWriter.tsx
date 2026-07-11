@@ -99,7 +99,7 @@ const StrokeWriter = ({
         });
         // Kick narration; parent may return a Promise so we wait for real onend.
         const guidP = Promise.resolve(
-          cbRef.current.onStrokeStart?.(i, glyph.strokes[i].guidance)
+          cbRef.current.onStrokeStart?.(i, glyph.strokes[i].guidance),
         ).catch(() => undefined);
 
         await Promise.all([animP, guidP]);
@@ -143,7 +143,12 @@ const StrokeWriter = ({
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="bg-card border-2 border-dashed border-border rounded-3xl p-4 shadow-inner">
-        <svg viewBox={glyph.viewBox} className="w-48 h-56 md:w-64 md:h-72" role="img" aria-label="Letter writing animation">
+        <svg
+          viewBox={glyph.viewBox}
+          className="w-48 h-56 md:w-64 md:h-72"
+          role="img"
+          aria-label="Letter writing animation"
+        >
           {/* Ghost outline */}
           {strokes.map((s, i) => (
             <path
@@ -174,7 +179,9 @@ const StrokeWriter = ({
                 style={{
                   strokeDasharray: "1",
                   strokeDashoffset: target === 1 ? "0" : "1",
-                  transition: isActive ? `stroke-dashoffset ${strokeDurationMs}ms ease-in-out` : "none"
+                  transition: isActive
+                    ? `stroke-dashoffset ${strokeDurationMs}ms ease-in-out`
+                    : "none",
                 }}
                 onTransitionEnd={() => {
                   if (isActive) {
@@ -190,7 +197,14 @@ const StrokeWriter = ({
           {/* Numbered start badges */}
           {strokes.map((s, i) => (
             <g key={`badge-${i}`}>
-              <circle cx={s.start[0]} cy={s.start[1]} r={9} fill="hsl(var(--kid-orange))" stroke="white" strokeWidth={2} />
+              <circle
+                cx={s.start[0]}
+                cy={s.start[1]}
+                r={9}
+                fill="hsl(var(--kid-orange))"
+                stroke="white"
+                strokeWidth={2}
+              />
               <text
                 x={s.start[0]}
                 y={s.start[1] + 4}

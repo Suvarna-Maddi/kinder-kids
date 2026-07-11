@@ -7,10 +7,18 @@ import { awardCoin, awardStar, markTable, recordAttempt } from "@/lib/progress";
 import SettingsBar from "@/components/learning/SettingsBar";
 
 const gradients = [
-  "from-kid-blue to-kid-teal", "from-kid-green to-kid-teal", "from-kid-orange to-kid-yellow",
-  "from-kid-purple to-kid-pink", "from-kid-pink to-kid-red", "from-kid-teal to-kid-green",
-  "from-kid-red to-kid-orange", "from-kid-yellow to-kid-green", "from-kid-blue to-kid-purple",
-  "from-kid-green to-kid-blue", "from-kid-orange to-kid-red", "from-kid-purple to-kid-blue",
+  "from-kid-blue to-kid-teal",
+  "from-kid-green to-kid-teal",
+  "from-kid-orange to-kid-yellow",
+  "from-kid-purple to-kid-pink",
+  "from-kid-pink to-kid-red",
+  "from-kid-teal to-kid-green",
+  "from-kid-red to-kid-orange",
+  "from-kid-yellow to-kid-green",
+  "from-kid-blue to-kid-purple",
+  "from-kid-green to-kid-blue",
+  "from-kid-orange to-kid-red",
+  "from-kid-purple to-kid-blue",
 ];
 
 const RANGE_OPTIONS = [10, 20, 50, 100, 500, 1000] as const;
@@ -34,7 +42,7 @@ const TablesGame = () => {
 
   const rows = useMemo(
     () => Array.from({ length: Math.min(range, MAX_RENDER_ROWS) }, (_, i) => i + 1),
-    [range]
+    [range],
   );
   const truncatedRows = range > MAX_RENDER_ROWS;
 
@@ -76,7 +84,10 @@ const TablesGame = () => {
       awardCoin(2);
       recordAndSpeak([
         { text: praise(), profile: "girl", pauseAfterMs: 150 },
-        { text: `${question.a} times ${question.b} is ${question.a * question.b}.`, profile: "girl" },
+        {
+          text: `${question.a} times ${question.b} is ${question.a * question.b}.`,
+          profile: "girl",
+        },
       ]);
     } else {
       setStreak(0);
@@ -92,6 +103,9 @@ const TablesGame = () => {
     markTable(n);
     cancelSpeech();
     speak(`Table of ${n}.`, { profile: "girl" });
+    
+    // Smoothly scroll down to the bottom where the table is rendered
+    setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
   };
 
   const readWholeTable = async () => {
@@ -100,7 +114,10 @@ const TablesGame = () => {
     await speakAsync(`Table of ${table}.`, { profile: "girl", pauseAfterMs: 150 });
     for (const b of rows) {
       setPlayingRow(b);
-      await speakAsync(`${table} times ${b} is ${table * b}.`, { profile: "girl", pauseAfterMs: 60 });
+      await speakAsync(`${table} times ${b} is ${table * b}.`, {
+        profile: "girl",
+        pauseAfterMs: 60,
+      });
     }
     setPlayingRow(null);
     speak(`Great! You heard the whole table of ${table}.`, { profile: "girl" });
@@ -110,7 +127,9 @@ const TablesGame = () => {
     if (table == null) return;
     cancelSpeech();
     setPlayingRow(b);
-    speakAsync(`${table} times ${b} is ${table * b}.`, { profile: "girl" }).then(() => setPlayingRow(null));
+    speakAsync(`${table} times ${b} is ${table * b}.`, { profile: "girl" }).then(() =>
+      setPlayingRow(null),
+    );
   };
 
   const submitCustom = () => {
@@ -139,8 +158,8 @@ const TablesGame = () => {
             <div className="ml-auto flex items-center gap-3">
               {streak >= 3 && (
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   className="flex items-center gap-1 bg-kid-orange/10 px-3 py-1 rounded-full"
                 >
                   <Sparkles className="w-4 h-4 text-kid-orange" />
@@ -149,7 +168,9 @@ const TablesGame = () => {
               )}
               <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-lg border border-border">
                 <Trophy className="w-5 h-5 text-kid-yellow" />
-                <span className="font-display font-bold text-foreground">{score}/{total}</span>
+                <span className="font-display font-bold text-foreground">
+                  {score}/{total}
+                </span>
               </div>
             </div>
           )}
@@ -187,13 +208,17 @@ const TablesGame = () => {
                 </label>
                 <div className="flex gap-2">
                   <select
-                    value={RANGE_OPTIONS.includes(range as (typeof RANGE_OPTIONS)[number]) ? range : ""}
+                    value={
+                      RANGE_OPTIONS.includes(range as (typeof RANGE_OPTIONS)[number]) ? range : ""
+                    }
                     onChange={(e) => e.target.value && setRange(parseInt(e.target.value, 10))}
                     className="rounded-xl border-2 border-border bg-background px-3 py-2 font-display text-lg"
                   >
                     <option value="">Custom</option>
                     {RANGE_OPTIONS.map((r) => (
-                      <option key={r} value={r}>× {r}</option>
+                      <option key={r} value={r}>
+                        × {r}
+                      </option>
                     ))}
                   </select>
                   <input
@@ -214,8 +239,8 @@ const TablesGame = () => {
               {Array.from({ length: 12 }, (_, i) => i + 1).map((n, i) => (
                 <motion.button
                   key={n}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.05, type: "spring" }}
                   whileHover={{ scale: 1.1, rotate: [0, -3, 3, 0], y: -4 }}
                   whileTap={{ scale: 0.9 }}
@@ -228,12 +253,8 @@ const TablesGame = () => {
               ))}
             </div>
 
-            <AnimatePresence>
-              {table && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
+            {table !== null && (
+                <div
                   className="mt-8 bg-card rounded-bubble shadow-2xl p-6 md:p-8 border border-border"
                 >
                   <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
@@ -241,7 +262,8 @@ const TablesGame = () => {
                       Table of {table} ✨{" "}
                       <span className="text-base text-muted-foreground">
                         (× 1 to {range.toLocaleString()}
-                        {truncatedRows ? `, showing first ${MAX_RENDER_ROWS.toLocaleString()}` : ""})
+                        {truncatedRows ? `, showing first ${MAX_RENDER_ROWS.toLocaleString()}` : ""}
+                        )
                       </span>
                     </h2>
                     <button
@@ -252,35 +274,39 @@ const TablesGame = () => {
                       Read table aloud
                     </button>
                   </div>
-                  <div className={`grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-6 ${range > 20 ? "max-h-[420px] overflow-auto pr-2" : ""}`}>
+                  <div
+                    className={`grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-6 ${range > 20 ? "max-h-[420px] overflow-auto pr-2" : ""}`}
+                  >
                     {rows.map((n, idx) => (
-                      <motion.button
+                      <button
                         key={n}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: Math.min(idx, 30) * 0.02 }}
                         onClick={() => readOneRow(n)}
-                        className={`rounded-xl p-3 text-center font-display text-base md:text-lg text-foreground transition-colors ${
-                          playingRow === n ? "bg-accent/30 ring-2 ring-accent" : "bg-muted hover:bg-muted/70"
+                        className={`rounded-xl p-3 text-center font-display text-base md:text-lg text-foreground transition-colors animate-in fade-in slide-in-from-left-2 duration-300 ${
+                          playingRow === n
+                            ? "bg-accent/30 ring-2 ring-accent"
+                            : "bg-muted hover:bg-muted/70"
                         }`}
+                        style={{ animationDelay: `${Math.min(idx, 30) * 20}ms`, animationFillMode: 'both' }}
                       >
                         {table} × {n} = <span className="font-bold text-primary">{table * n}</span>
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                   <div className="text-center">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => { playClick(); startQuiz(table); }}
+                      onClick={() => {
+                        playClick();
+                        startQuiz(table);
+                      }}
                       className="bg-accent text-accent-foreground px-8 py-3 rounded-full font-display text-xl font-bold shadow-lg"
                     >
                       🎮 Take Quiz!
                     </motion.button>
                   </div>
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
           </>
         ) : (
           <motion.div
@@ -298,7 +324,8 @@ const TablesGame = () => {
                   let btnClass = "bg-muted text-foreground hover:bg-muted/80";
                   if (showResult) {
                     if (opt === correct) btnClass = "bg-accent text-accent-foreground";
-                    else if (opt === selected) btnClass = "bg-destructive text-destructive-foreground";
+                    else if (opt === selected)
+                      btnClass = "bg-destructive text-destructive-foreground";
                   }
                   return (
                     <motion.button
@@ -310,13 +337,17 @@ const TablesGame = () => {
                     >
                       {opt}
                       {showResult && opt === correct && <Check className="inline ml-2 w-6 h-6" />}
-                      {showResult && opt === selected && opt !== correct && <X className="inline ml-2 w-6 h-6" />}
+                      {showResult && opt === selected && opt !== correct && (
+                        <X className="inline ml-2 w-6 h-6" />
+                      )}
                     </motion.button>
                   );
                 })}
               </div>
               <button
-                onClick={() => { setQuizMode(false); }}
+                onClick={() => {
+                  setQuizMode(false);
+                }}
                 className="mt-6 text-muted-foreground font-body underline"
               >
                 ← Back to table

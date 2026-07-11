@@ -23,7 +23,9 @@ export function createQuizDeck<T>(pool: readonly T[]) {
       return deck.pop() as T;
     },
     remaining: () => deck.length,
-    reset() { deck = shuffle(pool); },
+    reset() {
+      deck = shuffle(pool);
+    },
   };
 }
 
@@ -71,13 +73,17 @@ export function makePersistentUniqueGenerator<T>(
       if (!raw) return [];
       const arr = JSON.parse(raw);
       return Array.isArray(arr) ? arr.slice(-historySize) : [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   };
   const save = (h: string[]) => {
     try {
       if (typeof localStorage === "undefined") return;
       localStorage.setItem(storageKey, JSON.stringify(h.slice(-historySize)));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
   let history = load();
   return () => {
@@ -110,19 +116,23 @@ export function createPersistentQuizDeck<T>(
       if (typeof localStorage === "undefined") return [];
       const raw = localStorage.getItem(storageKey);
       return raw ? (JSON.parse(raw) as string[]) : [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   };
   const save = (seen: string[]) => {
     try {
       if (typeof localStorage === "undefined") return;
       localStorage.setItem(storageKey, JSON.stringify(seen));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
   let seen = load();
   return {
     next(): T {
       const remaining = pool.filter((p) => !seen.includes(keyOf(p)));
-      const source = remaining.length ? remaining : (seen = [], pool.slice());
+      const source = remaining.length ? remaining : ((seen = []), pool.slice());
       const item = source[Math.floor(Math.random() * source.length)];
       seen.push(keyOf(item));
       save(seen);
@@ -131,11 +141,7 @@ export function createPersistentQuizDeck<T>(
   };
 }
 
-export function sampleUnique<T>(
-  pool: readonly T[],
-  n: number,
-  exclude: readonly T[] = [],
-): T[] {
+export function sampleUnique<T>(pool: readonly T[], n: number, exclude: readonly T[] = []): T[] {
   const available = pool.filter((x) => !exclude.includes(x));
   return shuffle(available).slice(0, Math.min(n, available.length));
 }

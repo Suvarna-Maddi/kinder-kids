@@ -49,11 +49,37 @@ const pickVoice = (profile: VoiceProfile): SpeechSynthesisVoice | undefined => {
   const english = cachedVoices.filter((v) => v.lang && v.lang.toLowerCase().startsWith("en"));
   const pool = english.length ? english : cachedVoices;
 
-  const girlHints = ["female", "samantha", "victoria", "karen", "moira", "tessa", "google us english", "zira", "salli", "joanna", "aria", "jenny", "child"];
-  const boyHints = ["male", "daniel", "alex", "fred", "google uk english male", "david", "mark", "guy", "matthew"];
+  // Prioritize Indian English (en-IN) or clear, neutral global English voices
+  const girlHints = [
+    "heera",
+    "neerja",
+    "en-in",
+    "india",
+    "google uk english female",
+    "samantha",
+    "victoria",
+    "karen",
+    "zira",
+    "female",
+    "child",
+  ];
+  const boyHints = [
+    "ravi",
+    "en-in",
+    "india",
+    "google uk english male",
+    "daniel",
+    "david",
+    "mark",
+    "male",
+    "boy",
+  ];
 
   const hints = profile === "girl" ? girlHints : boyHints;
-  const match = pool.find((v) => hints.some((h) => v.name.toLowerCase().includes(h)));
+  const match = pool.find((v) =>
+    hints.some((h) => v.name.toLowerCase().includes(h) || v.lang.toLowerCase().includes(h)),
+  );
+
   if (match) return match;
   // Fallback: pick different voices for girl vs boy by index
   return profile === "girl" ? pool[0] : pool[Math.min(1, pool.length - 1)];
@@ -78,8 +104,10 @@ const processQueue = async () => {
   const utter = new SpeechSynthesisUtterance(next.text);
   const voice = pickVoice(next.profile);
   if (voice) utter.voice = voice;
-  utter.rate = Math.min(0.8, Math.max(0.55, next.rate ?? settings.speechRate));
-  utter.pitch = next.pitch ?? (next.profile === "girl" ? 1.35 : 1.1);
+  // Slow down slightly to offset the pitch increase
+  utter.rate = Math.min(0.8, Math.max(0.55, next.rate ?? settings.speechRate * 0.9));
+  // Pitch 1.6 hits the sweet spot for sounding young without sounding like a robot
+  utter.pitch = next.pitch ?? (next.profile === "girl" ? 1.6 : 1.3);
   utter.volume = 1;
 
   next.onStart?.();
@@ -106,10 +134,7 @@ const processQueue = async () => {
   }
 };
 
-export const speak = (
-  text: string,
-  opts: Partial<Omit<Clip, "text">> = {}
-) => {
+export const speak = (text: string, opts: Partial<Omit<Clip, "text">> = {}) => {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   queue.push({ text, profile: opts.profile ?? "girl", ...opts });
   processQueue();
@@ -117,16 +142,17 @@ export const speak = (
 
 // Promise-returning speak. Resolves ONLY after the utterance actually ends
 // (or is cancelled). Used to drive event-driven syncing with animations.
-export const speakAsync = (
-  text: string,
-  opts: Partial<Omit<Clip, "text">> = {}
-): Promise<void> =>
+export const speakAsync = (text: string, opts: Partial<Omit<Clip, "text">> = {}): Promise<void> =>
   new Promise((resolve) => {
     const userEnd = opts.onEnd;
     speak(text, {
       ...opts,
       onEnd: () => {
-        try { userEnd?.(); } finally { resolve(); }
+        try {
+          userEnd?.();
+        } finally {
+          resolve();
+        }
       },
     });
     // Safety: if speech is disabled or unavailable, processQueue's synthetic
@@ -147,7 +173,9 @@ export const cancelSpeech = () => {
   speaking = false;
   try {
     window.speechSynthesis?.cancel();
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 };
 
 let lastNarration: Array<string | Clip> = [];
@@ -165,9 +193,21 @@ export const replayLast = () => {
 
 // Random praise / encouragement pools
 const PRAISE = [
-  "Excellent!", "Amazing!", "Fantastic!", "Wonderful!", "Super!",
-  "You're doing great!", "Brilliant!", "Awesome!", "Perfect!", "Great job!",
-  "Well done!", "Keep going!", "You can do it!", "Nice work!", "Outstanding!",
+  "Excellent!",
+  "Amazing!",
+  "Fantastic!",
+  "Wonderful!",
+  "Super!",
+  "You're doing great!",
+  "Brilliant!",
+  "Awesome!",
+  "Perfect!",
+  "Great job!",
+  "Well done!",
+  "Keep going!",
+  "You can do it!",
+  "Nice work!",
+  "Outstanding!",
 ];
 const RETRY = [
   "Almost! Let's try again.",

@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import SpellingGame from "@/features/SpellingGame";
+import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/spelling")({
-  component: SpellingGame,
+  component: lazyRouteComponent(() => import("@/features/SpellingGame")),
 });

@@ -5,6 +5,7 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 import { IMG_MAP } from "@/lib/images";
+import { LazyImage } from "./LazyImage";
 
 type Props = {
   emoji: string;
@@ -28,11 +29,17 @@ const WordImage = memo(({ emoji, word, size = "md", onClick, highlighted }: Prop
       whileHover={onClick ? { scale: 1.05, y: -3 } : undefined}
       whileTap={onClick ? { scale: 0.95 } : undefined}
       aria-label={word}
-      className={`${SIZE_CLASSES[size]} rounded-3xl bg-gradient-to-br from-card to-muted shadow-lg border-2 flex items-center justify-center transition-colors ${highlighted ? "border-accent ring-4 ring-accent/40" : "border-border"
-        } ${onClick ? "cursor-pointer" : "cursor-default"}`}
+      className={`${SIZE_CLASSES[size]} rounded-3xl bg-gradient-to-br from-card to-muted shadow-lg border-2 flex items-center justify-center transition-colors ${
+        highlighted ? "border-accent ring-4 ring-accent/40" : "border-border"
+      } ${onClick ? "cursor-pointer" : "cursor-default"}`}
     >
       {IMG_MAP[word] ? (
-        <img src={IMG_MAP[word]} alt={word} className="w-3/5 h-3/5 object-contain" draggable={false} loading="lazy" decoding="async" />
+        <LazyImage
+          src={IMG_MAP[word]}
+          alt={word}
+          className="w-3/5 h-3/5 object-contain"
+          draggable={false}
+        />
       ) : (
         <span role="img" aria-hidden>
           {emoji}

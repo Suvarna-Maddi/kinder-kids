@@ -1,13 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import Rewards from "@/features/Rewards";
+import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/rewards")({
-  component: Rewards,
+  component: lazyRouteComponent(() => import("@/features/Rewards")),
   head: () => ({
     meta: [
-      { title: "Rewards & Progress — KinderKids" },
-      { name: "description", content: "Track stars, coins, streaks and earned badges as you learn." },
-      { property: "og:title", content: "Rewards & Progress — KinderKids" },
+      { title: "Rewards & Progress — KinderKidsSpace" },
+      {
+        name: "description",
+        content: "Track stars, coins, streaks and earned badges as you learn.",
+      },
+      { property: "og:title", content: "Rewards & Progress — KinderKidsSpace" },
       { property: "og:description", content: "See every star, coin and badge you've earned." },
     ],
   }),

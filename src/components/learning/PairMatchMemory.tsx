@@ -1,12 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { speak, recordAttempt } from "@/lib/tts";
+import { speak } from "@/lib/tts";
 import { playSuccess, playError, playClick } from "@/lib/sounds";
-import { awardCoin, awardStar, recordAndSpeak } from "@/lib/progress";
-import { useReward } from "@/components/Reward";
+import { awardCoin, awardStar, recordAttempt } from "@/lib/progress";
+import { useReward, MEMORY_CATEGORIES, pickRotatingCategory } from "@/features/PlayZone";
 import { CardFace } from "./CardFace"; // use shared CardFace component
 import { shuffle } from "@/lib/quizEngine";
-import { MEMORY_CATEGORIES, pickRotatingCategory } from "@/features/PlayZone";
 
 interface PairMatchMemoryProps {
   difficulty: "easy" | "medium" | "hard";
@@ -33,19 +32,21 @@ export const PairMatchMemory: React.FC<PairMatchMemoryProps> = ({ difficulty, on
 
   // Build pair data based on mode
   const { leftItems, rightItems, correctMap } = useMemo(() => {
-    const left: any[] = [];
-    const right: any[] = [];
+    const left: { key: string; label: string; color?: string; image?: string }[] = [];
+    const right: { key: string; label: string; color?: string; image?: string }[] = [];
     const map = new Map<string, string>(); // leftKey -> rightKey
 
     if (mode === "letter-object") {
       const letters = MEMORY_CATEGORIES.find((c) => c.id === "letters")!.items;
       const excludeCats = ["letters", "numbers", "colors", "shapes"];
-      const allObjects = MEMORY_CATEGORIES.filter(c => !excludeCats.includes(c.id)).flatMap(c => c.items);
+      const allObjects = MEMORY_CATEGORIES.filter((c) => !excludeCats.includes(c.id)).flatMap(
+        (c) => c.items,
+      );
       const chosenLetters = shuffle(letters).slice(0, count);
       chosenLetters.forEach((lt) => {
         // find objects starting with same letter
-        const candidates = allObjects.filter((obj) =>
-          obj.label[0].toUpperCase() === lt.label[0].toUpperCase()
+        const candidates = allObjects.filter(
+          (obj) => obj.label[0].toUpperCase() === lt.label[0].toUpperCase(),
         );
         const obj = candidates.length ? shuffle(candidates)[0] : shuffle(allObjects)[0];
         left.push(lt);
@@ -151,7 +152,7 @@ export const PairMatchMemory: React.FC<PairMatchMemoryProps> = ({ difficulty, on
               onClick={() => handleSelectLeft(it.key)}
               className={`w-full aspect-square p-2 rounded-xl shadow ${matched.has(it.key) ? "ring-4 ring-kid-green" : "bg-gradient-to-br from-kid-blue to-kid-purple text-foreground"}`}
             >
-              <CardFace item={it} />
+              <CardFace item={it as any} />
             </motion.button>
           ))}
         </div>
@@ -165,14 +166,17 @@ export const PairMatchMemory: React.FC<PairMatchMemoryProps> = ({ difficulty, on
               onClick={() => handleSelectRight(it.key)}
               className={`w-full aspect-square p-2 rounded-xl shadow ${selectedLeft && correctMap.get(selectedLeft) === it.key ? "ring-4 ring-kid-green animate-pulse" : "bg-gradient-to-br from-kid-blue to-kid-purple text-foreground"}`}
             >
-              <CardFace item={it} />
+              <CardFace item={it as any} />
             </motion.button>
           ))}
         </div>
       </div>
       {allMatched && (
         <div className="text-center mt-6">
-          <button onClick={finish} className="bg-primary text-primary-foreground px-5 py-2 rounded-full font-display font-bold shadow">
+          <button
+            onClick={finish}
+            className="bg-primary text-primary-foreground px-5 py-2 rounded-full font-display font-bold shadow"
+          >
             Finish
           </button>
         </div>

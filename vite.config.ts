@@ -12,10 +12,29 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  // ADD THIS DOWN HERE:
   vite: {
-    base: '/',
+    base: "/",
+    server: {
+      proxy: {
+        "/edge-tts-ws": {
+          target: "wss://speech.platform.bing.com",
+          ws: true,
+          changeOrigin: true,
+          secure: false,
+          headers: {
+            Origin: "chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold",
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0",
+          },
+          rewrite: (path) => path.replace(/^\/edge-tts-ws/, ""),
+        },
+        "/google-tts": {
+          target: "https://translate.googleapis.com",
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/google-tts/, ""),
+        },
+      },
+    },
   },
 });
-
-

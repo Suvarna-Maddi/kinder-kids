@@ -1,5 +1,6 @@
 import React from "react";
 import { IMG_MAP } from "@/lib/images";
+import { LazyImage } from "./LazyImage";
 
 type MemItem = { key: string; label: string; color: string };
 
@@ -142,7 +143,7 @@ const TWEMOJI: Record<string, string> = {
   Violin: "1f3bb",
   Trumpet: "1f3ba",
   Harp: "1fa95",
-  Tabla: "1f941"
+  Tabla: "1f941",
 };
 
 const twemojiUrl = (cp: string) =>
@@ -174,10 +175,7 @@ const ShapeSvg = ({ name, color }: { name: string; color: string }) => {
     case "Star":
       return (
         <svg viewBox="0 0 100 100" className="w-3/5 h-3/5">
-          <polygon
-            points="50,6 61,38 95,38 67,58 78,92 50,72 22,92 33,58 5,38 39,38"
-            {...common}
-          />
+          <polygon points="50,6 61,38 95,38 67,58 78,92 50,72 22,92 33,58 5,38 39,38" {...common} />
         </svg>
       );
     case "Heart":
@@ -248,7 +246,7 @@ export const CardFace = ({ item, size = "md" }: { item: MemItem; size?: "sm" | "
                     width: "70%",
                     aspectRatio: "1 / 1",
                     background: item.color,
-                    boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.15)"
+                    boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.15)",
                   }}
                 />
               ))}
@@ -265,22 +263,18 @@ export const CardFace = ({ item, size = "md" }: { item: MemItem; size?: "sm" | "
           {item.label}
         </span>
       ) : IMG_MAP[item.label] ? (
-        <img
-          src={IMG_MAP[item.label]}
+        <LazyImage
+          src={IMG_MAP[item.label as keyof typeof IMG_MAP]}
           alt={item.label}
           draggable={false}
           className={size === "sm" ? "w-3/5 h-3/5 object-contain" : "w-4/5 h-4/5 object-contain"}
-          loading="lazy"
-          decoding="async"
         />
       ) : cp ? (
-        <img
+        <LazyImage
           src={twemojiUrl(cp)}
           alt=""
           draggable={false}
           className={size === "sm" ? "w-3/5 h-3/5" : "w-4/5 h-4/5"}
-          loading="lazy"
-          decoding="async"
         />
       ) : null}
     </div>

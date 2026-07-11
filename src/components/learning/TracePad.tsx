@@ -14,7 +14,7 @@ type Props = {
   onProgress?: (pct: number) => void;
   color?: string;
   successThreshold?: number; // 0-1
-  proximityPx?: number;      // in canvas px
+  proximityPx?: number; // in canvas px
 };
 
 const CANVAS_SIZE = 320;
@@ -71,7 +71,6 @@ const TracePad = ({
     setCoverage(0);
     setSucceeded(false);
     clearCanvas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [glyph]);
 
   const clearCanvas = () => {
@@ -103,24 +102,33 @@ const TracePad = ({
     const strokes = strokesRef.current;
     if (!strokes.length) return;
     const r2 = proximityPx * proximityPx;
-    const endR2 = (proximityPx * 1.3) * (proximityPx * 1.3);
+    const endR2 = proximityPx * 1.3 * (proximityPx * 1.3);
     let newlyHit = 0;
     for (const s of strokes) {
       for (const p of s.points) {
         if (p.hit) continue;
-        const dx = p.x - x, dy = p.y - y;
-        if (dx * dx + dy * dy <= r2) { p.hit = true; newlyHit++; }
+        const dx = p.x - x,
+          dy = p.y - y;
+        if (dx * dx + dy * dy <= r2) {
+          p.hit = true;
+          newlyHit++;
+        }
       }
       if (!s.endpoint.hit) {
-        const dx = s.endpoint.x - x, dy = s.endpoint.y - y;
-        if (dx * dx + dy * dy <= endR2) { s.endpoint.hit = true; newlyHit++; }
+        const dx = s.endpoint.x - x,
+          dy = s.endpoint.y - y;
+        if (dx * dx + dy * dy <= endR2) {
+          s.endpoint.hit = true;
+          newlyHit++;
+        }
       }
     }
     if (newlyHit === 0) return;
 
     // Per-stroke coverage — every stroke must clear the threshold AND touch
     // its endpoint before we call the tracing complete.
-    let totalPts = 0, totalHits = 0;
+    let totalPts = 0,
+      totalHits = 0;
     let allStrokesPassed = true;
     for (const s of strokes) {
       totalPts += s.points.length;

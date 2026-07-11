@@ -1,6 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import SolarSystem from '@/features/SolarSystem'
+import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/solarsystem')({
-  component: SolarSystem,
-})
+export const Route = createFileRoute("/solarsystem")({
+  component: lazyRouteComponent(() => import("@/features/SolarSystem")),
+});
