@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { PremiumPopup } from "./PremiumPopup";
 import { useAuth } from "../lib/auth-client";
+import logo from "@/assets/logo.png";
 
 const navItems = [
   { path: "/", label: "Home", icon: Home, color: "text-kid-blue" },
@@ -67,7 +68,23 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { isAuthenticated, username, isLoading, logout } = useAuth();
+
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    if (pathname !== '/') return;
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
   
   // Protect routes globally inside Layout
   useEffect(() => {
@@ -130,43 +147,34 @@ const Layout = ({ children }: { children: ReactNode }) => {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
             >
-              <Sparkles className="w-6 h-6 text-kid-yellow" />
+              <img src={logo} alt="KinderKidsSpace Logo" className="h-10 md:h-12 w-auto object-contain scale-125 origin-left" />
             </motion.div>
-            <span className="text-xl md:text-2xl font-display font-bold">
-              <span className="text-kid-blue">K</span>
-              <span className="text-kid-orange">i</span>
-              <span className="text-kid-green">n</span>
-              <span className="text-kid-pink">d</span>
-              <span className="text-kid-purple">e</span>
-              <span className="text-kid-teal">r</span>
-              <span className="text-kid-red">K</span>
-              <span className="text-kid-yellow">i</span>
-              <span className="text-kid-blue">d</span>
-              <span className="text-kid-green">s</span>
-              <span className="text-indigo-500">S</span>
-              <span className="text-pink-500">p</span>
-              <span className="text-teal-500">a</span>
-              <span className="text-orange-500">c</span>
-              <span className="text-blue-500">e</span>
-            </span>
+            {!isAuthenticated && (
+              <span className="font-display font-extrabold text-xl md:text-2xl text-[#1E293B] tracking-tight">
+                Kinder<span className="text-[#F43F5E]">Kids</span><span className="text-[#6366F1]">Space</span>
+              </span>
+            )}
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 md:gap-2">
-            {pathname === '/' ? (
+          <div className="hidden md:flex items-center gap-1 md:gap-6">
+            {!isAuthenticated ? (
               // Landing Page Specific Navigation Links
               <>
-                <Link to="/" className="flex items-center gap-2 px-4 py-2 text-[#7C3AED] bg-[#7C3AED]/10 rounded-full font-bold text-sm">
-                  <Home className="w-4 h-4" /> Home
-                </Link>
-                <Link to="/playzone" className="flex items-center gap-2 px-4 py-2 text-[#475569] hover:bg-gray-100 rounded-full font-bold text-sm transition-colors">
-                  <Gamepad2 className="w-4 h-4" /> Games
-                </Link>
-                <Link to="/alphabets" className="flex items-center gap-2 px-4 py-2 text-[#475569] hover:bg-gray-100 rounded-full font-bold text-sm transition-colors">
-                  <BookOpen className="w-4 h-4" /> Learning
-                </Link>
-                <Link to="/" className="flex items-center gap-2 px-4 py-2 text-[#475569] hover:bg-gray-100 rounded-full font-bold text-sm transition-colors">
-                  <Heart className="w-4 h-4" /> About Us
-                </Link>
+                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="font-bold text-sm text-[#6366F1] border-b-2 border-[#6366F1] pb-1 hover:cursor-pointer">
+                  Home
+                </button>
+                <a href="#about" onClick={(e) => handleScroll(e, 'about')} className="font-bold text-sm text-[#1E293B] hover:text-[#6366F1] transition-colors cursor-pointer">
+                  About Us
+                </a>
+                <a href="#stories" onClick={(e) => handleScroll(e, 'stories')} className="font-bold text-sm text-[#1E293B] hover:text-[#6366F1] transition-colors cursor-pointer">
+                  Stories
+                </a>
+                <a href="#features" onClick={(e) => handleScroll(e, 'features')} className="font-bold text-sm text-[#1E293B] hover:text-[#6366F1] transition-colors cursor-pointer">
+                  Features
+                </a>
+                <a href="#contact" onClick={(e) => handleScroll(e, 'contact')} className="font-bold text-sm text-[#1E293B] hover:text-[#6366F1] transition-colors cursor-pointer">
+                  Contact
+                </a>
               </>
             ) : (
               // Standard App Navigation Links
@@ -194,40 +202,49 @@ const Layout = ({ children }: { children: ReactNode }) => {
             )}
             
             {/* Login / Logout Button */}
-            {pathname === '/' && !isAuthenticated ? (
-              <Link to="/signup" preload="intent" className="ml-2">
+            {!isAuthenticated ? (
+              <Link to="/login" preload="intent" className="ml-2">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-[#7C3AED] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md flex items-center gap-2 hover:bg-[#6D28D9] transition-colors"
+                  className="bg-[#6366F1] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md flex items-center gap-2 hover:bg-[#4F46E5] transition-colors"
                 >
-                  Start Learning <Rocket className="w-4 h-4" />
+                  Log In ⭐
                 </motion.div>
               </Link>
             ) : (
-              <div className="flex items-center gap-1 md:gap-2 ml-2">
-                <Link to="/profile" preload="intent">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-kid-blue/10 hover:bg-kid-blue/20 transition-colors border border-kid-blue/20 rounded-full cursor-pointer"
-                  >
-                    <UserCircle2 className="w-5 h-5 text-kid-blue" />
-                    <span className="font-display font-bold text-sm text-foreground">
-                      {username || "Kid"}
-                    </span>
-                  </motion.div>
-                </Link>
-                <button onClick={() => { logout(); }} className="focus:outline-none">
-                  <motion.div
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-1 px-2 md:px-3 py-2 rounded-xl font-display text-sm md:text-base font-semibold transition-colors text-muted-foreground hover:text-foreground hover:bg-muted"
-                  >
-                    <LogOut className="w-4 h-4 text-kid-red" />
-                    <span className="hidden sm:inline">Log Out</span>
-                  </motion.div>
-                </button>
+              <div className="relative ml-2">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-kid-blue/10 hover:bg-kid-blue/20 transition-colors border border-kid-blue/20 rounded-full cursor-pointer focus:outline-none"
+                >
+                  <UserCircle2 className="w-5 h-5 text-kid-blue" />
+                  <span className="font-display font-bold text-sm text-foreground">
+                    {username || "Kid"}
+                  </span>
+                </motion.button>
+                
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-lg py-2 z-50">
+                    <Link 
+                      to="/profile" 
+                      onClick={() => setIsProfileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-muted font-display text-sm text-foreground transition-colors"
+                    >
+                      <UserCircle2 className="w-4 h-4 text-kid-blue" />
+                      View Profile
+                    </Link>
+                    <button 
+                      onClick={() => { setIsProfileMenuOpen(false); logout(); }} 
+                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-muted font-display text-sm text-foreground transition-colors"
+                    >
+                      <LogOut className="w-4 h-4 text-kid-red" />
+                      Log Out
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -332,24 +349,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             {/* Brand & Description */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <Link to="/" preload="intent" className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-6 h-6 text-kid-yellow" />
-                <span className="text-2xl font-display font-bold">
-                  <span className="text-kid-blue">K</span>
-                  <span className="text-kid-orange">i</span>
-                  <span className="text-kid-green">n</span>
-                  <span className="text-kid-pink">d</span>
-                  <span className="text-kid-purple">e</span>
-                  <span className="text-kid-teal">r</span>
-                  <span className="text-kid-red">K</span>
-                  <span className="text-kid-yellow">i</span>
-                  <span className="text-kid-blue">d</span>
-                  <span className="text-kid-green">s</span>
-                  <span className="text-indigo-500">S</span>
-                  <span className="text-pink-500">p</span>
-                  <span className="text-teal-500">a</span>
-                  <span className="text-orange-500">c</span>
-                  <span className="text-blue-500">e</span>
-                </span>
+                <img src={logo} alt="KinderKidsSpace Logo" className="h-20 md:h-28 w-auto object-contain scale-125 md:scale-150 origin-left md:origin-center" />
               </Link>
               <p className="text-muted-foreground font-body text-sm max-w-xs">
                 Making learning fun, interactive, and engaging for little champions everywhere!

