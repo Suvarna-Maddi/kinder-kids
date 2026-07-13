@@ -30,14 +30,44 @@ function Signup() {
     setLoading(true);
 
     try {
-      const response = await registerUser({ data: formData });
-      if (response.success) {
-        toast.success("Welcome! Your account has been created.");
-        login(String(response.userId), formData.username);
-        window.location.href = "/profile";
-      }
+      // 1. Create Firebase Auth User
+      const { createUserWithEmailAndPassword, updateProfile } = await import("firebase/auth");
+      const { auth, db } = await import("../lib/firebase");
+      const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
+      
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+
+      // 2. Update Auth Profile
+      await updateProfile(user, { displayName: formData.username });
+
+      // 3. Create Firestore Document
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: formData.username,
+        email: formData.email,
+        phone_number: formData.phone_number,
+        coins: 0,
+        stars: 0,
+        level: 1,
+        achievements: [],
+        completedLessons: [],
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp()
+      });
+
+      toast.success("Welcome! Your account has been created.");
+      login(user.uid, formData.username); // Keep for compatibility
+      window.location.href = "/profile";
     } catch (error: any) {
-      toast.error(error.message || "Something went wrong. Please try again.");
+      console.error("Signup error:", error);
+      let errorMessage = "Something went wrong. Please try again.";
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "An account with this email already exists.";
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = "Password should be at least 6 characters.";
+      }
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

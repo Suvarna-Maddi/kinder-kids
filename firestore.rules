@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to check if the user is signed in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Function to check if the user is accessing their own document
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Match the users collection
+    match /users/{userId} {
+      // Users can only read their own documents
+      allow read: if isOwner(userId);
+      
+      // Users can create their initial document (during signup)
+      allow create: if isOwner(userId) 
+                    && request.resource.data.uid == userId
+                    && request.resource.data.isPremium != true;
+      
+      // Users can only update their own documents and cannot modify restricted fields
+      allow update: if isOwner(userId) 
+                    && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'email', 'createdAt', 'isPremium', 'premiumUnlocked']);
+                    
+      // Prevent deleting user documents
+      allow delete: if false;
+    }
+    
+    // ------------------------------------
+    // FUTURE COLLECTIONS PREPARATION
+    // ------------------------------------
+    
+    // Leaderboards: typically publicly readable but only server-writable
+    match /leaderboards/{document=**} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only Cloud Functions / Admin SDK can update
+    }
+    
+    // Achievements & Rewards: likely readable globally but only writable by owner or server
+    match /achievements/{document=**} {
+      allow read: if isSignedIn();
+      allow write: if false; 
+    }
+    
+    match /rewards/{document=**} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    
+    // Parent Reports: Strictly owner (parent) access
+    match /parent_reports/{reportId} {
+      allow read, write: if isSignedIn() && resource.data.parentId == request.auth.uid;
+    }
+    
+    // Subscriptions: Server managed only, readable by owner
+    match /subscriptions/{subscriptionId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow write: if false; // Managed by Stripe / Cloud Functions
+    }
+  }
+}

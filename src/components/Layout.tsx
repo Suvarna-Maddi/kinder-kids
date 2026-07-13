@@ -42,7 +42,7 @@ const navItems = [
 ] as const;
 
 const FloatingParticles = () => {
-  const emojis = ["⭐", "🌈", "✨", "🎈", "🦋", "🌸", "💫", "🎀"];
+  const emojis = ["⭐", "🌈", "✨", "🎈", "🦋", "💫", "🎀"];
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {emojis.map((emoji, i) => (
@@ -132,7 +132,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background relative">
-      <FloatingParticles />
       <PremiumPopup />
 
       <motion.nav
@@ -141,22 +140,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className="sticky top-0 lg:top-4 z-50 backdrop-blur-xl bg-card/80 border-b lg:border lg:rounded-full lg:mx-4 shadow-lg transition-all"
       >
-        <div className="w-full mx-auto px-4 lg:px-6 py-2 flex items-center justify-between">
-          <Link to="/" preload="intent" className="flex items-center gap-2 pl-2 lg:pl-4">
+        <div className="w-full mx-auto px-2 lg:px-4 py-2 flex items-center justify-between">
+          <Link to="/" preload="intent" className="flex items-center gap-2">
             <motion.div
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
             >
               <img src={logo} alt="KinderKidsSpace Logo" className="h-10 md:h-12 w-auto object-contain scale-125 origin-left" />
             </motion.div>
-            {!isAuthenticated && (
-              <span className="font-display font-extrabold text-xl md:text-2xl text-[#1E293B] tracking-tight">
-                Kinder<span className="text-[#F43F5E]">Kids</span><span className="text-[#6366F1]">Space</span>
-              </span>
-            )}
+            <span className="font-display font-extrabold text-lg sm:text-xl md:text-2xl tracking-tight bg-[linear-gradient(to_right,#F43F5E,#F97316,#EAB308,#22C55E,#3B82F6,#8B5CF6,#D946EF)] bg-clip-text text-transparent drop-shadow-sm">
+              KinderKidsSpace
+            </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 md:gap-6">
+          <div className="hidden md:flex items-center gap-1 md:gap-2">
             {!isAuthenticated ? (
               // Landing Page Specific Navigation Links
               <>
@@ -186,14 +183,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
                     <motion.div
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`flex items-center gap-1 px-2 md:px-3 py-2 rounded-xl font-display text-sm md:text-base font-semibold transition-colors
+                      className={`flex items-center gap-1 px-1.5 md:px-2 py-1.5 rounded-xl font-display text-xs md:text-sm font-semibold transition-colors
                         ${
                           isActive
                             ? "bg-primary/10 text-primary shadow-sm"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted"
                         }`}
                     >
-                      <Icon className={`w-4 h-4 ${isActive ? item.color : ""}`} />
+                      <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isActive ? item.color : ""}`} />
                       <span className="hidden sm:inline">{item.label}</span>
                     </motion.div>
                   </Link>
@@ -345,20 +342,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
       <footer className="relative z-10 border-t border-border bg-card/80 backdrop-blur-md mt-10">
         <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-12">
             {/* Brand & Description */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <div className="col-span-2 lg:col-span-1 flex flex-col items-center lg:items-start text-center lg:text-left">
               <Link to="/" preload="intent" className="flex items-center gap-2 mb-4">
-                <img src={logo} alt="KinderKidsSpace Logo" className="h-20 md:h-28 w-auto object-contain scale-125 md:scale-150 origin-left md:origin-center" />
+                <img src={logo} alt="KinderKidsSpace Logo" className="h-20 lg:h-28 w-auto object-contain scale-125 lg:scale-150 origin-center lg:origin-left" />
               </Link>
-              <p className="text-muted-foreground font-body text-sm max-w-xs">
+              <p className="text-muted-foreground font-body text-sm max-w-xs px-4 lg:px-0">
                 Making learning fun, interactive, and engaging for little champions everywhere!
               </p>
             </div>
 
             {/* Quick Links */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="font-display font-bold text-foreground text-lg mb-4">
+            <div className="col-span-1 flex flex-col items-start text-left pl-2 md:pl-8 lg:pl-0">
+              <h3 className="font-display font-bold text-foreground text-lg mb-4 flex items-center gap-2">
                 🚀 Quick Links
               </h3>
               <div className="flex flex-col gap-3">
@@ -378,8 +375,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </div>
 
             {/* More Games */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="font-display font-bold text-foreground text-lg mb-4">🎯 More Games</h3>
+            <div className="col-span-1 flex flex-col items-start text-left pl-2 md:pl-8 lg:pl-0">
+              <h3 className="font-display font-bold text-foreground text-lg mb-4 flex items-center gap-2">
+                🎯 More Games
+              </h3>
               <div className="flex flex-col gap-3">
                 {navItems.slice(5).map((item) => (
                   <Link
@@ -397,19 +396,21 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </div>
 
             {/* Features */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="font-display font-bold text-foreground text-lg mb-4">⭐ Features</h3>
+            <div className="col-span-2 lg:col-span-1 flex flex-col items-center lg:items-start text-center lg:text-left mt-4 lg:mt-0">
+              <h3 className="font-display font-bold text-foreground text-lg mb-4 flex items-center gap-2">
+                ⭐ Features
+              </h3>
               <ul className="flex flex-col gap-3 text-muted-foreground font-body text-sm">
-                <li className="flex items-center justify-center md:justify-start gap-2">
+                <li className="flex items-center justify-start gap-2">
                   <Volume2 className="w-4 h-4 text-kid-blue" /> Voice assistance
                 </li>
-                <li className="flex items-center justify-center md:justify-start gap-2">
+                <li className="flex items-center justify-start gap-2">
                   <Music className="w-4 h-4 text-kid-pink" /> Sound effects
                 </li>
-                <li className="flex items-center justify-center md:justify-start gap-2">
+                <li className="flex items-center justify-start gap-2">
                   <Gamepad2 className="w-4 h-4 text-kid-green" /> Interactive games
                 </li>
-                <li className="flex items-center justify-center md:justify-start gap-2">
+                <li className="flex items-center justify-start gap-2">
                   <Trophy className="w-4 h-4 text-kid-yellow" /> Progress tracking
                 </li>
               </ul>

@@ -63,7 +63,7 @@ function ProfilePage() {
           
           <button
             onClick={logout}
-            className="text-muted-foreground hover:text-kid-red transition-colors font-bold font-body underline"
+            className="mt-2 w-full md:w-auto px-8 py-3 rounded-xl border-2 border-slate-200 text-slate-500 hover:border-kid-red hover:bg-kid-red/10 hover:text-kid-red transition-all font-bold text-base flex items-center justify-center mx-auto"
           >
             Sign Out
           </button>

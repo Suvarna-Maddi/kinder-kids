@@ -23,6 +23,22 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleResetPassword = async () => {
+    if (!formData.email) {
+      toast.error("Please enter your email first to reset your password.");
+      return;
+    }
+    try {
+      const { sendPasswordResetEmail } = await import("firebase/auth");
+      const { auth } = await import("../lib/firebase");
+      await sendPasswordResetEmail(auth, formData.email);
+      toast.success("Password reset email sent! Please check your inbox.");
+    } catch (error: any) {
+      console.error("Password reset error:", error);
+      toast.error("Failed to send password reset email. Make sure the email is valid.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -36,14 +52,34 @@ function Login() {
     }
 
     try {
-      const response = await loginUser({ data: formData });
-      if (response.success) {
-        toast.success(`Welcome back, ${response.username}!`);
-        login(String(response.userId), String(response.username));
-        window.location.href = "/profile";
+      const { signInWithEmailAndPassword } = await import("firebase/auth");
+      const { auth, db } = await import("../lib/firebase");
+      const { doc, updateDoc, serverTimestamp } = await import("firebase/firestore");
+
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+
+      // Update lastLogin
+      try {
+        await updateDoc(doc(db, "users", user.uid), {
+          lastLogin: serverTimestamp()
+        });
+      } catch (err) {
+        console.error("Could not update lastLogin:", err);
       }
+
+      toast.success(`Welcome back!`);
+      login(user.uid, user.displayName || "Champion");
+      window.location.href = "/profile";
     } catch (error: any) {
-      toast.error(error.message || "Invalid email or password.");
+      console.error("Login error:", error);
+      let errorMessage = "Invalid email or password.";
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        errorMessage = "Invalid email or password.";
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = "Too many failed attempts. Please try again later.";
+      }
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -88,9 +124,18 @@ function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-foreground mb-1 ml-1" htmlFor="password">
-              Secret Password
-            </label>
+            <div className="flex justify-between items-center mb-1 ml-1 pr-1">
+              <label className="block text-sm font-bold text-foreground" htmlFor="password">
+                Secret Password
+              </label>
+              <button 
+                type="button" 
+                onClick={handleResetPassword}
+                className="text-xs text-primary hover:underline font-bold"
+              >
+                Forgot Password?
+              </button>
+            </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-muted-foreground" />

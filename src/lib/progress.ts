@@ -1,24 +1,26 @@
-// Kid learning progress persisted to localStorage. Reactive via a small pub/sub.
-
 import { useEffect, useState } from "react";
+import { auth, db } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, onSnapshot, updateDoc, serverTimestamp } from "firebase/firestore";
 
 export type Progress = {
-  lettersLearned: string[]; // e.g. ["A", "B"]
-  numbersLearned: number[]; // e.g. [1, 2, 15]
-  tablesCompleted: number[]; // e.g. [2, 5]
+  lettersLearned: string[];
+  numbersLearned: number[];
+  tablesCompleted: number[];
   gamesCompleted: number;
   stars: number;
   coins: number;
-  badges: string[]; // slugs
+  badges: string[];
   streakDays: number;
-  lastActiveDate: string | null; // YYYY-MM-DD
+  longestStreak: number;
+  lastActiveDate: string | null;
   correct: number;
   attempts: number;
   isPremium: boolean;
   premiumPopupShown: boolean;
+  level: number;
 };
 
-const KEY = "lp.progress.v1";
 const DEFAULTS: Progress = {
   lettersLearned: [],
   numbersLearned: [],
@@ -28,54 +30,133 @@ const DEFAULTS: Progress = {
   coins: 0,
   badges: [],
   streakDays: 0,
+  longestStreak: 0,
   lastActiveDate: null,
   correct: 0,
   attempts: 0,
   isPremium: false,
   premiumPopupShown: false,
+  level: 1,
 };
 
-let state: Progress = load();
+let state: Progress = { ...DEFAULTS };
 const listeners = new Set<(p: Progress) => void>();
+let currentUserId: string | null = null;
+let isLoadedFromCloud = false;
 
-function load(): Progress {
-  if (typeof window === "undefined") return DEFAULTS;
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return DEFAULTS;
-    return { ...DEFAULTS, ...JSON.parse(raw) };
-  } catch {
-    return DEFAULTS;
-  }
-}
-function persist() {
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify(state));
-  } catch {
-    /* ignore */
-  }
-}
-function set(patch: Partial<Progress>) {
-  state = { ...state, ...patch };
-  persist();
+let unsubscribeSnapshot: (() => void) | null = null;
+
+function notifyListeners() {
   listeners.forEach((fn) => fn(state));
 }
 
-const today = () => new Date().toISOString().slice(0, 10);
+// Watch Auth State only on the client
+if (typeof window !== 'undefined') {
+  onAuthStateChanged(auth, (user) => {
+    if (unsubscribeSnapshot) {
+      unsubscribeSnapshot();
+      unsubscribeSnapshot = null;
+    }
+
+    if (user) {
+      currentUserId = user.uid;
+      const docRef = doc(db, "users", user.uid);
+      
+      // Real-time listener for cross-device sync
+      unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
+        // Ignore local writes that haven't hit the server yet, as we already updated local state synchronously in set()
+        if (docSnap.metadata.hasPendingWrites) return;
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          state = {
+            ...DEFAULTS,
+            lettersLearned: data.alphabetProgress?.lettersLearned || [],
+            numbersLearned: data.numbersProgress?.numbersLearned || [],
+            tablesCompleted: data.mathProgress?.tablesCompleted || [],
+            gamesCompleted: data.playzoneProgress?.gamesCompleted || 0,
+            stars: data.stars || 0,
+            coins: data.coins || 0,
+            badges: data.achievements || [],
+            streakDays: data.streakDays || 0,
+            longestStreak: data.longestStreak || 0,
+            lastActiveDate: data.lastActiveDate || null,
+            correct: data.quizScores?.correct || 0,
+            attempts: data.quizScores?.attempts || 0,
+            isPremium: data.isPremium || false,
+            premiumPopupShown: data.premiumPopupShown || false,
+            level: data.level || 1,
+          };
+          isLoadedFromCloud = true;
+          touchStreak(); // Will recalculate streak on login if needed
+          notifyListeners();
+        }
+      }, (err) => {
+        console.error("Error listening to progress from Firestore", err);
+      });
+
+    } else {
+      currentUserId = null;
+      state = { ...DEFAULTS };
+      isLoadedFromCloud = false;
+      notifyListeners();
+    }
+  });
+}
+
+async function syncToCloud() {
+  if (!currentUserId || !isLoadedFromCloud) return;
+  try {
+    const docRef = doc(db, "users", currentUserId);
+    await updateDoc(docRef, {
+      stars: state.stars,
+      coins: state.coins,
+      level: state.level,
+      achievements: state.badges,
+      streakDays: state.streakDays,
+      longestStreak: state.longestStreak,
+      lastActiveDate: state.lastActiveDate,
+      isPremium: state.isPremium,
+      premiumPopupShown: state.premiumPopupShown,
+      updatedAt: serverTimestamp(),
+      'alphabetProgress.lettersLearned': state.lettersLearned,
+      'numbersProgress.numbersLearned': state.numbersLearned,
+      'mathProgress.tablesCompleted': state.tablesCompleted,
+      'playzoneProgress.gamesCompleted': state.gamesCompleted,
+      'quizScores.correct': state.correct,
+      'quizScores.attempts': state.attempts,
+    });
+  } catch (err) {
+    console.error("Error syncing progress to Firestore", err);
+  }
+}
+
+function set(patch: Partial<Progress>) {
+  state = { ...state, ...patch };
+  notifyListeners();
+  syncToCloud();
+}
+
+const today = () => new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD local
 
 export const touchStreak = () => {
   const t = today();
   if (state.lastActiveDate === t) return;
-  const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
-  const streak = state.lastActiveDate === yesterday ? state.streakDays + 1 : 1;
   
-  // Check for 11-day premium unlock
-  let premiumPatch = {};
-  if (streak >= 11 && !state.isPremium) {
-    premiumPatch = { isPremium: true, premiumPopupShown: false };
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterday = yesterdayDate.toLocaleDateString("en-CA");
+  
+  let newStreak = state.lastActiveDate === yesterday ? state.streakDays + 1 : 1;
+  let newLongest = Math.max(state.longestStreak, newStreak);
+  
+  // Premium popup trigger at 10 days
+  let popupPatch = {};
+  if (newStreak >= 10 && !state.premiumPopupShown) {
+    popupPatch = { premiumPopupShown: false }; // Wait, if it triggers it shouldn't auto-set to true until shown, but logic says trigger when >= 10 and false. We don't change it here, the UI will change it.
   }
 
-  set({ lastActiveDate: t, streakDays: streak, ...premiumPatch });
+  set({ lastActiveDate: t, streakDays: newStreak, longestStreak: newLongest, ...popupPatch });
 };
 
 export const dismissPremiumPopup = () => {
