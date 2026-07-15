@@ -21,6 +21,7 @@ import { Route as PlayzoneRouteImport } from './routes/playzone'
 import { Route as NumbersRouteImport } from './routes/numbers'
 import { Route as MathRouteImport } from './routes/math'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AlphabetsRouteImport } from './routes/alphabets'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -84,6 +85,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlphabetsRoute = AlphabetsRouteImport.update({
   id: '/alphabets',
   path: '/alphabets',
@@ -98,6 +104,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alphabets': typeof AlphabetsRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/math': typeof MathRoute
   '/numbers': typeof NumbersRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alphabets': typeof AlphabetsRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/math': typeof MathRoute
   '/numbers': typeof NumbersRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alphabets': typeof AlphabetsRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/math': typeof MathRoute
   '/numbers': typeof NumbersRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alphabets'
+    | '/dashboard'
     | '/login'
     | '/math'
     | '/numbers'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/alphabets'
+    | '/dashboard'
     | '/login'
     | '/math'
     | '/numbers'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/alphabets'
+    | '/dashboard'
     | '/login'
     | '/math'
     | '/numbers'
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlphabetsRoute: typeof AlphabetsRoute
+  DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   MathRoute: typeof MathRoute
   NumbersRoute: typeof NumbersRoute
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alphabets': {
       id: '/alphabets'
       path: '/alphabets'
@@ -318,6 +338,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlphabetsRoute: AlphabetsRoute,
+  DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   MathRoute: MathRoute,
   NumbersRoute: NumbersRoute,

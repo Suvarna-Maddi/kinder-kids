@@ -7,6 +7,7 @@ export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [gender, setGender] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -20,8 +21,10 @@ export function useAuth() {
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             setUsername(userDoc.data().name);
+            setGender(userDoc.data().gender || null);
           } else {
             setUsername(user.displayName || "Champion");
+            setGender(null);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -31,6 +34,7 @@ export function useAuth() {
         setIsAuthenticated(false);
         setUserId(null);
         setUsername(null);
+        setGender(null);
       }
       setIsLoading(false);
     });
@@ -52,5 +56,5 @@ export function useAuth() {
     }
   };
 
-  return { isAuthenticated, userId, username, isLoading, login, logout };
+  return { isAuthenticated, userId, username, gender, isLoading, login, logout };
 }

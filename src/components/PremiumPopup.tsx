@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Trophy, X, Star, Crown } from "lucide-react";
 import { useProgress, dismissPremiumPopup } from "@/lib/progress";
 import confetti from "canvas-confetti"; // We will try to use it if installed, otherwise we can ignore. 
+import { auth } from "@/lib/firebase";
 
 export const PremiumPopup = () => {
   const progress = useProgress();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // Admin bypass
+    if (auth.currentUser?.email?.toLowerCase() === "kinderkidsspace@gmail.com") return;
+
     if (progress.isPremium && !progress.premiumPopupShown) {
       setShow(true);
       // Trigger a confetti explosion for the celebration

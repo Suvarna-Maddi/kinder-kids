@@ -19,6 +19,7 @@ function Signup() {
     email: "",
     phone_number: "",
     password: "",
+    gender: "boy"
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +48,7 @@ function Signup() {
         name: formData.username,
         email: formData.email,
         phone_number: formData.phone_number,
+        gender: formData.gender,
         coins: 0,
         stars: 0,
         level: 1,
@@ -58,7 +60,7 @@ function Signup() {
 
       toast.success("Welcome! Your account has been created.");
       login(user.uid, formData.username); // Keep for compatibility
-      window.location.href = "/profile";
+      window.location.href = "/dashboard";
     } catch (error: any) {
       console.error("Signup error:", error);
       let errorMessage = "Something went wrong. Please try again.";
@@ -171,6 +173,28 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
               />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-foreground mb-1 ml-1">
+              Select Avatar
+            </label>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, gender: "boy" }))}
+                className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all border-2 ${formData.gender === 'boy' ? 'bg-kid-blue/20 border-kid-blue text-kid-blue' : 'bg-muted/50 border-transparent text-muted-foreground hover:bg-muted'}`}
+              >
+                👦 Boy
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, gender: "girl" }))}
+                className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all border-2 ${formData.gender === 'girl' ? 'bg-kid-pink/20 border-kid-pink text-kid-pink' : 'bg-muted/50 border-transparent text-muted-foreground hover:bg-muted'}`}
+              >
+                👧 Girl
+              </button>
             </div>
           </div>
 

@@ -26,6 +26,8 @@ import {
 import { PremiumPopup } from "./PremiumPopup";
 import { useAuth } from "../lib/auth-client";
 import logo from "@/assets/logo.png";
+import avatarBoy from "@/assets/avatar_boy.png";
+import avatarGirl from "@/assets/avatar_girl.png";
 
 const navItems = [
   { path: "/", label: "Home", icon: Home, color: "text-kid-blue" },
@@ -67,9 +69,14 @@ const FloatingParticles = () => {
 const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
+  const { isAuthenticated, username, gender, isLoading, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { isAuthenticated, username, isLoading, logout } = useAuth();
+  
+  const getAvatar = () => {
+    if (gender === 'girl') return avatarGirl;
+    return avatarBoy;
+  };
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -134,6 +141,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     <div className="min-h-screen bg-background relative">
       <PremiumPopup />
 
+      {pathname !== '/dashboard' && (
       <motion.nav
         initial={{ y: -80 }}
         animate={{ y: 0 }}
@@ -215,9 +223,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-kid-blue/10 hover:bg-kid-blue/20 transition-colors border border-kid-blue/20 rounded-full cursor-pointer focus:outline-none"
+                  className="flex items-center gap-2 px-2 py-1 bg-kid-blue/10 hover:bg-kid-blue/20 transition-colors border border-kid-blue/20 rounded-full cursor-pointer focus:outline-none"
                 >
-                  <UserCircle2 className="w-5 h-5 text-kid-blue" />
+                  <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center overflow-hidden border border-kid-blue/20">
+                    <img src={getAvatar()} alt="Profile" className="w-[120%] h-[120%] object-cover pt-1" />
+                  </div>
                   <span className="font-display font-bold text-sm text-foreground">
                     {username || "Kid"}
                   </span>
@@ -328,6 +338,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </motion.div>
         )}
       </motion.nav>
+      )}
 
       <motion.main
         key={pathname}
@@ -340,6 +351,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         {children}
       </motion.main>
 
+      {pathname !== '/dashboard' && (
       <footer className="relative z-10 border-t border-border bg-card/80 backdrop-blur-md mt-10">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-12">
@@ -427,6 +439,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
       </footer>
+      )}
     </div>
   );
 };

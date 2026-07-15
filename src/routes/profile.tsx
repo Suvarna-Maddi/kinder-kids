@@ -3,14 +3,22 @@ import { useAuth } from "../lib/auth-client";
 import { motion } from "framer-motion";
 import { UserCircle2, Trophy, Star, Sparkles } from "lucide-react";
 import { useProgress } from "../lib/progress";
+import avatarBoy from "@/assets/avatar_boy.png";
+import avatarGirl from "@/assets/avatar_girl.png";
+import dBear from "@/assets/d_bear.png";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
 function ProfilePage() {
-  const { username, logout } = useAuth();
+  const { username, gender, logout } = useAuth();
   const { streakDays, stars } = useProgress();
+
+  const getAvatar = () => {
+    if (gender === 'girl') return avatarGirl;
+    return avatarBoy;
+  };
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
@@ -26,9 +34,13 @@ function ProfilePage() {
         <div className="flex flex-col items-center text-center relative z-10">
           <motion.div
             whileHover={{ rotate: 10, scale: 1.1 }}
-            className="w-32 h-32 bg-kid-blue/20 rounded-full flex items-center justify-center mb-6 shadow-inner border-4 border-kid-blue/30"
+            className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-6 shadow-[0_10px_30px_rgba(0,0,0,0.1)] border-4 border-white overflow-hidden relative"
           >
-            <UserCircle2 className="w-20 h-20 text-kid-blue" />
+            <img 
+              src={getAvatar()} 
+              alt="Avatar" 
+              className="w-[120%] h-[120%] object-cover absolute top-[5px]" 
+            />
           </motion.div>
 
           <h1 className="text-4xl font-display font-bold text-foreground mb-2">

@@ -47,7 +47,7 @@ function Login() {
     if (formData.email.trim() === 'admin' && formData.password === 'admin') {
       toast.success("Welcome back, Admin!");
       login("admin_id", "Admin");
-      window.location.href = "/profile";
+      window.location.href = "/dashboard";
       return;
     }
 
@@ -70,7 +70,7 @@ function Login() {
 
       toast.success(`Welcome back!`);
       login(user.uid, user.displayName || "Champion");
-      window.location.href = "/profile";
+      window.location.href = "/dashboard";
     } catch (error: any) {
       console.error("Login error:", error);
       let errorMessage = "Invalid email or password.";

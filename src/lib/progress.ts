@@ -140,6 +140,9 @@ function set(patch: Partial<Progress>) {
 const today = () => new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD local
 
 export const touchStreak = () => {
+  // Bypass streak calculation for admin
+  if (auth.currentUser?.email?.toLowerCase() === "kinderkidsspace@gmail.com") return;
+
   const t = today();
   if (state.lastActiveDate === t) return;
   
