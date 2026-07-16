@@ -9,6 +9,22 @@ import dBear from "@/assets/d_bear.png";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
+  head: () => {
+    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/profile";
+    
+    return {
+      meta: [
+        { title: "My Profile | KinderKidsSpace" },
+        { name: "description", content: "View your personal learning dashboard and profile settings." },
+        { property: "og:title", content: "My Profile | KinderKidsSpace" },
+        { property: "og:url", content: canonicalUrl },
+        { name: "robots", content: "noindex, nofollow" }
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl }
+      ]
+    };
+  },
 });
 
 function ProfilePage() {

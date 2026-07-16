@@ -8,6 +8,21 @@ import { Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   component: Login,
+  head: () => {
+    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/login";
+    
+    return {
+      meta: [
+        { title: "Login | KinderKidsSpace" },
+        { name: "description", content: "Login to KinderKidsSpace to continue your learning adventure." },
+        { property: "og:title", content: "Login | KinderKidsSpace" },
+        { property: "og:url", content: canonicalUrl },
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl }
+      ]
+    };
+  },
 });
 
 function Login() {

@@ -52,7 +52,10 @@ const Index = () => {
             </h1>
             <img 
               src={heroImg} 
-              alt="Magical Book Adventure" 
+              alt="Magical Book Adventure"
+              width="192"
+              height="192"
+              loading="lazy"
               className="w-36 sm:w-48 h-auto object-contain drop-shadow-lg md:hidden" 
               style={{ 
                 maskImage: 'radial-gradient(circle at center, black 60%, transparent 80%)',
@@ -91,7 +94,10 @@ const Index = () => {
         <div className="hidden md:flex w-full md:w-1/2 relative mt-16 md:mt-0 justify-center">
           <img 
             src={heroImg} 
-            alt="Magical Book Adventure" 
+            alt="Magical Book Adventure Desktop" 
+            width="600"
+            height="600"
+            loading="lazy"
             className="w-full max-w-[600px] h-auto object-contain drop-shadow-lg relative z-10" 
             style={{ 
               maskImage: 'radial-gradient(circle at center, black 55%, transparent 75%)',
@@ -108,7 +114,10 @@ const Index = () => {
           <div className="hidden md:block w-full md:w-1/2 p-4 mt-16 md:mt-64">
             <img 
               src={storyImg} 
-              alt="Dragon Story" 
+              alt="Dragon Story Educational Reading"
+              width="700"
+              height="500"
+              loading="lazy"
               className="w-full h-auto shadow-[0_20px_50px_rgba(0,0,0,0.15)] object-cover" 
               style={{ borderRadius: '100px 30px 100px 30px' }} 
             />
@@ -117,7 +126,7 @@ const Index = () => {
           {/* Right: Parchment Paper Style Card */}
           <div className="w-full md:w-1/2 relative flex items-center justify-center bg-[#FCF9EE]">
             {/* The Parchment Background Image - Normal height now that text is short */}
-            <img src={parchmentImg} alt="Parchment" className="w-full h-[550px] md:h-[950px] block object-fill mix-blend-multiply" />
+            <img src={parchmentImg} alt="Parchment Background for Text" width="700" height="950" loading="lazy" className="w-full h-[550px] md:h-[950px] block object-fill mix-blend-multiply" />
             
             {/* The Text Overlay Safe Area */}
             <div className="absolute top-[18%] md:top-[28%] bottom-[15%] md:bottom-[28%] left-[18%] right-[18%] flex flex-col justify-center items-center text-center overflow-y-auto scrollbar-hide">
@@ -149,7 +158,7 @@ const Index = () => {
               {exploreCards.map((card, idx) => (
                 <div key={`set1-${card.id}-${idx}`} className="min-w-[260px] max-w-[260px] bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-all">
                   <div className={`w-full h-40 bg-gradient-to-b ${card.bg} rounded-2xl mb-4 flex items-center justify-center p-4`}>
-                    <img src={card.img} alt={card.title} className="w-full h-full object-contain drop-shadow-md hover:scale-110 transition-transform" />
+                    <img src={card.img} alt={card.title} width="128" height="128" loading="lazy" className="w-full h-full object-contain drop-shadow-md hover:scale-110 transition-transform" />
                   </div>
                   <h3 className="font-bold text-[#1E293B] mb-2 text-lg">{card.title}</h3>
                   <p className="text-xs text-gray-500 mb-4 h-10">{card.desc}</p>

@@ -28,6 +28,24 @@ import imgPlayzone from "@/assets/d_controller.png";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
+  head: () => {
+    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/dashboard";
+    
+    return {
+      meta: [
+        { title: "Dashboard | KinderKidsSpace" },
+        { name: "description", content: "Track your learning progress, view achievements, and continue your educational journey." },
+        { property: "og:title", content: "Dashboard | KinderKidsSpace" },
+        { property: "og:description", content: "Track your learning progress, view achievements, and continue your educational journey." },
+        { property: "og:url", content: canonicalUrl },
+        { property: "og:type", content: "website" },
+        { name: "robots", content: "noindex, nofollow" }
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl }
+      ]
+    };
+  },
 });
 
 const SIDEBAR_ITEMS = [
@@ -62,9 +80,8 @@ function Dashboard() {
   const [showMoreMobile, setShowMoreMobile] = useState(false);
 
   const getAvatar = () => {
-    if (gender === 'boy') return avatarBoy;
     if (gender === 'girl') return avatarGirl;
-    return readingBear;
+    return avatarBoy;
   };
 
   // Colors

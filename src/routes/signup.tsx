@@ -8,6 +8,21 @@ import { useAuth } from "../lib/auth-client";
 
 export const Route = createFileRoute("/signup")({
   component: Signup,
+  head: () => {
+    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/signup";
+    
+    return {
+      meta: [
+        { title: "Sign Up | KinderKidsSpace" },
+        { name: "description", content: "Create an account for KinderKidsSpace to unlock unlimited fun learning activities." },
+        { property: "og:title", content: "Sign Up | KinderKidsSpace" },
+        { property: "og:url", content: canonicalUrl },
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl }
+      ]
+    };
+  },
 });
 
 function Signup() {

@@ -154,7 +154,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
             >
-              <img src={logo} alt="KinderKidsSpace Logo" className="h-10 md:h-12 w-auto object-contain scale-125 origin-left" />
+              <img src={logo} alt="KinderKidsSpace Logo" width="48" height="48" loading="lazy" className="h-10 md:h-12 w-auto object-contain scale-125 origin-left" />
             </motion.div>
             <span className="font-display font-extrabold text-lg sm:text-xl md:text-2xl tracking-tight bg-[linear-gradient(to_right,#F43F5E,#F97316,#EAB308,#22C55E,#3B82F6,#8B5CF6,#D946EF)] bg-clip-text text-transparent drop-shadow-sm">
               KinderKidsSpace
@@ -226,7 +226,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   className="flex items-center gap-2 px-2 py-1 bg-kid-blue/10 hover:bg-kid-blue/20 transition-colors border border-kid-blue/20 rounded-full cursor-pointer focus:outline-none"
                 >
                   <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center overflow-hidden border border-kid-blue/20">
-                    <img src={getAvatar()} alt="Profile" className="w-[120%] h-[120%] object-cover pt-1" />
+                    <img src={getAvatar()} alt="User Profile Avatar" width="32" height="32" loading="lazy" className="w-[120%] h-[120%] object-cover pt-1" />
                   </div>
                   <span className="font-display font-bold text-sm text-foreground">
                     {username || "Kid"}

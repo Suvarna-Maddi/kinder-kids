@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://Suvarna-Maddi.github.io/kinder-kids/sitemap.xml
