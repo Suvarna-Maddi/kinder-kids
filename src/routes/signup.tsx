@@ -47,7 +47,7 @@ function Signup() {
 
     try {
       // 1. Create Firebase Auth User
-      const { createUserWithEmailAndPassword, updateProfile } = await import("firebase/auth");
+      const { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } = await import("firebase/auth");
       const { auth, db } = await import("../lib/firebase");
       const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
       
@@ -57,11 +57,15 @@ function Signup() {
       // 2. Update Auth Profile
       await updateProfile(user, { displayName: formData.username });
 
+      // Send Email Verification
+      await sendEmailVerification(user);
+
       // 3. Create Firestore Document
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: formData.username,
         email: formData.email,
+        emailVerified: false,
         phone_number: formData.phone_number,
         gender: formData.gender,
         coins: 0,
@@ -73,9 +77,11 @@ function Signup() {
         lastLogin: serverTimestamp()
       });
 
-      toast.success("Welcome! Your account has been created.");
-      login(user.uid, formData.username); // Keep for compatibility
-      window.location.href = "/dashboard";
+      // Force sign out so they can't bypass verification
+      await signOut(auth);
+
+      toast.success("Account created successfully! Please verify your email by clicking the link we sent before signing in.", { duration: 8000 });
+      navigate({ to: "/login" });
     } catch (error: any) {
       console.error("Signup error:", error);
       let errorMessage = "Something went wrong. Please try again.";

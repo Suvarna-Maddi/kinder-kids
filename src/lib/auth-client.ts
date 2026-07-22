@@ -12,7 +12,7 @@ export function useAuth() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+      if (user && user.emailVerified) {
         setIsAuthenticated(true);
         setUserId(user.uid);
         
@@ -31,6 +31,11 @@ export function useAuth() {
           setUsername(user.displayName || "Champion");
         }
       } else {
+        if (user && !user.emailVerified) {
+          // If they happen to be logged in but not verified, we can sign them out or just keep them unauthenticated
+          // However, keeping them signed in Firebase allows them to resend verification without re-entering password.
+          // We just don't grant them app access (isAuthenticated = false)
+        }
         setIsAuthenticated(false);
         setUserId(null);
         setUsername(null);

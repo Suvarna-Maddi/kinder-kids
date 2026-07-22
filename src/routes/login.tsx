@@ -54,9 +54,41 @@ function Login() {
     }
   };
 
+  const [unverifiedUser, setUnverifiedUser] = useState<any>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  const handleResendVerification = async () => {
+    if (!unverifiedUser) return;
+    if (resendCooldown > 0) {
+      toast.error(`Please wait ${resendCooldown} seconds before resending.`);
+      return;
+    }
+    
+    try {
+      const { sendEmailVerification } = await import("firebase/auth");
+      await sendEmailVerification(unverifiedUser);
+      toast.success("Verification email resent! Please check your inbox.");
+      setResendCooldown(60);
+      
+      const timer = setInterval(() => {
+        setResendCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.error("Resend error:", error);
+      toast.error("Failed to resend email. Please try again later.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setUnverifiedUser(null);
 
     // Admin backdoor
     if (formData.email.trim() === 'admin' && formData.password === 'admin') {
@@ -74,10 +106,18 @@ function Login() {
       const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
 
+      if (!user.emailVerified) {
+        setUnverifiedUser(user);
+        toast.error("Please verify your email before signing in.");
+        setLoading(false);
+        return;
+      }
+
       // Update lastLogin
       try {
         await updateDoc(doc(db, "users", user.uid), {
-          lastLogin: serverTimestamp()
+          lastLogin: serverTimestamp(),
+          emailVerified: true // Ensure Firestore matches the verified status
         });
       } catch (err) {
         console.error("Could not update lastLogin:", err);
@@ -183,7 +223,22 @@ function Login() {
               </>
             )}
           </motion.button>
-        </form>
+            {unverifiedUser && (
+              <div className="mt-4 p-4 bg-orange-100 dark:bg-orange-950 border border-orange-300 dark:border-orange-800 rounded-xl text-center">
+                <p className="text-orange-800 dark:text-orange-200 text-sm mb-3">
+                  Check your inbox for the verification link.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resendCooldown > 0}
+                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
+                >
+                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend Verification Email"}
+                </button>
+              </div>
+            )}
+          </form>
 
         <p className="mt-8 text-center text-sm text-muted-foreground font-body">
           Don't have an account?{" "}
