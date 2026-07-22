@@ -154,6 +154,10 @@ import saturnImg from "@/assets/saturn.png";
 import uranusImg from "@/assets/uranus.png";
 import neptuneImg from "@/assets/neptune.png";
 import sunpImg from "@/assets/sunp.png";
+import hairImg from "@/assets/hair.png";
+import shankamImg from "@/assets/shankam.png";
+import musicImg from "@/assets/Music.png";
+import knowledgeImg from "@/assets/knowledge.png";
 
 export const IMG_MAP: Record<string, string> = {
   Tomato: tomatoImg,
@@ -271,6 +275,7 @@ export const IMG_MAP: Record<string, string> = {
   Uranus: uranusImg,
   Neptune: neptuneImg,
   // Telugu mappings
+  Braid: hairImg,
   Palace: aanthapuramImg,
   Fly: eegaImg,
   Squirrel: uduthaImg,
@@ -306,4 +311,7 @@ export const IMG_MAP: Record<string, string> = {
   Lock: thalamImg,
   Machine: yantramImg,
   Fruit: fruitsImg,
+  Shell: shankamImg,
+  Music: musicImg,
+  Knowledge: knowledgeImg,
 };

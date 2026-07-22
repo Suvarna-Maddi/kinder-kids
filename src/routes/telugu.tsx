@@ -70,12 +70,12 @@ export const TeluguAlphabetCard = memo(
             <img
               src={IMG_MAP[item.exampleMeaning]}
               alt={item.exampleMeaning}
-              className="w-16 h-16 object-contain"
+              className="w-24 h-24 object-contain"
               loading="lazy"
               decoding="async"
             />
           ) : (
-            <span className="text-4xl" role="img" aria-label={item.exampleMeaning}>
+            <span className="text-6xl" role="img" aria-label={item.exampleMeaning}>
               {item.exampleImage}
             </span>
           )}
@@ -142,8 +142,32 @@ function TeluguPage() {
         // Add small delay before pronouncing the word
         setTimeout(() => {
           const wordAudio = new Audio(getAudioUrl(true));
+          wordAudio.onerror = () => {
+            if ("speechSynthesis" in window) {
+              const utterance = new SpeechSynthesisUtterance(item.exampleWord);
+              utterance.lang = "te-IN";
+              window.speechSynthesis.speak(utterance);
+            }
+          };
           wordAudio.play().catch(console.error);
         }, 500);
+      }
+    };
+
+    letterAudio.onerror = () => {
+      if ("speechSynthesis" in window) {
+        const letterUtterance = new SpeechSynthesisUtterance(item.letter);
+        letterUtterance.lang = "te-IN";
+        letterUtterance.onend = () => {
+          if (item.exampleWord) {
+            setTimeout(() => {
+              const wordUtterance = new SpeechSynthesisUtterance(item.exampleWord);
+              wordUtterance.lang = "te-IN";
+              window.speechSynthesis.speak(wordUtterance);
+            }, 500);
+          }
+        };
+        window.speechSynthesis.speak(letterUtterance);
       }
     };
 
@@ -246,17 +270,17 @@ function TeluguPage() {
               </button>
 
               <div className="flex-1 flex flex-col items-center text-center">
-                <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4 shadow-inner">
+                <div className="w-32 h-32 bg-muted rounded-full flex items-center justify-center mb-4 shadow-inner">
                   {IMG_MAP[tracingLetter.exampleMeaning as keyof typeof IMG_MAP] ? (
                     <img
                       src={IMG_MAP[tracingLetter.exampleMeaning as keyof typeof IMG_MAP]}
                       alt={tracingLetter.exampleMeaning}
-                      className="w-16 h-16 object-contain"
+                      className="w-24 h-24 object-contain"
                       loading="lazy"
                       decoding="async"
                     />
                   ) : (
-                    <span className="text-5xl">{tracingLetter.exampleImage}</span>
+                    <span className="text-7xl">{tracingLetter.exampleImage}</span>
                   )}
                 </div>
                 <h2 className="text-3xl font-display font-bold text-foreground mb-1">
