@@ -10,7 +10,7 @@ import { Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/login")({
   component: Login,
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/login";
+    const canonicalUrl = "https://kinderkidsspace.in/login";
 
     return {
       meta: [

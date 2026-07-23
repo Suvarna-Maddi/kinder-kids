@@ -10,7 +10,7 @@ import { useAuth } from "../lib/auth-client";
 export const Route = createFileRoute("/signup")({
   component: Signup,
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/signup";
+    const canonicalUrl = "https://kinderkidsspace.in/signup";
 
     return {
       meta: [

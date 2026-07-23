@@ -39,7 +39,7 @@ import imgPlayzone from "@/assets/d_controller.png";
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/dashboard";
+    const canonicalUrl = "https://kinderkidsspace.in/dashboard";
 
     return {
       meta: [

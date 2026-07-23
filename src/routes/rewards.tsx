@@ -3,7 +3,7 @@ import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 export const Route = createFileRoute("/rewards")({
   component: lazyRouteComponent(() => import("@/features/Rewards")),
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/rewards";
+    const canonicalUrl = "https://kinderkidsspace.in/rewards";
 
     return {
       meta: [

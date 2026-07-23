@@ -4,7 +4,7 @@ import Index from "@/features/Index";
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/";
+    const canonicalUrl = "https://kinderkidsspace.in/";
 
     return {
       meta: [

@@ -77,27 +77,27 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/";
+    const canonicalUrl = "https://kinderkidsspace.in/";
     const schema = {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "EducationalOrganization",
-          "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#organization",
+          "@id": "https://kinderkidsspace.in/#organization",
           name: "KinderKidsSpace",
-          url: "https://Suvarna-Maddi.github.io/kinder-kids/",
-          logo: "https://Suvarna-Maddi.github.io/kinder-kids/favicon.png",
+          url: "https://kinderkidsspace.in/",
+          logo: "https://kinderkidsspace.in/favicon.png",
           description:
             "Interactive learning platform for kids with alphabets, numbers, games, tracing activities, and learning resources.",
           sameAs: [],
         },
         {
           "@type": "WebSite",
-          "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#website",
-          url: "https://Suvarna-Maddi.github.io/kinder-kids/",
+          "@id": "https://kinderkidsspace.in/#website",
+          url: "https://kinderkidsspace.in/",
           name: "KinderKidsSpace",
           publisher: {
-            "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#organization",
+            "@id": "https://kinderkidsspace.in/#organization",
           },
         },
       ],
@@ -131,7 +131,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:url", content: canonicalUrl },
         {
           property: "og:image",
-          content: "https://Suvarna-Maddi.github.io/kinder-kids/favicon.png",
+          content: "https://kinderkidsspace.in/favicon.png",
         },
         { name: "twitter:card", content: "summary_large_image" },
         {

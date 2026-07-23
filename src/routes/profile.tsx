@@ -10,7 +10,7 @@ import dBear from "@/assets/d_bear.png";
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/profile";
+    const canonicalUrl = "https://kinderkidsspace.in/profile";
 
     return {
       meta: [

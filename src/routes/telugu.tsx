@@ -10,7 +10,7 @@ import FreeDrawPad from "../components/learning/FreeDrawPad";
 export const Route = createFileRoute("/telugu")({
   component: TeluguPage,
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/telugu";
+    const canonicalUrl = "https://kinderkidsspace.in/telugu";
     const schema = {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/telugu")({
       provider: {
         "@type": "EducationalOrganization",
         name: "KinderKidsSpace",
-        sameAs: "https://Suvarna-Maddi.github.io/kinder-kids/",
+        sameAs: "https://kinderkidsspace.in/",
       },
     };
 

@@ -3,7 +3,7 @@ import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 export const Route = createFileRoute("/spelling")({
   component: lazyRouteComponent(() => import("@/features/SpellingGame")),
   head: () => {
-    const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/spelling";
+    const canonicalUrl = "https://kinderkidsspace.in/spelling";
     const schema = {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/spelling")({
       provider: {
         "@type": "EducationalOrganization",
         name: "KinderKidsSpace",
-        sameAs: "https://Suvarna-Maddi.github.io/kinder-kids/",
+        sameAs: "https://kinderkidsspace.in/",
       },
     };
 
