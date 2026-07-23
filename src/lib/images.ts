@@ -156,7 +156,7 @@ import neptuneImg from "@/assets/neptune.png";
 import sunpImg from "@/assets/sunp.png";
 import hairImg from "@/assets/hair.png";
 import shankamImg from "@/assets/shankam.png";
-import musicImg from "@/assets/Music.png";
+import musicImg from "@/assets/music.png";
 import knowledgeImg from "@/assets/knowledge.png";
 
 export const IMG_MAP: Record<string, string> = {
