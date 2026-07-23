@@ -84,11 +84,7 @@ function Signup() {
 
       // Send Email Verification (wrapped in try/catch to avoid breaking signup if rate limited)
       try {
-        const actionCodeSettings = {
-          url: window.location.origin + "/login",
-          handleCodeInApp: true,
-        };
-        await sendEmailVerification(user, actionCodeSettings);
+        await sendEmailVerification(user);
       } catch (emailError) {
         console.error("Could not send verification email immediately:", emailError);
       }
