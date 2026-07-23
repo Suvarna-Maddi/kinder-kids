@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Web Audio API sound effects for kid-friendly interactions
 const audioCtx = () => new (window.AudioContext || (window as any).webkitAudioContext)();
 

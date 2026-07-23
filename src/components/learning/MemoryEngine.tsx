@@ -42,7 +42,9 @@ export const MemoryEngine = ({
     setPick(null);
     setPhase("show");
     if (round === 0) {
-      speak("Let's play a memory game. I will show you some pictures. Look carefully.", { profile: "girl" });
+      speak("Let's play a memory game. I will show you some pictures. Look carefully.", {
+        profile: "girl",
+      });
       setTimeout(() => {
         setPhase("hide");
         speak("They are going away.", { profile: "girl" });
@@ -101,15 +103,26 @@ export const MemoryEngine = ({
   return (
     <div>
       <div className="flex justify-between mb-3 text-sm font-body text-muted-foreground">
-        <span>Round {round + 1} / {totalRounds}</span>
-        <span className="flex items-center gap-1 font-display font-bold text-foreground">🏆 {score}</span>
+        <span>
+          Round {round + 1} / {totalRounds}
+        </span>
+        <span className="flex items-center gap-1 font-display font-bold text-foreground">
+          🏆 {score}
+        </span>
       </div>
       {phase === "show" && (
         <div>
           <p className="text-center font-display font-bold mb-4 text-xl">Remember these!</p>
-          <div className={`grid ${count <= 4 ? "grid-cols-2" : "grid-cols-3 md:grid-cols-4"} gap-3`}>
+          <div
+            className={`grid ${count <= 4 ? "grid-cols-2" : "grid-cols-3 md:grid-cols-4"} gap-3`}
+          >
             {items.map((it) => (
-              <motion.div key={it.key} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="aspect-square">
+              <motion.div
+                key={it.key}
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="aspect-square"
+              >
                 <CardFace item={it} />
               </motion.div>
             ))}
@@ -117,32 +130,43 @@ export const MemoryEngine = ({
         </div>
       )}
       {phase === "hide" && (
-        <div className="text-center py-16 text-4xl font-display font-bold text-muted-foreground">✨ Hiding… ✨</div>
+        <div className="text-center py-16 text-4xl font-display font-bold text-muted-foreground">
+          ✨ Hiding… ✨
+        </div>
       )}
       {(phase === "ask" || phase === "result") && (
         <div>
           <p className="text-center font-display font-bold mb-4 text-xl">Which one is missing?</p>
-          <div className={`grid ${count <= 4 ? "grid-cols-2" : "grid-cols-3 md:grid-cols-4"} gap-3`}>
-            {items.filter((it) => it.key !== missing?.key).map((it) => {
-              const isAns = phase === "result" && missing?.key === it.key;
-              const isPick = pick?.key === it.key;
-              return (
-                <motion.button
-                  key={it.key}
-                  disabled={phase === "result"}
-                  whileHover={phase === "ask" ? { scale: 1.05 } : {}}
-                  onClick={() => choose(it)}
-                  animate={isAns ? { scale: [1, 1.05, 1] } : isPick && !isAns ? { x: [0, -5, 5, 0] } : {}}
-                  className={`aspect-square rounded-2xl overflow-hidden shadow-lg ${isAns ? "ring-4 ring-kid-green" : isPick ? "ring-4 ring-destructive" : ""}`}
-                >
-                  <CardFace item={it} />
-                </motion.button>
-              );
-            })}
+          <div
+            className={`grid ${count <= 4 ? "grid-cols-2" : "grid-cols-3 md:grid-cols-4"} gap-3`}
+          >
+            {items
+              .filter((it) => it.key !== missing?.key)
+              .map((it) => {
+                const isAns = phase === "result" && missing?.key === it.key;
+                const isPick = pick?.key === it.key;
+                return (
+                  <motion.button
+                    key={it.key}
+                    disabled={phase === "result"}
+                    whileHover={phase === "ask" ? { scale: 1.05 } : {}}
+                    onClick={() => choose(it)}
+                    animate={
+                      isAns ? { scale: [1, 1.05, 1] } : isPick && !isAns ? { x: [0, -5, 5, 0] } : {}
+                    }
+                    className={`aspect-square rounded-2xl overflow-hidden shadow-lg ${isAns ? "ring-4 ring-kid-green" : isPick ? "ring-4 ring-destructive" : ""}`}
+                  >
+                    <CardFace item={it} />
+                  </motion.button>
+                );
+              })}
           </div>
           {phase === "result" && (
             <div className="text-center mt-5">
-              <button onClick={next} className="bg-primary text-primary-foreground px-5 py-2 rounded-full font-display font-bold shadow">
+              <button
+                onClick={next}
+                className="bg-primary text-primary-foreground px-5 py-2 rounded-full font-display font-bold shadow"
+              >
                 {round + 1 >= totalRounds ? "Finish" : "Next round"}
               </button>
             </div>

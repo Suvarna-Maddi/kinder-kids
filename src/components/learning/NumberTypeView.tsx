@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, PlayCircle, CheckCircle, XCircle } from "lucide-react";

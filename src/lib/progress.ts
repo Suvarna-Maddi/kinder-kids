@@ -51,7 +51,7 @@ function notifyListeners() {
 }
 
 // Watch Auth State only on the client
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   onAuthStateChanged(auth, (user) => {
     if (unsubscribeSnapshot) {
       unsubscribeSnapshot();
@@ -61,40 +61,43 @@ if (typeof window !== 'undefined') {
     if (user) {
       currentUserId = user.uid;
       const docRef = doc(db, "users", user.uid);
-      
+
       // Real-time listener for cross-device sync
-      unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
-        // Ignore local writes that haven't hit the server yet, as we already updated local state synchronously in set()
-        if (docSnap.metadata.hasPendingWrites) return;
+      unsubscribeSnapshot = onSnapshot(
+        docRef,
+        (docSnap) => {
+          // Ignore local writes that haven't hit the server yet, as we already updated local state synchronously in set()
+          if (docSnap.metadata.hasPendingWrites) return;
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          state = {
-            ...DEFAULTS,
-            lettersLearned: data.alphabetProgress?.lettersLearned || [],
-            numbersLearned: data.numbersProgress?.numbersLearned || [],
-            tablesCompleted: data.mathProgress?.tablesCompleted || [],
-            gamesCompleted: data.playzoneProgress?.gamesCompleted || 0,
-            stars: data.stars || 0,
-            coins: data.coins || 0,
-            badges: data.achievements || [],
-            streakDays: data.streakDays || 0,
-            longestStreak: data.longestStreak || 0,
-            lastActiveDate: data.lastActiveDate || null,
-            correct: data.quizScores?.correct || 0,
-            attempts: data.quizScores?.attempts || 0,
-            isPremium: data.isPremium || false,
-            premiumPopupShown: data.premiumPopupShown || false,
-            level: data.level || 1,
-          };
-          isLoadedFromCloud = true;
-          touchStreak(); // Will recalculate streak on login if needed
-          notifyListeners();
-        }
-      }, (err) => {
-        console.error("Error listening to progress from Firestore", err);
-      });
-
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            state = {
+              ...DEFAULTS,
+              lettersLearned: data.alphabetProgress?.lettersLearned || [],
+              numbersLearned: data.numbersProgress?.numbersLearned || [],
+              tablesCompleted: data.mathProgress?.tablesCompleted || [],
+              gamesCompleted: data.playzoneProgress?.gamesCompleted || 0,
+              stars: data.stars || 0,
+              coins: data.coins || 0,
+              badges: data.achievements || [],
+              streakDays: data.streakDays || 0,
+              longestStreak: data.longestStreak || 0,
+              lastActiveDate: data.lastActiveDate || null,
+              correct: data.quizScores?.correct || 0,
+              attempts: data.quizScores?.attempts || 0,
+              isPremium: data.isPremium || false,
+              premiumPopupShown: data.premiumPopupShown || false,
+              level: data.level || 1,
+            };
+            isLoadedFromCloud = true;
+            touchStreak(); // Will recalculate streak on login if needed
+            notifyListeners();
+          }
+        },
+        (err) => {
+          console.error("Error listening to progress from Firestore", err);
+        },
+      );
     } else {
       currentUserId = null;
       state = { ...DEFAULTS };
@@ -119,12 +122,12 @@ async function syncToCloud() {
       isPremium: state.isPremium,
       premiumPopupShown: state.premiumPopupShown,
       updatedAt: serverTimestamp(),
-      'alphabetProgress.lettersLearned': state.lettersLearned,
-      'numbersProgress.numbersLearned': state.numbersLearned,
-      'mathProgress.tablesCompleted': state.tablesCompleted,
-      'playzoneProgress.gamesCompleted': state.gamesCompleted,
-      'quizScores.correct': state.correct,
-      'quizScores.attempts': state.attempts,
+      "alphabetProgress.lettersLearned": state.lettersLearned,
+      "numbersProgress.numbersLearned": state.numbersLearned,
+      "mathProgress.tablesCompleted": state.tablesCompleted,
+      "playzoneProgress.gamesCompleted": state.gamesCompleted,
+      "quizScores.correct": state.correct,
+      "quizScores.attempts": state.attempts,
     });
   } catch (err) {
     console.error("Error syncing progress to Firestore", err);
@@ -145,14 +148,14 @@ export const touchStreak = () => {
 
   const t = today();
   if (state.lastActiveDate === t) return;
-  
+
   const yesterdayDate = new Date();
   yesterdayDate.setDate(yesterdayDate.getDate() - 1);
   const yesterday = yesterdayDate.toLocaleDateString("en-CA");
-  
-  let newStreak = state.lastActiveDate === yesterday ? state.streakDays + 1 : 1;
-  let newLongest = Math.max(state.longestStreak, newStreak);
-  
+
+  const newStreak = state.lastActiveDate === yesterday ? state.streakDays + 1 : 1;
+  const newLongest = Math.max(state.longestStreak, newStreak);
+
   // Premium popup trigger at 10 days
   let popupPatch = {};
   if (newStreak >= 10 && !state.premiumPopupShown) {

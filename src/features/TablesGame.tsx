@@ -103,7 +103,7 @@ const TablesGame = () => {
     markTable(n);
     cancelSpeech();
     speak(`Table of ${n}.`, { profile: "girl" });
-    
+
     // Smoothly scroll down to the bottom where the table is rendered
     setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
   };
@@ -254,59 +254,59 @@ const TablesGame = () => {
             </div>
 
             {table !== null && (
-                <div
-                  className="mt-8 bg-card rounded-bubble shadow-2xl p-6 md:p-8 border border-border"
-                >
-                  <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-                    <h2 className="text-3xl font-display font-bold text-primary">
-                      Table of {table} ✨{" "}
-                      <span className="text-base text-muted-foreground">
-                        (× 1 to {range.toLocaleString()}
-                        {truncatedRows ? `, showing first ${MAX_RENDER_ROWS.toLocaleString()}` : ""}
-                        )
-                      </span>
-                    </h2>
-                    <button
-                      onClick={readWholeTable}
-                      className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full font-display font-bold shadow hover:scale-105 transition-transform"
-                    >
-                      <Volume2 className="w-4 h-4" />
-                      Read table aloud
-                    </button>
-                  </div>
-                  <div
-                    className={`grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-6 ${range > 20 ? "max-h-[420px] overflow-auto pr-2" : ""}`}
+              <div className="mt-8 bg-card rounded-bubble shadow-2xl p-6 md:p-8 border border-border">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+                  <h2 className="text-3xl font-display font-bold text-primary">
+                    Table of {table} ✨{" "}
+                    <span className="text-base text-muted-foreground">
+                      (× 1 to {range.toLocaleString()}
+                      {truncatedRows ? `, showing first ${MAX_RENDER_ROWS.toLocaleString()}` : ""})
+                    </span>
+                  </h2>
+                  <button
+                    onClick={readWholeTable}
+                    className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full font-display font-bold shadow hover:scale-105 transition-transform"
                   >
-                    {rows.map((n, idx) => (
-                      <button
-                        key={n}
-                        onClick={() => readOneRow(n)}
-                        className={`rounded-xl p-3 text-center font-display text-base md:text-lg text-foreground transition-colors animate-in fade-in slide-in-from-left-2 duration-300 ${
-                          playingRow === n
-                            ? "bg-accent/30 ring-2 ring-accent"
-                            : "bg-muted hover:bg-muted/70"
-                        }`}
-                        style={{ animationDelay: `${Math.min(idx, 30) * 20}ms`, animationFillMode: 'both' }}
-                      >
-                        {table} × {n} = <span className="font-bold text-primary">{table * n}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="text-center">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        playClick();
-                        startQuiz(table);
-                      }}
-                      className="bg-accent text-accent-foreground px-8 py-3 rounded-full font-display text-xl font-bold shadow-lg"
-                    >
-                      🎮 Take Quiz!
-                    </motion.button>
-                  </div>
+                    <Volume2 className="w-4 h-4" />
+                    Read table aloud
+                  </button>
                 </div>
-              )}
+                <div
+                  className={`grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-6 ${range > 20 ? "max-h-[420px] overflow-auto pr-2" : ""}`}
+                >
+                  {rows.map((n, idx) => (
+                    <button
+                      key={n}
+                      onClick={() => readOneRow(n)}
+                      className={`rounded-xl p-3 text-center font-display text-base md:text-lg text-foreground transition-colors animate-in fade-in slide-in-from-left-2 duration-300 ${
+                        playingRow === n
+                          ? "bg-accent/30 ring-2 ring-accent"
+                          : "bg-muted hover:bg-muted/70"
+                      }`}
+                      style={{
+                        animationDelay: `${Math.min(idx, 30) * 20}ms`,
+                        animationFillMode: "both",
+                      }}
+                    >
+                      {table} × {n} = <span className="font-bold text-primary">{table * n}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="text-center">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      playClick();
+                      startQuiz(table);
+                    }}
+                    className="bg-accent text-accent-foreground px-8 py-3 rounded-full font-display text-xl font-bold shadow-lg"
+                  >
+                    🎮 Take Quiz!
+                  </motion.button>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <motion.div

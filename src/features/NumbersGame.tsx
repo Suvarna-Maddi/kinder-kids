@@ -450,7 +450,7 @@ const NumbersGame = () => {
       { text: `${n}.`, profile: "girl" },
     ]);
     markNumber(n);
-    
+
     // Smoothly scroll back to the top where the details panel is displayed
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

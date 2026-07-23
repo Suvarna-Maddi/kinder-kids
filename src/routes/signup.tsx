@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { registerUser } from "../lib/auth";
@@ -10,17 +11,19 @@ export const Route = createFileRoute("/signup")({
   component: Signup,
   head: () => {
     const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/signup";
-    
+
     return {
       meta: [
         { title: "Sign Up | KinderKidsSpace" },
-        { name: "description", content: "Create an account for KinderKidsSpace to unlock unlimited fun learning activities." },
+        {
+          name: "description",
+          content:
+            "Create an account for KinderKidsSpace to unlock unlimited fun learning activities.",
+        },
         { property: "og:title", content: "Sign Up | KinderKidsSpace" },
         { property: "og:url", content: canonicalUrl },
       ],
-      links: [
-        { rel: "canonical", href: canonicalUrl }
-      ]
+      links: [{ rel: "canonical", href: canonicalUrl }],
     };
   },
 });
@@ -34,7 +37,7 @@ function Signup() {
     email: "",
     phone_number: "",
     password: "",
-    gender: "boy"
+    gender: "boy",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,16 +50,20 @@ function Signup() {
 
     try {
       // 1. Create Firebase Auth User
-      const { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } = await import("firebase/auth");
+      const { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } =
+        await import("firebase/auth");
       const { auth, db } = await import("../lib/firebase");
       const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
-      
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
       const user = userCredential.user;
 
       // 2. Update Auth Profile
       await updateProfile(user, { displayName: formData.username });
-
 
       // 3. Create Firestore Document
       await setDoc(doc(db, "users", user.uid), {
@@ -72,13 +79,13 @@ function Signup() {
         achievements: [],
         completedLessons: [],
         createdAt: serverTimestamp(),
-        lastLogin: serverTimestamp()
+        lastLogin: serverTimestamp(),
       });
 
       // Send Email Verification (wrapped in try/catch to avoid breaking signup if rate limited)
       try {
         const actionCodeSettings = {
-          url: window.location.origin + '/login',
+          url: window.location.origin + "/login",
           handleCodeInApp: true,
         };
         await sendEmailVerification(user, actionCodeSettings);
@@ -89,14 +96,17 @@ function Signup() {
       // Force sign out so they can't bypass verification
       await signOut(auth);
 
-      toast.success("Account created successfully! Please verify your email by clicking the link we sent before signing in.", { duration: 8000 });
+      toast.success(
+        "Account created successfully! Please verify your email by clicking the link we sent before signing in.",
+        { duration: 8000 },
+      );
       navigate({ to: "/login" });
     } catch (error: any) {
       console.error("Signup error:", error);
       let errorMessage = "Something went wrong. Please try again.";
-      if (error.code === 'auth/email-already-in-use') {
+      if (error.code === "auth/email-already-in-use") {
         errorMessage = "An account with this email already exists.";
-      } else if (error.code === 'auth/weak-password') {
+      } else if (error.code === "auth/weak-password") {
         errorMessage = "Password should be at least 6 characters.";
       }
       toast.error(errorMessage);
@@ -115,8 +125,10 @@ function Signup() {
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Sparkles className="w-24 h-24 text-primary" />
         </div>
-        
-        <h1 className="text-4xl font-display font-bold text-center text-primary mb-2">Join the Fun!</h1>
+
+        <h1 className="text-4xl font-display font-bold text-center text-primary mb-2">
+          Join the Fun!
+        </h1>
         <p className="text-center text-muted-foreground mb-8 font-body">
           Create an account to track your progress and unlock rewards.
         </p>
@@ -165,7 +177,10 @@ function Signup() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-foreground mb-1 ml-1" htmlFor="phone_number">
+            <label
+              className="block text-sm font-bold text-foreground mb-1 ml-1"
+              htmlFor="phone_number"
+            >
               Phone Number
             </label>
             <div className="relative">
@@ -213,15 +228,15 @@ function Signup() {
             <div className="flex gap-4">
               <button
                 type="button"
-                onClick={() => setFormData(prev => ({ ...prev, gender: "boy" }))}
-                className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all border-2 ${formData.gender === 'boy' ? 'bg-kid-blue/20 border-kid-blue text-kid-blue' : 'bg-muted/50 border-transparent text-muted-foreground hover:bg-muted'}`}
+                onClick={() => setFormData((prev) => ({ ...prev, gender: "boy" }))}
+                className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all border-2 ${formData.gender === "boy" ? "bg-kid-blue/20 border-kid-blue text-kid-blue" : "bg-muted/50 border-transparent text-muted-foreground hover:bg-muted"}`}
               >
                 👦 Boy
               </button>
               <button
                 type="button"
-                onClick={() => setFormData(prev => ({ ...prev, gender: "girl" }))}
-                className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all border-2 ${formData.gender === 'girl' ? 'bg-kid-pink/20 border-kid-pink text-kid-pink' : 'bg-muted/50 border-transparent text-muted-foreground hover:bg-muted'}`}
+                onClick={() => setFormData((prev) => ({ ...prev, gender: "girl" }))}
+                className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all border-2 ${formData.gender === "girl" ? "bg-kid-pink/20 border-kid-pink text-kid-pink" : "bg-muted/50 border-transparent text-muted-foreground hover:bg-muted"}`}
               >
                 👧 Girl
               </button>

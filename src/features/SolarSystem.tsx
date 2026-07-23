@@ -222,7 +222,7 @@ const SolarSystem = () => {
               <div className="relative w-full h-full flex items-center justify-center">
                 <div className="absolute inset-0 bg-orange-500/30 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
                 <div className="absolute inset-0 bg-yellow-400/20 blur-[50px] rounded-full mix-blend-screen animate-pulse pointer-events-none" />
-                
+
                 {selectedPlanet?.id === "sun" && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -230,9 +230,7 @@ const SolarSystem = () => {
                     exit={{ opacity: 0, scale: 0.8 }}
                     className="absolute inset-[-40px] pointer-events-none flex items-center justify-center overflow-visible z-0"
                   >
-                    <div
-                      className="absolute inset-0 bg-gradient-to-tr from-yellow-400 to-orange-600 opacity-40 blur-3xl rounded-full mix-blend-screen animate-pulse"
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-yellow-400 to-orange-600 opacity-40 blur-3xl rounded-full mix-blend-screen animate-pulse" />
                   </motion.div>
                 )}
 

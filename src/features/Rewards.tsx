@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { motion } from "framer-motion";
 import { Trophy, Star, Coins, Flame, BookOpen, Hash, Grid3X3, Sparkles } from "lucide-react";
 import { useProgress } from "@/lib/progress";

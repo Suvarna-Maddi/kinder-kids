@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from './firebase';
+import { useState, useEffect } from "react";
+import { onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
 
 export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -15,9 +15,9 @@ export function useAuth() {
       if (user && user.emailVerified) {
         setIsAuthenticated(true);
         setUserId(user.uid);
-        
+
         try {
-          const userDocRef = doc(db, 'users', user.uid);
+          const userDocRef = doc(db, "users", user.uid);
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             setUsername(userDoc.data().name);

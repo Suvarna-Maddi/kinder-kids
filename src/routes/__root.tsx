@@ -84,22 +84,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           "@type": "EducationalOrganization",
           "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#organization",
-          "name": "KinderKidsSpace",
-          "url": "https://Suvarna-Maddi.github.io/kinder-kids/",
-          "logo": "https://Suvarna-Maddi.github.io/kinder-kids/favicon.png",
-          "description": "Interactive learning platform for kids with alphabets, numbers, games, tracing activities, and learning resources.",
-          "sameAs": []
+          name: "KinderKidsSpace",
+          url: "https://Suvarna-Maddi.github.io/kinder-kids/",
+          logo: "https://Suvarna-Maddi.github.io/kinder-kids/favicon.png",
+          description:
+            "Interactive learning platform for kids with alphabets, numbers, games, tracing activities, and learning resources.",
+          sameAs: [],
         },
         {
           "@type": "WebSite",
           "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#website",
-          "url": "https://Suvarna-Maddi.github.io/kinder-kids/",
-          "name": "KinderKidsSpace",
-          "publisher": {
-            "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#organization"
-          }
-        }
-      ]
+          url: "https://Suvarna-Maddi.github.io/kinder-kids/",
+          name: "KinderKidsSpace",
+          publisher: {
+            "@id": "https://Suvarna-Maddi.github.io/kinder-kids/#organization",
+          },
+        },
+      ],
     };
 
     return {
@@ -112,15 +113,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           content:
             "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources.",
         },
-        { name: "keywords", content: "Kids learning platform, Preschool learning, Kindergarten education, Alphabet learning, Number learning, Educational games for children, Tracing activities, Learning app for kids, Telugu learning for kids" },
-        { property: "og:title", content: "KinderKidsSpace - Interactive Learning Platform for Kids" },
-        { property: "og:description", content: "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources." },
+        {
+          name: "keywords",
+          content:
+            "Kids learning platform, Preschool learning, Kindergarten education, Alphabet learning, Number learning, Educational games for children, Tracing activities, Learning app for kids, Telugu learning for kids",
+        },
+        {
+          property: "og:title",
+          content: "KinderKidsSpace - Interactive Learning Platform for Kids",
+        },
+        {
+          property: "og:description",
+          content:
+            "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources.",
+        },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
-        { property: "og:image", content: "https://Suvarna-Maddi.github.io/kinder-kids/favicon.png" },
+        {
+          property: "og:image",
+          content: "https://Suvarna-Maddi.github.io/kinder-kids/favicon.png",
+        },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "KinderKidsSpace - Interactive Learning Platform for Kids" },
-        { name: "twitter:description", content: "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources." },
+        {
+          name: "twitter:title",
+          content: "KinderKidsSpace - Interactive Learning Platform for Kids",
+        },
+        {
+          name: "twitter:description",
+          content:
+            "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources.",
+        },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
@@ -138,8 +160,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           type: "application/ld+json",
           children: JSON.stringify(schema),
-        }
-      ]
+        },
+      ],
     };
   },
   shellComponent: RootShell,

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Trophy, X, Star, Crown } from "lucide-react";
 import { useProgress, dismissPremiumPopup } from "@/lib/progress";
-import confetti from "canvas-confetti"; // We will try to use it if installed, otherwise we can ignore. 
+import confetti from "canvas-confetti"; // We will try to use it if installed, otherwise we can ignore.
 import { auth } from "@/lib/firebase";
 
 export const PremiumPopup = () => {
@@ -18,15 +18,17 @@ export const PremiumPopup = () => {
       // Trigger a confetti explosion for the celebration
       setTimeout(() => {
         try {
-          if (typeof confetti === 'function') {
+          if (typeof confetti === "function") {
             confetti({
               particleCount: 150,
               spread: 80,
               origin: { y: 0.6 },
-              colors: ['#facc15', '#f472b6', '#38bdf8', '#4ade80']
+              colors: ["#facc15", "#f472b6", "#38bdf8", "#4ade80"],
             });
           }
-        } catch(e) {}
+        } catch (e) {
+          /* ignore */
+        }
       }, 500);
     }
   }, [progress.isPremium, progress.premiumPopupShown]);
@@ -62,7 +64,7 @@ export const PremiumPopup = () => {
                 className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_50%,#c084fc_100%)] opacity-20 mix-blend-screen"
               />
             </div>
-            
+
             {/* Floating Icons */}
             <motion.div
               animate={{ y: [-10, 10, -10] }}
@@ -79,11 +81,15 @@ export const PremiumPopup = () => {
               <h2 className="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-500 mb-4 drop-shadow-sm">
                 Premium Unlocked!
               </h2>
-              
+
               <p className="text-xl text-purple-100 font-light mb-8 leading-relaxed">
-                Wow! You've maintained an incredible <span className="font-bold text-yellow-400">11-Day Streak!</span> 
-                <br/><br/>
-                As a reward for your dedication, you now have access to our most <span className="font-bold text-white">advanced and engaging topics</span>! Keep up the amazing work!
+                Wow! You've maintained an incredible{" "}
+                <span className="font-bold text-yellow-400">11-Day Streak!</span>
+                <br />
+                <br />
+                As a reward for your dedication, you now have access to our most{" "}
+                <span className="font-bold text-white">advanced and engaging topics</span>! Keep up
+                the amazing work!
               </p>
 
               <button

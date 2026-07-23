@@ -143,7 +143,13 @@ export const consonants: TeluguLetter[] = [
     exampleMeaning: "Pot",
     exampleImage: "🏺",
   },
-  { letter: "ఙ", pronunciation: "sangeetham", exampleWord: "సంగీతం", exampleMeaning: "Music", exampleImage: "🎵" },
+  {
+    letter: "ఙ",
+    pronunciation: "sangeetham",
+    exampleWord: "సంగీతం",
+    exampleMeaning: "Music",
+    exampleImage: "🎵",
+  },
   {
     letter: "చ",
     pronunciation: "cha",
@@ -172,7 +178,13 @@ export const consonants: TeluguLetter[] = [
     exampleMeaning: "Fish",
     exampleImage: "🐟",
   },
-  { letter: "ఞ", pronunciation: "gnanam", exampleWord: "జ్ఞానం", exampleMeaning: "Knowledge", exampleImage: "🧠" },
+  {
+    letter: "ఞ",
+    pronunciation: "gnanam",
+    exampleWord: "జ్ఞానం",
+    exampleMeaning: "Knowledge",
+    exampleImage: "🧠",
+  },
   {
     letter: "ట",
     pronunciation: "ta",

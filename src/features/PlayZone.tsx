@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IMG_MAP } from "@/lib/images";
@@ -264,12 +266,47 @@ export const useReward = () => {
 };
 
 const EMOJI_TO_NAME: Record<string, string> = {
-  "🐄": "Cow", "🐶": "Dog", "🐱": "Cat", "🦆": "Duck", "🐑": "Sheep", "🦁": "Lion", "🐴": "Horse", "🐷": "Pig",
-  "🍎": "Apple", "🍌": "Banana", "🍇": "Grapes", "🍊": "Orange", "🍓": "Strawberry", "🥭": "Mango", "🍍": "Pineapple", "🍉": "Watermelon",
-  "🚗": "Car", "🚌": "Bus", "✈️": "Airplane", "🚂": "Train", "🚲": "Bike", "🚢": "Ship", "🚁": "Helicopter", "🚀": "Rocket",
-  "🔺": "Triangle", "⭕": "Circle", "🟥": "Square", "⭐": "Star", "🔷": "Diamond", "❤️": "Heart",
-  "🔴": "Red", "🟢": "Green", "🔵": "Blue", "🟡": "Yellow", "🟣": "Purple", "🟠": "Orange",
-  "🌙": "Moon", "☀️": "Sun", "☁️": "Cloud", "🐭": "Mouse", "🦊": "Fox",
+  "🐄": "Cow",
+  "🐶": "Dog",
+  "🐱": "Cat",
+  "🦆": "Duck",
+  "🐑": "Sheep",
+  "🦁": "Lion",
+  "🐴": "Horse",
+  "🐷": "Pig",
+  "🍎": "Apple",
+  "🍌": "Banana",
+  "🍇": "Grapes",
+  "🍊": "Orange",
+  "🍓": "Strawberry",
+  "🥭": "Mango",
+  "🍍": "Pineapple",
+  "🍉": "Watermelon",
+  "🚗": "Car",
+  "🚌": "Bus",
+  "✈️": "Airplane",
+  "🚂": "Train",
+  "🚲": "Bike",
+  "🚢": "Ship",
+  "🚁": "Helicopter",
+  "🚀": "Rocket",
+  "🔺": "Triangle",
+  "⭕": "Circle",
+  "🟥": "Square",
+  "⭐": "Star",
+  "🔷": "Diamond",
+  "❤️": "Heart",
+  "🔴": "Red",
+  "🟢": "Green",
+  "🔵": "Blue",
+  "🟡": "Yellow",
+  "🟣": "Purple",
+  "🟠": "Orange",
+  "🌙": "Moon",
+  "☀️": "Sun",
+  "☁️": "Cloud",
+  "🐭": "Mouse",
+  "🦊": "Fox",
 };
 
 // -------- Game host modal --------
@@ -819,7 +856,7 @@ const GameRunner = ({
             const isWrong = picked === opt && opt !== q.answer;
             const mappedName = EMOJI_TO_NAME[opt] || opt;
             const imgSrc = IMG_MAP[mappedName as keyof typeof IMG_MAP];
-            
+
             return (
               <motion.button
                 key={opt}
@@ -835,7 +872,11 @@ const GameRunner = ({
                 }`}
               >
                 {imgSrc ? (
-                  <LazyImage src={imgSrc} alt={mappedName} className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                  <LazyImage
+                    src={imgSrc}
+                    alt={mappedName}
+                    className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                  />
                 ) : (
                   opt
                 )}
@@ -1404,7 +1445,6 @@ const SmartMemoryMatch = ({
     } else {
       speak(`New round: ${category.title}. Find the matching pairs!`, { profile: "girl" });
     }
-    // eslint-disable-next-line
   }, [category]);
 
   // Big reward only after every pair is matched.
@@ -1599,7 +1639,7 @@ const WhatsMissing = ({
   };
 
   useEffect(() => {
-    start(); /* eslint-disable-next-line */
+    start();
   }, [round]);
 
   const choose = (it: MemItem) => {
@@ -1744,7 +1784,6 @@ const FlashColorMemory = ({
         profile: "girl",
       });
     else speak("Watch the colors carefully!", { profile: "girl" });
-    // eslint-disable-next-line
   }, [round]);
 
   useEffect(() => {
@@ -1880,7 +1919,6 @@ const PatternRecall = ({
         profile: "girl",
       });
     else speak("Watch the pattern.", { profile: "girl" });
-    // eslint-disable-next-line
   }, [round]);
 
   useEffect(() => {

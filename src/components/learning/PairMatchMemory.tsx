@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { speak } from "@/lib/tts";

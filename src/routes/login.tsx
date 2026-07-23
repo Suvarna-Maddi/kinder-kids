@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { loginUser } from "../lib/auth";
@@ -10,17 +11,18 @@ export const Route = createFileRoute("/login")({
   component: Login,
   head: () => {
     const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/login";
-    
+
     return {
       meta: [
         { title: "Login | KinderKidsSpace" },
-        { name: "description", content: "Login to KinderKidsSpace to continue your learning adventure." },
+        {
+          name: "description",
+          content: "Login to KinderKidsSpace to continue your learning adventure.",
+        },
         { property: "og:title", content: "Login | KinderKidsSpace" },
         { property: "og:url", content: canonicalUrl },
       ],
-      links: [
-        { rel: "canonical", href: canonicalUrl }
-      ]
+      links: [{ rel: "canonical", href: canonicalUrl }],
     };
   },
 });
@@ -63,17 +65,17 @@ function Login() {
       toast.error(`Please wait ${resendCooldown} seconds before resending.`);
       return;
     }
-    
+
     try {
       const { sendEmailVerification } = await import("firebase/auth");
       const actionCodeSettings = {
-        url: window.location.origin + '/login',
+        url: window.location.origin + "/login",
         handleCodeInApp: true,
       };
       await sendEmailVerification(unverifiedUser, actionCodeSettings);
       toast.success("Verification email resent! Please check your inbox.");
       setResendCooldown(60);
-      
+
       const timer = setInterval(() => {
         setResendCooldown((prev) => {
           if (prev <= 1) {
@@ -95,7 +97,7 @@ function Login() {
     setUnverifiedUser(null);
 
     // Admin backdoor
-    if (formData.email.trim() === 'admin' && formData.password === 'admin') {
+    if (formData.email.trim() === "admin" && formData.password === "admin") {
       toast.success("Welcome back, Admin!");
       login("admin_id", "Admin");
       window.location.href = "/dashboard";
@@ -107,7 +109,11 @@ function Login() {
       const { auth, db } = await import("../lib/firebase");
       const { doc, updateDoc, serverTimestamp } = await import("firebase/firestore");
 
-      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
       const user = userCredential.user;
 
       if (!user.emailVerified) {
@@ -121,7 +127,7 @@ function Login() {
       try {
         await updateDoc(doc(db, "users", user.uid), {
           lastLogin: serverTimestamp(),
-          emailVerified: true // Ensure Firestore matches the verified status
+          emailVerified: true, // Ensure Firestore matches the verified status
         });
       } catch (err) {
         console.error("Could not update lastLogin:", err);
@@ -133,9 +139,13 @@ function Login() {
     } catch (error: any) {
       console.error("Login error:", error);
       let errorMessage = "Invalid email or password.";
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+      if (
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/invalid-credential"
+      ) {
         errorMessage = "Invalid email or password.";
-      } else if (error.code === 'auth/too-many-requests') {
+      } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Too many failed attempts. Please try again later.";
       }
       toast.error(errorMessage);
@@ -154,8 +164,10 @@ function Login() {
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Sparkles className="w-24 h-24 text-primary" />
         </div>
-        
-        <h1 className="text-4xl font-display font-bold text-center text-primary mb-2">Welcome Back!</h1>
+
+        <h1 className="text-4xl font-display font-bold text-center text-primary mb-2">
+          Welcome Back!
+        </h1>
         <p className="text-center text-muted-foreground mb-8 font-body">
           Ready for some more fun learning?
         </p>
@@ -187,8 +199,8 @@ function Login() {
               <label className="block text-sm font-bold text-foreground" htmlFor="password">
                 Secret Password
               </label>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleResetPassword}
                 className="text-xs text-primary hover:underline font-bold"
               >
@@ -227,22 +239,22 @@ function Login() {
               </>
             )}
           </motion.button>
-            {unverifiedUser && (
-              <div className="mt-4 p-4 bg-orange-100 dark:bg-orange-950 border border-orange-300 dark:border-orange-800 rounded-xl text-center">
-                <p className="text-orange-800 dark:text-orange-200 text-sm mb-3">
-                  Check your inbox for the verification link.
-                </p>
-                <button
-                  type="button"
-                  onClick={handleResendVerification}
-                  disabled={resendCooldown > 0}
-                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
-                >
-                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend Verification Email"}
-                </button>
-              </div>
-            )}
-          </form>
+          {unverifiedUser && (
+            <div className="mt-4 p-4 bg-orange-100 dark:bg-orange-950 border border-orange-300 dark:border-orange-800 rounded-xl text-center">
+              <p className="text-orange-800 dark:text-orange-200 text-sm mb-3">
+                Check your inbox for the verification link.
+              </p>
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                disabled={resendCooldown > 0}
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
+              >
+                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend Verification Email"}
+              </button>
+            </div>
+          )}
+        </form>
 
         <p className="mt-8 text-center text-sm text-muted-foreground font-body">
           Don't have an account?{" "}

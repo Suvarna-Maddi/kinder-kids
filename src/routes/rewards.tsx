@@ -4,7 +4,7 @@ export const Route = createFileRoute("/rewards")({
   component: lazyRouteComponent(() => import("@/features/Rewards")),
   head: () => {
     const canonicalUrl = "https://Suvarna-Maddi.github.io/kinder-kids/rewards";
-    
+
     return {
       meta: [
         { title: "Rewards & Progress — KinderKidsSpace" },
@@ -17,9 +17,7 @@ export const Route = createFileRoute("/rewards")({
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "website" },
       ],
-      links: [
-        { rel: "canonical", href: canonicalUrl }
-      ]
+      links: [{ rel: "canonical", href: canonicalUrl }],
     };
   },
 });

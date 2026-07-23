@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,34 +14,48 @@ export const Route = createFileRoute("/telugu")({
     const schema = {
       "@context": "https://schema.org",
       "@type": "Course",
-      "name": "Telugu Learning World",
-      "description": "Learn Telugu alphabets, vowels (Achulu) and consonants (Hallulu) with interactive tracing and audio.",
-      "provider": {
+      name: "Telugu Learning World",
+      description:
+        "Learn Telugu alphabets, vowels (Achulu) and consonants (Hallulu) with interactive tracing and audio.",
+      provider: {
         "@type": "EducationalOrganization",
-        "name": "KinderKidsSpace",
-        "sameAs": "https://Suvarna-Maddi.github.io/kinder-kids/"
-      }
+        name: "KinderKidsSpace",
+        sameAs: "https://Suvarna-Maddi.github.io/kinder-kids/",
+      },
     };
 
     return {
       meta: [
         { title: "Telugu Learning World — Achulu & Hallulu | KinderKidsSpace" },
-        { name: "description", content: "Learn Telugu alphabets, vowels (Achulu) and consonants (Hallulu) with interactive tracing and audio." },
-        { name: "keywords", content: "Telugu learning for kids, Learn Telugu alphabets, Telugu vowels, Telugu consonants, Achulu, Hallulu" },
-        { property: "og:title", content: "Telugu Learning World — Achulu & Hallulu | KinderKidsSpace" },
-        { property: "og:description", content: "Learn Telugu alphabets, vowels (Achulu) and consonants (Hallulu) with interactive tracing and audio." },
+        {
+          name: "description",
+          content:
+            "Learn Telugu alphabets, vowels (Achulu) and consonants (Hallulu) with interactive tracing and audio.",
+        },
+        {
+          name: "keywords",
+          content:
+            "Telugu learning for kids, Learn Telugu alphabets, Telugu vowels, Telugu consonants, Achulu, Hallulu",
+        },
+        {
+          property: "og:title",
+          content: "Telugu Learning World — Achulu & Hallulu | KinderKidsSpace",
+        },
+        {
+          property: "og:description",
+          content:
+            "Learn Telugu alphabets, vowels (Achulu) and consonants (Hallulu) with interactive tracing and audio.",
+        },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "article" },
       ],
-      links: [
-        { rel: "canonical", href: canonicalUrl }
-      ],
+      links: [{ rel: "canonical", href: canonicalUrl }],
       scripts: [
         {
           type: "application/ld+json",
           children: JSON.stringify(schema),
-        }
-      ]
+        },
+      ],
     };
   },
 });
@@ -112,9 +127,7 @@ export const TeluguAlphabetCard = memo(
 );
 
 function TeluguPage() {
-  const [activeSection, setActiveSection] = useState<
-    "vowels" | "consonants"
-  >("vowels");
+  const [activeSection, setActiveSection] = useState<"vowels" | "consonants">("vowels");
 
   const [tracingLetter, setTracingLetter] = useState<TeluguLetter | null>(null);
   const [tracingColor, setTracingColor] = useState("#3b82f6"); // Blue as default
