@@ -57,8 +57,6 @@ function Signup() {
       // 2. Update Auth Profile
       await updateProfile(user, { displayName: formData.username });
 
-      // Send Email Verification
-      await sendEmailVerification(user);
 
       // 3. Create Firestore Document
       await setDoc(doc(db, "users", user.uid), {
@@ -76,6 +74,17 @@ function Signup() {
         createdAt: serverTimestamp(),
         lastLogin: serverTimestamp()
       });
+
+      // Send Email Verification (wrapped in try/catch to avoid breaking signup if rate limited)
+      try {
+        const actionCodeSettings = {
+          url: window.location.origin + '/login',
+          handleCodeInApp: true,
+        };
+        await sendEmailVerification(user, actionCodeSettings);
+      } catch (emailError) {
+        console.error("Could not send verification email immediately:", emailError);
+      }
 
       // Force sign out so they can't bypass verification
       await signOut(auth);

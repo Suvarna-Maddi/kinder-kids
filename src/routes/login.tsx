@@ -66,7 +66,11 @@ function Login() {
     
     try {
       const { sendEmailVerification } = await import("firebase/auth");
-      await sendEmailVerification(unverifiedUser);
+      const actionCodeSettings = {
+        url: window.location.origin + '/login',
+        handleCodeInApp: true,
+      };
+      await sendEmailVerification(unverifiedUser, actionCodeSettings);
       toast.success("Verification email resent! Please check your inbox.");
       setResendCooldown(60);
       

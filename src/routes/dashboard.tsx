@@ -94,6 +94,7 @@ function Dashboard() {
   const numbersProgress = Math.min(100, Math.round(((progress?.numbersLearned || []).length / 20) * 100));
   const tablesProgress = Math.min(100, Math.round(((progress?.tablesCompleted || []).length / 10) * 100));
   const playzoneProgress = Math.min(100, Math.round(((progress?.gamesCompleted || 0) / 10) * 100));
+  const overallProgress = Math.round((abcProgress + numbersProgress + tablesProgress + playzoneProgress) / 4);
 
   const mappedActivities = ACTIVITIES.map(act => {
     let pct = 0;
@@ -260,12 +261,12 @@ function Dashboard() {
                   <div className="h-4 bg-[#E5E7EB] rounded-full flex-1 overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
-                      animate={{ width: '70%' }}
+                      animate={{ width: `${overallProgress}%` }}
                       transition={{ duration: 1, ease: "easeOut" }}
                       className="h-full bg-[#84CC16] rounded-full"
                     />
                   </div>
-                  <span className="font-bold text-[#374151]">70%</span>
+                  <span className="font-bold text-[#374151]">{overallProgress}%</span>
                   <Star className="w-5 h-5 text-[#F59E0B] fill-[#F59E0B]" />
                 </div>
               </div>
