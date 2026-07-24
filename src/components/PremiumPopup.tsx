@@ -45,10 +45,10 @@ export const PremiumPopup = () => {
 
   const handlePurchase = () => {
     setIsProcessingPayment(true);
-    
+
     // Amount in INR (e.g. ₹99)
-    const amount = 99; 
-    
+    const amount = 99;
+
     const userDetails = {
       id: auth.currentUser?.uid,
       name: auth.currentUser?.displayName || "Kinder Kids User",
@@ -61,7 +61,7 @@ export const PremiumPopup = () => {
       (data) => {
         setIsProcessingPayment(false);
         toast.success("Payment successful! Premium features unlocked.", {
-          description: `Order ID: ${data.order_id || 'Verified'}`,
+          description: `Order ID: ${data.order_id || "Verified"}`,
         });
         handleDismiss();
         // Here we can also update user's premium status in Firestore when ready
@@ -70,12 +70,17 @@ export const PremiumPopup = () => {
         setIsProcessingPayment(false);
         const errorMessage = error?.message || "Something went wrong during payment";
         // User cancelling is typically a specific error code or just a generic error from Razorpay
-        if (errorMessage.toLowerCase().includes("cancelled") || errorMessage.toLowerCase().includes("failed")) {
-            toast.error("Payment incomplete", { description: "The payment process was not finished." });
+        if (
+          errorMessage.toLowerCase().includes("cancelled") ||
+          errorMessage.toLowerCase().includes("failed")
+        ) {
+          toast.error("Payment incomplete", {
+            description: "The payment process was not finished.",
+          });
         } else {
-            toast.error("Payment failed", { description: errorMessage });
+          toast.error("Payment failed", { description: errorMessage });
         }
-      }
+      },
     );
   };
 
@@ -116,7 +121,7 @@ export const PremiumPopup = () => {
               </div>
             </motion.div>
 
-            <button 
+            <button
               onClick={handleDismiss}
               className="absolute top-4 right-4 text-purple-300 hover:text-white transition-colors z-20"
             >

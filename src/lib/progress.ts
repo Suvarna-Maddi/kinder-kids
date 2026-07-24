@@ -89,10 +89,10 @@ if (typeof window !== "undefined") {
               attempts: data.quizScores?.attempts || 0,
               isPremium: data.isPremium || false,
               premiumPopupShown: data.premiumPopupShown || false,
-              subscriptionExpiryDate: data.subscriptionExpiryDate 
-                ? (typeof data.subscriptionExpiryDate.toDate === 'function' 
-                    ? data.subscriptionExpiryDate.toDate().toISOString() 
-                    : new Date(data.subscriptionExpiryDate).toISOString()) 
+              subscriptionExpiryDate: data.subscriptionExpiryDate
+                ? typeof data.subscriptionExpiryDate.toDate === "function"
+                  ? data.subscriptionExpiryDate.toDate().toISOString()
+                  : new Date(data.subscriptionExpiryDate).toISOString()
                 : null,
               level: data.level || 1,
             };

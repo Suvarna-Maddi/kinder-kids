@@ -16,13 +16,13 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const progress = useProgress();
   const isPremium = progress.isPremium;
-  
+
   // Format the date nicely if it exists
-  const expiryDate = progress.subscriptionExpiryDate 
-    ? new Date(progress.subscriptionExpiryDate).toLocaleDateString("en-US", { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+  const expiryDate = progress.subscriptionExpiryDate
+    ? new Date(progress.subscriptionExpiryDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       })
     : null;
 
@@ -46,7 +46,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
       (data) => {
         setIsProcessingPayment(false);
         toast.success("Payment successful! Premium features unlocked.", {
-          description: `Order ID: ${data.order_id || 'Verified'}`,
+          description: `Order ID: ${data.order_id || "Verified"}`,
         });
         // The check-subscription API or local snapshot will automatically update UI
         onClose();
@@ -54,12 +54,17 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
       (error) => {
         setIsProcessingPayment(false);
         const errorMessage = error?.message || "Something went wrong during payment";
-        if (errorMessage.toLowerCase().includes("cancelled") || errorMessage.toLowerCase().includes("failed")) {
-            toast.error("Payment incomplete", { description: "The payment process was not finished." });
+        if (
+          errorMessage.toLowerCase().includes("cancelled") ||
+          errorMessage.toLowerCase().includes("failed")
+        ) {
+          toast.error("Payment incomplete", {
+            description: "The payment process was not finished.",
+          });
         } else {
-            toast.error("Payment failed", { description: errorMessage });
+          toast.error("Payment failed", { description: errorMessage });
         }
-      }
+      },
     );
   };
 
@@ -74,7 +79,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
             onClick={onClose}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
-          
+
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -84,7 +89,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
           >
             {/* Header background styling */}
             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-amber-400/20 via-yellow-500/10 to-transparent pointer-events-none" />
-            
+
             <button
               onClick={onClose}
               className="absolute top-4 right-4 p-2 bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground rounded-full transition-colors z-20"
@@ -107,7 +112,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
                   <p className="text-muted-foreground mb-8">
                     You have full access to all premium features!
                   </p>
-                  
+
                   <div className="bg-muted rounded-2xl p-6 mb-8 text-left border border-border">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="p-3 bg-emerald-500/20 rounded-full text-emerald-500">
@@ -130,7 +135,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
                       </div>
                     )}
                   </div>
-                  
+
                   <button
                     onClick={onClose}
                     className="w-full py-4 bg-muted hover:bg-muted/80 text-foreground font-bold rounded-full transition-colors"
@@ -154,7 +159,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
                       "Unlimited access to Solar System",
                       "Ad-free uninterrupted learning",
                       "Exclusive premium quizzes",
-                      "Detailed progress tracking"
+                      "Detailed progress tracking",
                     ].map((feature, i) => (
                       <div key={i} className="flex items-center gap-3">
                         <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
@@ -188,12 +193,16 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
                         <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
                       )}
                       {isProcessingPayment ? "Processing..." : "Get Premium"}
-                      
+
                       {/* Shine effect */}
                       <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                     </button>
                   ) : (
-                    <Link to="/login" onClick={onClose} className="block w-full text-center py-4 bg-kid-blue text-white font-bold rounded-full hover:bg-kid-blue/90 transition-colors">
+                    <Link
+                      to="/login"
+                      onClick={onClose}
+                      className="block w-full text-center py-4 bg-kid-blue text-white font-bold rounded-full hover:bg-kid-blue/90 transition-colors"
+                    >
                       Log In to Subscribe
                     </Link>
                   )}

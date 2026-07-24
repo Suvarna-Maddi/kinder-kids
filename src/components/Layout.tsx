@@ -143,9 +143,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen bg-background relative">
       <PremiumPopup />
-      <SubscriptionModal 
-        isOpen={isSubscriptionModalOpen} 
-        onClose={() => setIsSubscriptionModalOpen(false)} 
+      <SubscriptionModal
+        isOpen={isSubscriptionModalOpen}
+        onClose={() => setIsSubscriptionModalOpen(false)}
       />
 
       {pathname !== "/dashboard" && (

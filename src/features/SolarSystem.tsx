@@ -131,19 +131,24 @@ const SolarSystem = () => {
       (data) => {
         setIsProcessingPayment(false);
         toast.success("Payment successful! Premium features unlocked.", {
-          description: `Order ID: ${data.order_id || 'Verified'}`,
+          description: `Order ID: ${data.order_id || "Verified"}`,
         });
         // The check-subscription API or local snapshot will automatically update the UI shortly
       },
       (error) => {
         setIsProcessingPayment(false);
         const errorMessage = error?.message || "Something went wrong during payment";
-        if (errorMessage.toLowerCase().includes("cancelled") || errorMessage.toLowerCase().includes("failed")) {
-            toast.error("Payment incomplete", { description: "The payment process was not finished." });
+        if (
+          errorMessage.toLowerCase().includes("cancelled") ||
+          errorMessage.toLowerCase().includes("failed")
+        ) {
+          toast.error("Payment incomplete", {
+            description: "The payment process was not finished.",
+          });
         } else {
-            toast.error("Payment failed", { description: errorMessage });
+          toast.error("Payment failed", { description: errorMessage });
         }
-      }
+      },
     );
   };
 
@@ -153,9 +158,15 @@ const SolarSystem = () => {
     return (
       <div className="min-h-screen bg-[#050510] text-white flex flex-col items-center justify-center p-4 relative font-body overflow-hidden">
         {/* Background */}
-        <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2560&auto=format&fit=crop')" }} />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2560&auto=format&fit=crop')",
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-[#020205]/70 via-[#050510]/80 to-[#050510]" />
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -165,14 +176,15 @@ const SolarSystem = () => {
             <div className="absolute inset-0 bg-amber-500/20 rounded-full animate-ping" />
             <Lock className="w-12 h-12 text-amber-400 relative z-10" />
           </div>
-          
+
           <h2 className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-500 mb-4">
             Premium Feature
           </h2>
           <p className="text-lg text-slate-300 mb-10 leading-relaxed font-light">
-            Unlock the wonders of the Solar System, exclusive quizzes, and fascinating facts with a Premium Subscription!
+            Unlock the wonders of the Solar System, exclusive quizzes, and fascinating facts with a
+            Premium Subscription!
           </p>
-          
+
           <div className="flex flex-col gap-4">
             <button
               onClick={handlePurchase}
@@ -186,7 +198,10 @@ const SolarSystem = () => {
               )}
               {isProcessingPayment ? "Processing..." : "Subscribe Now"}
             </button>
-            <Link to="/playzone" className="text-slate-400 hover:text-white transition-colors mt-4 inline-flex items-center justify-center gap-2">
+            <Link
+              to="/playzone"
+              className="text-slate-400 hover:text-white transition-colors mt-4 inline-flex items-center justify-center gap-2"
+            >
               <ChevronLeft className="w-4 h-4" /> Go Back
             </Link>
           </div>
