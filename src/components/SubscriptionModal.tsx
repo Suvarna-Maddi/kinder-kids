@@ -33,7 +33,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
     }
 
     setIsProcessingPayment(true);
-    const amount = 99; // 1 month premium
+    const amount = 49; // 1 month premium
     const userDetails = {
       id: auth.currentUser?.uid,
       name: auth.currentUser?.displayName || "Kinder Kids User",
@@ -171,7 +171,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, on
                       <p className="text-sm text-muted-foreground">Cancel anytime</p>
                     </div>
                     <div className="text-right">
-                      <span className="text-2xl font-bold text-foreground">₹99</span>
+                      <span className="text-2xl font-bold text-foreground">₹49</span>
                       <span className="text-muted-foreground">/mo</span>
                     </div>
                   </div>
