@@ -8,28 +8,35 @@ export const Route = createFileRoute("/")({
 
     return {
       meta: [
-        { title: "KinderKidsSpace - Interactive Learning Platform for Kids" },
+        { title: "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids" },
         {
           name: "description",
-          content:
-            "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources.",
+          content: "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today."
         },
         {
           name: "keywords",
-          content:
-            "Kids learning platform, Preschool learning, Kindergarten education, Alphabet learning, Number learning, Educational games for children, Tracing activities, Learning app for kids, Telugu learning for kids",
+          content: "preschool learning app, kindergarten learning app, kids learning platform, online learning for kids, AI learning app for kids, educational games, alphabet learning, phonics, number learning, math for kids, kids stories, learning activities"
         },
-        {
-          property: "og:title",
-          content: "KinderKidsSpace - Interactive Learning Platform for Kids",
-        },
-        {
-          property: "og:description",
-          content:
-            "Fun and engaging educational platform for children with alphabets, numbers, games, tracing activities, and learning resources.",
-        },
+        { property: "og:title", content: "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids" },
+        { property: "og:description", content: "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today." },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "website" },
+      ],
+      links: [{ rel: "canonical", href: canonicalUrl }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://kinderkidsspace.in/"
+            }]
+          }),
+        },
       ],
       links: [{ rel: "canonical", href: canonicalUrl }],
     };

@@ -274,7 +274,8 @@ const Index = () => {
                   >
                     <img
                       src={card.img}
-                      alt={card.title}
+                      alt={`${card.title} educational game`}
+                      title={card.title}
                       width="128"
                       height="128"
                       loading="lazy"
@@ -304,7 +305,11 @@ const Index = () => {
                   >
                     <img
                       src={card.img}
-                      alt={card.title}
+                      alt={`${card.title} educational game`}
+                      title={card.title}
+                      width="128"
+                      height="128"
+                      loading="lazy"
                       className="w-full h-full object-contain drop-shadow-md hover:scale-110 transition-transform"
                     />
                   </div>

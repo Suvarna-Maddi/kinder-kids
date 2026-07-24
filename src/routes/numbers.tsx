@@ -19,16 +19,16 @@ export const Route = createFileRoute("/numbers")({
 
     return {
       meta: [
-        { title: "Numbers — Count and Learn | KinderKidsSpace" },
+        { title: "Number Learning Games for Kids – Preschool & Kindergarten App" },
         {
           name: "description",
           content:
-            "Learn to count with fun games and audio for kindergarten and preschool children.",
+            "Teach your kids to count with fun, interactive number learning games. Designed for preschool and kindergarten kids to master basic math concepts easily.",
         },
         {
           name: "keywords",
           content:
-            "Number learning, Kids math, Learn to count, Preschool numbers, Educational games for children",
+            "number learning, math for kids, kids educational games, kindergarten learning app, preschool learning app, learn to count, kids math games",
         },
         { property: "og:title", content: "Numbers — Count and Learn | KinderKidsSpace" },
         {
@@ -44,6 +44,25 @@ export const Route = createFileRoute("/numbers")({
         {
           type: "application/ld+json",
           children: JSON.stringify(schema),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://kinderkidsspace.in/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Numbers",
+              "item": "https://kinderkidsspace.in/numbers"
+            }]
+          }),
         },
       ],
     };

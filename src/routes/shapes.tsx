@@ -18,16 +18,16 @@ export const Route = createFileRoute("/shapes")({
 
     return {
       meta: [
-        { title: "Shapes — Learn Circles, Squares & More | KinderKidsSpace" },
+        { title: "Learn Shapes for Kids – Educational Preschool App" },
         {
           name: "description",
           content:
-            "Learn shapes with pictures, narration, and a shape-matching quiz. Fun educational games for children.",
+            "Teach your kids basic shapes through interactive quizzes, narration, and fun learning activities designed for kindergarten and preschool children.",
         },
         {
           name: "keywords",
           content:
-            "Learn shapes, Preschool shapes, Kindergarten shapes, Shapes for kids, Educational games for children",
+            "learn shapes, preschool shapes, kindergarten learning app, kids educational games, interactive learning, shapes for kids, learning activities",
         },
         {
           property: "og:title",
@@ -46,6 +46,25 @@ export const Route = createFileRoute("/shapes")({
         {
           type: "application/ld+json",
           children: JSON.stringify(schema),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://kinderkidsspace.in/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Shapes",
+              "item": "https://kinderkidsspace.in/shapes"
+            }]
+          }),
         },
       ],
     };

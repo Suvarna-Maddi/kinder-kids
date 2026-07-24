@@ -19,16 +19,16 @@ export const Route = createFileRoute("/math")({
 
     return {
       meta: [
-        { title: "Mathematics — Fun Arithmetic for Kids | KinderKidsSpace" },
+        { title: "Math for Kids – Addition, Subtraction & Arithmetic Games" },
         {
           name: "description",
           content:
-            "Practice addition, subtraction, multiplication and division with unlimited kid-friendly questions. Interactive math learning for children.",
+            "Engaging math learning for kids. Practice addition, subtraction, multiplication, and division through fun educational games perfect for early learning.",
         },
         {
           name: "keywords",
           content:
-            "Kids math, Arithmetic for kids, Learn addition, Learn subtraction, Educational math games, Math practice for children",
+            "math for kids, math learning, kids math games, arithmetic for kids, learn addition, learn subtraction, educational games, preschool math, kindergarten math",
         },
         {
           property: "og:title",
@@ -47,6 +47,25 @@ export const Route = createFileRoute("/math")({
         {
           type: "application/ld+json",
           children: JSON.stringify(schema),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://kinderkidsspace.in/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Math",
+              "item": "https://kinderkidsspace.in/math"
+            }]
+          }),
         },
       ],
     };

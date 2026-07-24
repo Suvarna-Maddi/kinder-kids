@@ -19,16 +19,16 @@ export const Route = createFileRoute("/alphabets")({
 
     return {
       meta: [
-        { title: "Alphabets — Learn A to Z & a to z | KinderKidsSpace" },
+        { title: "Learn ABC & Phonics – Best Alphabet Learning App for Preschool & Kindergarten" },
         {
           name: "description",
           content:
-            "Learn uppercase and lowercase alphabets with animated strokes, tracing, quizzes and audio. Perfect for kindergarten education and preschool learning.",
+            "Help your kids learn ABC, phonics, and uppercase/lowercase letters with interactive tracing, stroke animations, and educational games designed for kindergarten.",
         },
         {
           name: "keywords",
           content:
-            "Alphabet learning, Learn A to Z, Preschool alphabet, Kindergarten letters, Tracing letters",
+            "alphabet learning, phonics, learn ABC, preschool learning app, kindergarten learning app, kids educational games, tracing letters, learning activities",
         },
         { property: "og:title", content: "Alphabets — Learn A to Z & a to z | KinderKidsSpace" },
         {
@@ -44,6 +44,25 @@ export const Route = createFileRoute("/alphabets")({
         {
           type: "application/ld+json",
           children: JSON.stringify(schema),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://kinderkidsspace.in/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Alphabets",
+              "item": "https://kinderkidsspace.in/alphabets"
+            }]
+          }),
         },
       ],
     };
