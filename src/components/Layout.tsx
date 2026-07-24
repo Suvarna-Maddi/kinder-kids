@@ -22,8 +22,10 @@ import {
   LogOut,
   UserCircle2,
   Heart,
+  Crown,
 } from "lucide-react";
 import { PremiumPopup } from "./PremiumPopup";
+import { SubscriptionModal } from "./SubscriptionModal";
 import { useAuth } from "../lib/auth-client";
 import logo from "@/assets/logo.png";
 import avatarBoy from "@/assets/avatar_boy.png";
@@ -72,6 +74,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, username, gender, isLoading, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   const getAvatar = () => {
     if (gender === "girl") return avatarGirl;
@@ -140,6 +143,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen bg-background relative">
       <PremiumPopup />
+      <SubscriptionModal 
+        isOpen={isSubscriptionModalOpen} 
+        onClose={() => setIsSubscriptionModalOpen(false)} 
+      />
 
       {pathname !== "/dashboard" && (
         <motion.nav
@@ -246,7 +253,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   </motion.div>
                 </Link>
               ) : (
-                <div className="relative ml-2">
+                <div className="flex items-center gap-2 ml-2 relative">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsSubscriptionModalOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400/20 to-yellow-500/20 hover:from-amber-400/30 hover:to-yellow-500/30 border border-amber-400/30 rounded-full transition-colors group"
+                  >
+                    <Crown className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform" />
+                    <span className="font-display font-bold text-xs text-amber-600 dark:text-amber-400 hidden sm:inline">
+                      Premium
+                    </span>
+                  </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -360,6 +378,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
                         {username || "Kid"}
                       </span>
                     </Link>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setIsSubscriptionModalOpen(true);
+                      }}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-muted rounded-xl transition-colors cursor-pointer text-left"
+                    >
+                      <Crown className="w-6 h-6 text-amber-500" />
+                      <span className="font-display font-bold text-lg text-amber-600 dark:text-amber-400">
+                        Premium Subscription
+                      </span>
+                    </button>
                     <button
                       onClick={() => {
                         logout();

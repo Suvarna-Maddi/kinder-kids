@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, X, Star, Crown } from "lucide-react";
+import { Sparkles, Trophy, X, Star, Crown, Loader2 } from "lucide-react";
 import { useProgress, dismissPremiumPopup } from "@/lib/progress";
 import confetti from "canvas-confetti"; // We will try to use it if installed, otherwise we can ignore.
 import { auth } from "@/lib/firebase";
+import { initiatePayment } from "@/lib/razorpay";
+import { toast } from "sonner";
 
 export const PremiumPopup = () => {
   const progress = useProgress();
   const [show, setShow] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   useEffect(() => {
     // Admin bypass
@@ -38,6 +41,42 @@ export const PremiumPopup = () => {
     setTimeout(() => {
       dismissPremiumPopup();
     }, 300);
+  };
+
+  const handlePurchase = () => {
+    setIsProcessingPayment(true);
+    
+    // Amount in INR (e.g. ₹99)
+    const amount = 99; 
+    
+    const userDetails = {
+      id: auth.currentUser?.uid,
+      name: auth.currentUser?.displayName || "Kinder Kids User",
+      email: auth.currentUser?.email || "hello@kinderkidsspace.in",
+    };
+
+    initiatePayment(
+      amount,
+      userDetails,
+      (data) => {
+        setIsProcessingPayment(false);
+        toast.success("Payment successful! Premium features unlocked.", {
+          description: `Order ID: ${data.order_id || 'Verified'}`,
+        });
+        handleDismiss();
+        // Here we can also update user's premium status in Firestore when ready
+      },
+      (error) => {
+        setIsProcessingPayment(false);
+        const errorMessage = error?.message || "Something went wrong during payment";
+        // User cancelling is typically a specific error code or just a generic error from Razorpay
+        if (errorMessage.toLowerCase().includes("cancelled") || errorMessage.toLowerCase().includes("failed")) {
+            toast.error("Payment incomplete", { description: "The payment process was not finished." });
+        } else {
+            toast.error("Payment failed", { description: errorMessage });
+        }
+      }
+    );
   };
 
   return (
@@ -77,6 +116,13 @@ export const PremiumPopup = () => {
               </div>
             </motion.div>
 
+            <button 
+              onClick={handleDismiss}
+              className="absolute top-4 right-4 text-purple-300 hover:text-white transition-colors z-20"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
             <div className="relative z-10">
               <h2 className="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-500 mb-4 drop-shadow-sm">
                 Premium Unlocked!
@@ -93,11 +139,16 @@ export const PremiumPopup = () => {
               </p>
 
               <button
-                onClick={handleDismiss}
-                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full text-indigo-950 font-bold text-xl hover:scale-105 transition-all shadow-[0_0_20px_rgba(250,204,21,0.5)] w-full sm:w-auto"
+                onClick={handlePurchase}
+                disabled={isProcessingPayment}
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full text-indigo-950 font-bold text-xl hover:scale-105 transition-all shadow-[0_0_20px_rgba(250,204,21,0.5)] w-full sm:w-auto disabled:opacity-70 disabled:hover:scale-100"
               >
-                <Sparkles className="w-6 h-6 group-hover:animate-spin" />
-                Claim Premium
+                {isProcessingPayment ? (
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                ) : (
+                  <Sparkles className="w-6 h-6 group-hover:animate-spin" />
+                )}
+                {isProcessingPayment ? "Processing..." : "Claim Premium"}
               </button>
             </div>
           </motion.div>

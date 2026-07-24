@@ -26,6 +26,11 @@ export function useAuth() {
             setUsername(user.displayName || "Champion");
             setGender(null);
           }
+
+          // Make a background call to check subscription status (auto-revokes if expired)
+          fetch(`/api/check-subscription?userId=${user.uid}`).catch(err => {
+            console.error('Failed to check subscription status', err);
+          });
         } catch (error) {
           console.error("Error fetching user data:", error);
           setUsername(user.displayName || "Champion");

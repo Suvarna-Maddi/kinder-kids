@@ -18,6 +18,7 @@ export type Progress = {
   attempts: number;
   isPremium: boolean;
   premiumPopupShown: boolean;
+  subscriptionExpiryDate: string | null;
   level: number;
 };
 
@@ -36,6 +37,7 @@ const DEFAULTS: Progress = {
   attempts: 0,
   isPremium: false,
   premiumPopupShown: false,
+  subscriptionExpiryDate: null,
   level: 1,
 };
 
@@ -87,6 +89,11 @@ if (typeof window !== "undefined") {
               attempts: data.quizScores?.attempts || 0,
               isPremium: data.isPremium || false,
               premiumPopupShown: data.premiumPopupShown || false,
+              subscriptionExpiryDate: data.subscriptionExpiryDate 
+                ? (typeof data.subscriptionExpiryDate.toDate === 'function' 
+                    ? data.subscriptionExpiryDate.toDate().toISOString() 
+                    : new Date(data.subscriptionExpiryDate).toISOString()) 
+                : null,
               level: data.level || 1,
             };
             isLoadedFromCloud = true;

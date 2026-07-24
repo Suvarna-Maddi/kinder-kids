@@ -17,8 +17,15 @@ import { SOLAR_SYSTEM, UNLOCKABLES, PlanetData } from "@/lib/solarSystemData";
 import { playClick, playPop, playSuccess, playError } from "@/lib/sounds";
 import { speak, cancelSpeech, recordAndSpeak, praise } from "@/lib/tts";
 import { Link } from "@tanstack/react-router";
+import { useProgress } from "@/lib/progress";
+import { initiatePayment } from "@/lib/razorpay";
+import { auth } from "@/lib/firebase";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const SolarSystem = () => {
+  const progress = useProgress();
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [selectedPlanet, setSelectedPlanet] = useState<PlanetData | null>(null);
   const [viewedPlanets, setViewedPlanets] = useState<Set<string>>(new Set());
   const [completedQuizzes, setCompletedQuizzes] = useState<Set<string>>(new Set());
@@ -108,6 +115,85 @@ const SolarSystem = () => {
 
   const allViewed = viewedPlanets.size === SOLAR_SYSTEM.length;
   const allUnlocked = completedQuizzes.size >= UNLOCKABLES.length;
+
+  const handlePurchase = () => {
+    setIsProcessingPayment(true);
+    const amount = 149; // 30 Days premium
+    const userDetails = {
+      id: auth.currentUser?.uid,
+      name: auth.currentUser?.displayName || "Kinder Kids User",
+      email: auth.currentUser?.email || "hello@kinderkidsspace.in",
+    };
+
+    initiatePayment(
+      amount,
+      userDetails,
+      (data) => {
+        setIsProcessingPayment(false);
+        toast.success("Payment successful! Premium features unlocked.", {
+          description: `Order ID: ${data.order_id || 'Verified'}`,
+        });
+        // The check-subscription API or local snapshot will automatically update the UI shortly
+      },
+      (error) => {
+        setIsProcessingPayment(false);
+        const errorMessage = error?.message || "Something went wrong during payment";
+        if (errorMessage.toLowerCase().includes("cancelled") || errorMessage.toLowerCase().includes("failed")) {
+            toast.error("Payment incomplete", { description: "The payment process was not finished." });
+        } else {
+            toast.error("Payment failed", { description: errorMessage });
+        }
+      }
+    );
+  };
+
+  // Prevent access if not premium (unless admin)
+  const isAdmin = auth.currentUser?.email?.toLowerCase() === "kinderkidsspace@gmail.com";
+  if (!progress.isPremium && !isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#050510] text-white flex flex-col items-center justify-center p-4 relative font-body overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2560&auto=format&fit=crop')" }} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020205]/70 via-[#050510]/80 to-[#050510]" />
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 max-w-lg w-full bg-[#0b0c1a]/90 backdrop-blur-xl border border-amber-500/30 rounded-[3rem] p-10 text-center shadow-[0_0_50px_rgba(245,158,11,0.2)]"
+        >
+          <div className="mx-auto w-24 h-24 mb-8 relative flex justify-center items-center">
+            <div className="absolute inset-0 bg-amber-500/20 rounded-full animate-ping" />
+            <Lock className="w-12 h-12 text-amber-400 relative z-10" />
+          </div>
+          
+          <h2 className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-500 mb-4">
+            Premium Feature
+          </h2>
+          <p className="text-lg text-slate-300 mb-10 leading-relaxed font-light">
+            Unlock the wonders of the Solar System, exclusive quizzes, and fascinating facts with a Premium Subscription!
+          </p>
+          
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={handlePurchase}
+              disabled={isProcessingPayment}
+              className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full text-indigo-950 font-bold text-xl hover:scale-105 transition-all shadow-[0_0_20px_rgba(250,204,21,0.4)] disabled:opacity-70 disabled:hover:scale-100"
+            >
+              {isProcessingPayment ? (
+                <Loader2 className="w-6 h-6 animate-spin" />
+              ) : (
+                <Sparkles className="w-6 h-6 group-hover:animate-spin" />
+              )}
+              {isProcessingPayment ? "Processing..." : "Subscribe Now"}
+            </button>
+            <Link to="/playzone" className="text-slate-400 hover:text-white transition-colors mt-4 inline-flex items-center justify-center gap-2">
+              <ChevronLeft className="w-4 h-4" /> Go Back
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div
