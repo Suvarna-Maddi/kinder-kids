@@ -50,18 +50,20 @@ export const Route = createFileRoute("/alphabets")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
-            "itemListElement": [{
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://kinderkidsspace.in/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Alphabets",
-              "item": "https://kinderkidsspace.in/alphabets"
-            }]
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://kinderkidsspace.in/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Alphabets",
+                item: "https://kinderkidsspace.in/alphabets",
+              },
+            ],
           }),
         },
       ],

@@ -1,13 +1,13 @@
-import admin from "firebase-admin";
+import { getApps, initializeApp, cert } from "firebase-admin/app";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 // Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
+if (!getApps().length) {
   try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
+    initializeApp({
+      credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        // Handle escaped newlines in Vercel environment variables
         privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
       }),
     });
@@ -22,14 +22,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    // allow userId to be passed via query string or body
     const userId = req.query.userId || req.body?.userId;
 
     if (!userId) {
       return res.status(400).json({ message: "Missing user ID" });
     }
 
-    const db = admin.firestore();
+    const db = getFirestore();
     const userRef = db.collection("users").doc(userId);
     const userDoc = await userRef.get();
 
@@ -39,12 +38,11 @@ export default async function handler(req, res) {
 
     const userData = userDoc.data();
 
-    // Check subscription status
     if (userData.isPremium && userData.subscriptionExpiryDate) {
-      const now = admin.firestore.Timestamp.now();
+      const now = Timestamp.now();
 
       if (userData.subscriptionExpiryDate.toMillis() < now.toMillis()) {
-        // Subscription has expired
+        // Subscription expired — revoke
         await userRef.update({
           isPremium: false,
           premiumUnlocked: false,
@@ -56,16 +54,16 @@ export default async function handler(req, res) {
           expiryDate: userData.subscriptionExpiryDate.toDate(),
         });
       } else {
-        // Subscription is active
         return res.status(200).json({
           isActive: true,
           message: "Subscription is active",
           expiryDate: userData.subscriptionExpiryDate.toDate(),
+          subscriptionStartDate: userData.subscriptionStartDate?.toDate?.() || null,
+          paymentId: userData.paymentId || null,
         });
       }
     }
 
-    // User is not premium
     return res.status(200).json({
       isActive: false,
       message: "User does not have an active subscription",

@@ -19,6 +19,8 @@ export type Progress = {
   isPremium: boolean;
   premiumPopupShown: boolean;
   subscriptionExpiryDate: string | null;
+  subscriptionStartDate: string | null;
+  paymentId: string | null;
   level: number;
 };
 
@@ -38,6 +40,8 @@ const DEFAULTS: Progress = {
   isPremium: false,
   premiumPopupShown: false,
   subscriptionExpiryDate: null,
+  subscriptionStartDate: null,
+  paymentId: null,
   level: 1,
 };
 
@@ -94,6 +98,12 @@ if (typeof window !== "undefined") {
                   ? data.subscriptionExpiryDate.toDate().toISOString()
                   : new Date(data.subscriptionExpiryDate).toISOString()
                 : null,
+              subscriptionStartDate: data.subscriptionStartDate
+                ? typeof data.subscriptionStartDate.toDate === "function"
+                  ? data.subscriptionStartDate.toDate().toISOString()
+                  : new Date(data.subscriptionStartDate).toISOString()
+                : null,
+              paymentId: data.paymentId || null,
               level: data.level || 1,
             };
             isLoadedFromCloud = true;

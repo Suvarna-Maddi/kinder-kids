@@ -87,17 +87,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "KinderKidsSpace",
           url: "https://kinderkidsspace.in/",
           logo: "https://kinderkidsspace.in/favicon.png",
-          description: "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
+          description:
+            "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
           sameAs: [
             "https://www.facebook.com/kinderkidsspace",
-            "https://www.instagram.com/kinderkidsspace"
+            "https://www.instagram.com/kinderkidsspace",
           ],
           address: {
             "@type": "PostalAddress",
             addressLocality: "Hyderabad",
             addressRegion: "Telangana",
-            addressCountry: "IN"
-          }
+            addressCountry: "IN",
+          },
         },
         {
           "@type": ["WebSite", "WebApplication", "SoftwareApplication"],
@@ -112,8 +113,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           potentialAction: {
             "@type": "SearchAction",
             target: "https://kinderkidsspace.in/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-          }
+            "query-input": "required name=search_term_string",
+          },
         },
       ],
     };
@@ -122,25 +123,46 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids" },
+        {
+          title:
+            "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids",
+        },
         {
           name: "description",
-          content: "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today."
+          content:
+            "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
         },
         {
           name: "keywords",
-          content: "preschool learning app, kindergarten learning app, kids learning platform, online learning for kids, AI learning app for kids, educational games, alphabet learning, phonics, number learning, math for kids, kids stories, learning activities"
+          content:
+            "preschool learning app, kindergarten learning app, kids learning platform, online learning for kids, AI learning app for kids, educational games, alphabet learning, phonics, number learning, math for kids, kids stories, learning activities",
         },
         { name: "theme-color", content: "#ffffff" },
-        { property: "og:title", content: "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids" },
-        { property: "og:description", content: "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today." },
+        {
+          property: "og:title",
+          content:
+            "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids",
+        },
+        {
+          property: "og:description",
+          content:
+            "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
+        },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
         { property: "og:image", content: "https://kinderkidsspace.in/favicon.png" },
         { property: "og:site_name", content: "KinderKidsspace" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids" },
-        { name: "twitter:description", content: "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today." },
+        {
+          name: "twitter:title",
+          content:
+            "KinderKidsspace – Interactive Learning Platform for Preschool & Kindergarten Kids",
+        },
+        {
+          name: "twitter:description",
+          content:
+            "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
+        },
         { name: "twitter:image", content: "https://kinderkidsspace.in/favicon.png" },
       ],
       links: [

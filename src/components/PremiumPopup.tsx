@@ -1,24 +1,16 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, X, Star, Crown, Loader2 } from "lucide-react";
+import { Crown, X, Star } from "lucide-react";
 import { useProgress, dismissPremiumPopup } from "@/lib/progress";
-import confetti from "canvas-confetti"; // We will try to use it if installed, otherwise we can ignore.
-import { auth } from "@/lib/firebase";
-import { initiatePayment } from "@/lib/razorpay";
-import { toast } from "sonner";
+import confetti from "canvas-confetti";
 
 export const PremiumPopup = () => {
   const progress = useProgress();
   const [show, setShow] = useState(false);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   useEffect(() => {
-    // Admin bypass
-    if (auth.currentUser?.email?.toLowerCase() === "kinderkidsspace@gmail.com") return;
-
     if (progress.isPremium && !progress.premiumPopupShown) {
       setShow(true);
-      // Trigger a confetti explosion for the celebration
       setTimeout(() => {
         try {
           if (typeof confetti === "function") {
@@ -41,47 +33,6 @@ export const PremiumPopup = () => {
     setTimeout(() => {
       dismissPremiumPopup();
     }, 300);
-  };
-
-  const handlePurchase = () => {
-    setIsProcessingPayment(true);
-
-    // Amount in INR (e.g. ₹99)
-    const amount = 99;
-
-    const userDetails = {
-      id: auth.currentUser?.uid,
-      name: auth.currentUser?.displayName || "Kinder Kids User",
-      email: auth.currentUser?.email || "hello@kinderkidsspace.in",
-    };
-
-    initiatePayment(
-      amount,
-      userDetails,
-      (data) => {
-        setIsProcessingPayment(false);
-        toast.success("Payment successful! Premium features unlocked.", {
-          description: `Order ID: ${data.order_id || "Verified"}`,
-        });
-        handleDismiss();
-        // Here we can also update user's premium status in Firestore when ready
-      },
-      (error) => {
-        setIsProcessingPayment(false);
-        const errorMessage = error?.message || "Something went wrong during payment";
-        // User cancelling is typically a specific error code or just a generic error from Razorpay
-        if (
-          errorMessage.toLowerCase().includes("cancelled") ||
-          errorMessage.toLowerCase().includes("failed")
-        ) {
-          toast.error("Payment incomplete", {
-            description: "The payment process was not finished.",
-          });
-        } else {
-          toast.error("Payment failed", { description: errorMessage });
-        }
-      },
-    );
   };
 
   return (
@@ -109,7 +60,6 @@ export const PremiumPopup = () => {
               />
             </div>
 
-            {/* Floating Icons */}
             <motion.div
               animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -130,30 +80,24 @@ export const PremiumPopup = () => {
 
             <div className="relative z-10">
               <h2 className="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-500 mb-4 drop-shadow-sm">
-                Premium Unlocked!
+                Premium Unlocked! 🎉
               </h2>
 
               <p className="text-xl text-purple-100 font-light mb-8 leading-relaxed">
-                Wow! You've maintained an incredible{" "}
-                <span className="font-bold text-yellow-400">11-Day Streak!</span>
+                Welcome to the <span className="font-bold text-white">Premium Club!</span>
                 <br />
                 <br />
-                As a reward for your dedication, you now have access to our most{" "}
-                <span className="font-bold text-white">advanced and engaging topics</span>! Keep up
-                the amazing work!
+                You now have full access to{" "}
+                <span className="font-bold text-yellow-400">all premium features</span>. Enjoy the
+                full learning universe!
               </p>
 
               <button
-                onClick={handlePurchase}
-                disabled={isProcessingPayment}
-                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full text-indigo-950 font-bold text-xl hover:scale-105 transition-all shadow-[0_0_20px_rgba(250,204,21,0.5)] w-full sm:w-auto disabled:opacity-70 disabled:hover:scale-100"
+                onClick={handleDismiss}
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full text-indigo-950 font-bold text-xl hover:scale-105 transition-all shadow-[0_0_20px_rgba(250,204,21,0.5)] w-full sm:w-auto"
               >
-                {isProcessingPayment ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                ) : (
-                  <Sparkles className="w-6 h-6 group-hover:animate-spin" />
-                )}
-                {isProcessingPayment ? "Processing..." : "Claim Premium"}
+                <Star className="w-6 h-6 group-hover:animate-spin" />
+                Start Exploring! 🚀
               </button>
             </div>
           </motion.div>

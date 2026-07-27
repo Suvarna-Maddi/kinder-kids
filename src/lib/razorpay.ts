@@ -13,11 +13,31 @@ export const loadRazorpayScript = () => {
   });
 };
 
+interface RazorpaySuccessResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayFailedResponse {
+  error: {
+    code: string;
+    description: string;
+    source: string;
+    step: string;
+    reason: string;
+    metadata: {
+      order_id: string;
+      payment_id: string;
+    };
+  };
+}
+
 export const initiatePayment = async (
   amount: number,
   userDetails: { id?: string; name?: string; email?: string; contact?: string },
-  onSuccess: (data: any) => void,
-  onError: (error: any) => void,
+  onSuccess: (data: { success: boolean; paymentId: string; expiryDate: string }) => void,
+  onError: (error: Error | unknown) => void,
 ) => {
   const isLoaded = await loadRazorpayScript();
   if (!isLoaded) {
@@ -49,7 +69,7 @@ export const initiatePayment = async (
       name: "Kinder Kids",
       description: "Premium Upgrade",
       order_id: orderData.order_id,
-      handler: async function (response: any) {
+      handler: async function (response: RazorpaySuccessResponse) {
         try {
           // 3. Verify payment on backend
           const verifyResponse = await fetch("/api/verify-payment", {
@@ -88,8 +108,9 @@ export const initiatePayment = async (
       },
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paymentObject = new (window as any).Razorpay(options);
-    paymentObject.on("payment.failed", function (response: any) {
+    paymentObject.on("payment.failed", function (response: RazorpayFailedResponse) {
       onError(response.error);
     });
     paymentObject.open();

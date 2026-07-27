@@ -1,11 +1,12 @@
 import crypto from "crypto";
-import admin from "firebase-admin";
+import { getApps, initializeApp, cert } from "firebase-admin/app";
+import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 
 // Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
+if (!getApps().length) {
   try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
+    initializeApp({
+      credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
         // Handle escaped newlines in Vercel environment variables
@@ -52,10 +53,15 @@ export default async function handler(req, res) {
     if (isAuthentic) {
       // Payment is successfully verified.
       // Save to Firestore using a transaction to prevent duplicates
-      const db = admin.firestore();
+      const db = getFirestore();
 
       // Use razorpay_order_id as the document ID for idempotency (prevent duplicates)
       const paymentRef = db.collection("payments").doc(razorpay_order_id);
+
+      // Calculate expiry before transaction so it's in scope for the response
+      const durationDays = req.body.durationDays || 30;
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + durationDays);
 
       await db.runTransaction(async (transaction) => {
         const paymentDoc = await transaction.get(paymentRef);
@@ -68,7 +74,7 @@ export default async function handler(req, res) {
 
         if (userDoc.exists) {
           const userData = userDoc.data();
-          const now = admin.firestore.Timestamp.now();
+          const now = Timestamp.now();
           if (
             userData.isPremium &&
             userData.subscriptionExpiryDate &&
@@ -86,29 +92,28 @@ export default async function handler(req, res) {
           currency: currency,
           status: "success",
           userId: userId,
-          purchaseTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+          purchaseTimestamp: FieldValue.serverTimestamp(),
         });
 
-        // Set subscription details on user document
-        const durationDays = req.body.durationDays || 30;
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + durationDays);
-
         transaction.set(
-          userRef,
+          db.collection("users").doc(userId),
           {
             isPremium: true,
             premiumUnlocked: true,
-            subscriptionStartDate: admin.firestore.FieldValue.serverTimestamp(),
-            subscriptionExpiryDate: admin.firestore.Timestamp.fromDate(expiryDate),
+            subscriptionStartDate: FieldValue.serverTimestamp(),
+            subscriptionExpiryDate: Timestamp.fromDate(expiryDate),
+            paymentId: razorpay_payment_id,
           },
           { merge: true },
         );
       });
 
-      return res
-        .status(200)
-        .json({ success: true, message: "Payment verified successfully and saved" });
+      return res.status(200).json({
+        success: true,
+        message: "Payment verified successfully and saved",
+        paymentId: razorpay_payment_id,
+        expiryDate: expiryDate.toISOString(),
+      });
     } else {
       console.error("Payment signature mismatch");
       return res.status(400).json({ success: false, message: "Invalid payment signature" });

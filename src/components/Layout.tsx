@@ -26,7 +26,9 @@ import {
 } from "lucide-react";
 import { PremiumPopup } from "./PremiumPopup";
 import { SubscriptionModal } from "./SubscriptionModal";
+import { PremiumBadgeModal } from "./PremiumBadgeModal";
 import { useAuth } from "../lib/auth-client";
+import { useProgress } from "../lib/progress";
 import logo from "@/assets/logo.png";
 import avatarBoy from "@/assets/avatar_boy.png";
 import avatarGirl from "@/assets/avatar_girl.png";
@@ -72,9 +74,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const { isAuthenticated, username, gender, isLoading, logout } = useAuth();
+  const progress = useProgress();
+  const isActivePremium =
+    progress.isPremium &&
+    !!progress.subscriptionExpiryDate &&
+    new Date(progress.subscriptionExpiryDate).getTime() > Date.now();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+  const [isPremiumBadgeOpen, setIsPremiumBadgeOpen] = useState(false);
 
   const getAvatar = () => {
     if (gender === "girl" || gender === "female") return avatarGirl;
@@ -147,6 +155,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         isOpen={isSubscriptionModalOpen}
         onClose={() => setIsSubscriptionModalOpen(false)}
       />
+      <PremiumBadgeModal isOpen={isPremiumBadgeOpen} onClose={() => setIsPremiumBadgeOpen(false)} />
 
       {pathname !== "/dashboard" && (
         <motion.nav
@@ -254,15 +263,31 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 </Link>
               ) : (
                 <div className="flex items-center gap-2 ml-2 relative">
+                  {/* Crown: opens badge for premium users, subscription modal for others */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsSubscriptionModalOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400/20 to-yellow-500/20 hover:from-amber-400/30 hover:to-yellow-500/30 border border-amber-400/30 rounded-full transition-colors group"
+                    onClick={() =>
+                      isActivePremium
+                        ? setIsPremiumBadgeOpen(true)
+                        : setIsSubscriptionModalOpen(true)
+                    }
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors group ${
+                      isActivePremium
+                        ? "bg-gradient-to-r from-amber-400/30 to-yellow-500/30 border border-amber-400/50 hover:from-amber-400/40 hover:to-yellow-500/40"
+                        : "bg-gradient-to-r from-amber-400/20 to-yellow-500/20 border border-amber-400/30 hover:from-amber-400/30 hover:to-yellow-500/30"
+                    }`}
+                    title={isActivePremium ? "View Premium Subscription" : "Upgrade to Premium"}
                   >
-                    <Crown className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform" />
+                    <Crown
+                      className={`w-4 h-4 group-hover:scale-110 transition-transform ${
+                        isActivePremium
+                          ? "text-amber-500 drop-shadow-[0_0_6px_rgba(245,158,11,0.8)]"
+                          : "text-amber-500"
+                      }`}
+                    />
                     <span className="font-display font-bold text-xs text-amber-600 dark:text-amber-400 hidden sm:inline">
-                      Premium
+                      {isActivePremium ? "Premium ✓" : "Premium"}
                     </span>
                   </motion.button>
                   <motion.button
@@ -381,13 +406,23 @@ const Layout = ({ children }: { children: ReactNode }) => {
                     <button
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        setIsSubscriptionModalOpen(true);
+                        if (isActivePremium) {
+                          setIsPremiumBadgeOpen(true);
+                        } else {
+                          setIsSubscriptionModalOpen(true);
+                        }
                       }}
                       className="flex items-center gap-3 px-4 py-2 hover:bg-muted rounded-xl transition-colors cursor-pointer text-left"
                     >
-                      <Crown className="w-6 h-6 text-amber-500" />
+                      <Crown
+                        className={`w-6 h-6 ${
+                          isActivePremium
+                            ? "text-amber-500 drop-shadow-[0_0_6px_rgba(245,158,11,0.8)]"
+                            : "text-amber-500"
+                        }`}
+                      />
                       <span className="font-display font-bold text-lg text-amber-600 dark:text-amber-400">
-                        Premium Subscription
+                        {isActivePremium ? "Premium Active ✓" : "Premium Subscription"}
                       </span>
                     </button>
                     <button
