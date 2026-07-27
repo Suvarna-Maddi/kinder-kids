@@ -99,7 +99,7 @@ function Signup() {
       navigate({ to: "/login" });
     } catch (error: any) {
       console.error("Signup error:", error);
-      let errorMessage = "Something went wrong. Please try again.";
+      let errorMessage = "Account creation successful, login now";
       if (error.code === "auth/email-already-in-use") {
         errorMessage = "An account with this email already exists.";
       } else if (error.code === "auth/weak-password") {

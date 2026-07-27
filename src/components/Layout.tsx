@@ -77,7 +77,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   const getAvatar = () => {
-    if (gender === "girl") return avatarGirl;
+    if (gender === "girl" || gender === "female") return avatarGirl;
     return avatarBoy;
   };
 

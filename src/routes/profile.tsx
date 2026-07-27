@@ -33,7 +33,7 @@ function ProfilePage() {
   const { streakDays, stars } = useProgress();
 
   const getAvatar = () => {
-    if (gender === "girl") return avatarGirl;
+    if (gender === "girl" || gender === "female") return avatarGirl;
     return avatarBoy;
   };
 

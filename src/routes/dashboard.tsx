@@ -240,7 +240,7 @@ function Dashboard() {
   const [showMoreMobile, setShowMoreMobile] = useState(false);
 
   const getAvatar = () => {
-    if (gender === "girl") return avatarGirl;
+    if (gender === "girl" || gender === "female") return avatarGirl;
     return avatarBoy;
   };
 
