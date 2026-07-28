@@ -2,23 +2,53 @@ import crypto from "crypto";
 import { getApps, initializeApp, cert } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 
-// Initialize Firebase Admin if not already initialized
-if (!getApps().length) {
-  try {
-    initializeApp({
-      credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        // Handle escaped newlines in Vercel environment variables
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-      }),
-    });
-  } catch (error) {
-    console.error("Firebase admin initialization error:", error.stack);
+let initError = null;
+
+function ensureFirebaseInitialized() {
+  console.log({
+    hasProjectId: typeof process.env.FIREBASE_PROJECT_ID,
+    hasClientEmail: typeof process.env.FIREBASE_CLIENT_EMAIL,
+    hasPrivateKey: typeof process.env.FIREBASE_PRIVATE_KEY,
+    projectIdValue: process.env.FIREBASE_PROJECT_ID
+  });
+
+  if (!getApps().length) {
+    try {
+      initializeApp({
+        credential: cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          // Handle escaped newlines in Vercel environment variables
+          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+        }),
+      });
+      console.log("Firebase initialized successfully. App count:", getApps().length);
+      initError = null;
+    } catch (error) {
+      console.error("Firebase admin initialization error:", error.stack);
+      initError = error;
+      throw error;
+    }
   }
 }
 
 export default async function handler(req, res) {
+  try {
+    ensureFirebaseInitialized();
+  } catch (error) {
+    return res.status(500).json({
+      message: "Firebase Admin initialization failed",
+      error: error.message,
+      details: "Check that FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY are correct."
+    });
+  }
+
+  if (getApps().length === 0) {
+    return res.status(500).json({
+      message: "Firebase Admin is not initialized (app count is 0)"
+    });
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
