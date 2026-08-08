@@ -77,6 +77,7 @@ if (typeof window !== "undefined") {
 
           if (docSnap.exists()) {
             const data = docSnap.data();
+            const isAdmin = auth.currentUser?.email?.toLowerCase() === "kinderkidsspace@gmail.com";
             state = {
               ...DEFAULTS,
               lettersLearned: data.alphabetProgress?.lettersLearned || [],
@@ -91,13 +92,15 @@ if (typeof window !== "undefined") {
               lastActiveDate: data.lastActiveDate || null,
               correct: data.quizScores?.correct || 0,
               attempts: data.quizScores?.attempts || 0,
-              isPremium: data.isPremium || false,
+              isPremium: isAdmin ? true : (data.isPremium || false),
               premiumPopupShown: data.premiumPopupShown || false,
-              subscriptionExpiryDate: data.subscriptionExpiryDate
-                ? typeof data.subscriptionExpiryDate.toDate === "function"
-                  ? data.subscriptionExpiryDate.toDate().toISOString()
-                  : new Date(data.subscriptionExpiryDate).toISOString()
-                : null,
+              subscriptionExpiryDate: isAdmin
+                ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 365).toISOString()
+                : (data.subscriptionExpiryDate
+                    ? typeof data.subscriptionExpiryDate.toDate === "function"
+                      ? data.subscriptionExpiryDate.toDate().toISOString()
+                      : new Date(data.subscriptionExpiryDate).toISOString()
+                    : null),
               subscriptionStartDate: data.subscriptionStartDate
                 ? typeof data.subscriptionStartDate.toDate === "function"
                   ? data.subscriptionStartDate.toDate().toISOString()
@@ -110,6 +113,7 @@ if (typeof window !== "undefined") {
             touchStreak(); // Will recalculate streak on login if needed
             notifyListeners();
           }
+
         },
         (err) => {
           console.error("Error listening to progress from Firestore", err);

@@ -22,6 +22,8 @@ import { initiatePayment } from "@/lib/razorpay";
 import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { CategoryHero } from "@/components/CategoryHero";
+
 
 const SolarSystem = () => {
   const progress = useProgress();
@@ -291,25 +293,15 @@ const SolarSystem = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 w-full pt-12 pb-24">
-        {/* Header */}
-        <div className="text-center mb-16 px-4">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-white to-purple-200 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] mb-4 tracking-tight"
-          >
-            Explore the Solar System
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-xl md:text-2xl text-indigo-200 font-light"
-          >
-            Discover planets, moons, and amazing space facts!
-          </motion.p>
-        </div>
+      <div className="relative z-10 w-full pb-24">
+        <CategoryHero
+          category="space"
+          title="Welcome to Space!"
+          description="Explore the universe, discover amazing facts, and begin your space adventure!"
+          ctaText="Start Exploring"
+        />
+        <div id="learning-content" className="pt-12 scroll-mt-20">
+
 
         {/* Premium Orbit Timeline Layout */}
         <div className="w-full mb-16 relative overflow-x-auto overflow-y-visible pb-16 pt-8 snap-x scrollbar-thin scrollbar-thumb-indigo-500/30">
@@ -769,9 +761,11 @@ const SolarSystem = () => {
             </button>
           </Link>
         </div>
+        </div>
       </div>
     </div>
   );
 };
+
 
 export default SolarSystem;

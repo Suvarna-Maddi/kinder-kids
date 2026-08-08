@@ -12,7 +12,8 @@ export function useAuth() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.emailVerified) {
+      const isAdminEmail = user?.email?.toLowerCase() === "kinderkidsspace@gmail.com";
+      if (user && (user.emailVerified || isAdminEmail)) {
         setIsAuthenticated(true);
         setUserId(user.uid);
 
@@ -28,9 +29,11 @@ export function useAuth() {
           }
 
           // Make a background call to check subscription status (auto-revokes if expired)
-          fetch(`/api/check-subscription?userId=${user.uid}`).catch((err) => {
-            console.error("Failed to check subscription status", err);
-          });
+          if (!isAdminEmail) {
+            fetch(`/api/check-subscription?userId=${user.uid}`).catch((err) => {
+              console.error("Failed to check subscription status", err);
+            });
+          }
         } catch (error) {
           console.error("Error fetching user data:", error);
           setUsername(user.displayName || "Champion");
@@ -48,6 +51,7 @@ export function useAuth() {
       }
       setIsLoading(false);
     });
+
 
     return () => unsubscribe();
   }, []);

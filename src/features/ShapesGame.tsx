@@ -17,6 +17,8 @@ import { recordAndSpeak, speak, praise, retryHint, cancelSpeech } from "@/lib/tt
 import { awardCoin, awardStar, recordAttempt } from "@/lib/progress";
 import { createPersistentQuizDeck, sampleUnique } from "@/lib/quizEngine";
 import SettingsBar from "@/components/learning/SettingsBar";
+import { CategoryHero } from "@/components/CategoryHero";
+
 
 type ShapeName =
   // 2D
@@ -738,20 +740,17 @@ const ShapesGame = () => {
   };
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex flex-wrap items-center gap-3 mb-6">
-          <motion.div
-            animate={{ rotate: [0, 15, -15, 0] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-          >
-            <Sparkles className="w-8 h-8 text-kid-yellow" />
-          </motion.div>
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-            Shapes! 🔷
-          </h1>
+    <div className="w-full">
+      <CategoryHero
+        category="shapes"
+        title="Let's Learn Shapes!"
+        description="Discover amazing shapes all around us. Learn, play, trace, and become a shape champion!"
+        ctaText="Explore Shapes"
+      />
+      <div id="learning-content" className="p-4 md:p-8 max-w-5xl mx-auto scroll-mt-20">
+        <div className="flex flex-wrap items-center gap-3 mb-6 justify-end">
           {mode === "quiz" && (
-            <div className="ml-auto flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-lg border border-border">
+            <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-lg border border-border">
               <Trophy className="w-5 h-5 text-kid-yellow" />
               <span className="font-display font-bold text-foreground">
                 {score}/{total}
@@ -759,6 +758,7 @@ const ShapesGame = () => {
             </div>
           )}
         </div>
+
 
         <div className="flex flex-wrap gap-2 mb-6">
           {(

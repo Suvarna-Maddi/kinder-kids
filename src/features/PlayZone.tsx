@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from
 import { motion, AnimatePresence } from "framer-motion";
 import { IMG_MAP } from "@/lib/images";
 import { LazyImage } from "@/components/learning/LazyImage";
+import { CategoryHero } from "@/components/CategoryHero";
+
 import {
   Sparkles,
   Star,
@@ -2307,7 +2309,13 @@ const PlayZone = () => {
   };
 
   return (
-    <div className="p-4 md:p-8 relative">
+    <div className="w-full relative">
+      <CategoryHero
+        category="playzone"
+        title="Welcome to PlayZone!"
+        description="Games for little champions. Pick a game, choose a level, and start the fun!"
+        ctaText="Let's Play!"
+      />
       {/* Cute floating clouds */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
         {["☁️", "☁️", "☁️", "🎈", "🎈", "⭐"].map((e, i) => (
@@ -2324,31 +2332,8 @@ const PlayZone = () => {
         ))}
       </div>
 
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="inline-flex items-center gap-2 bg-card/80 px-4 py-2 rounded-full shadow border border-border mb-3"
-          >
-            <Sparkles className="w-4 h-4 text-kid-yellow" />
-            <span className="font-body font-semibold text-sm">Welcome to the PlayZone!</span>
-          </motion.div>
-          <h1 className="text-4xl md:text-6xl font-display font-bold">
-            <span className="text-kid-pink">P</span>
-            <span className="text-kid-orange">l</span>
-            <span className="text-kid-yellow">a</span>
-            <span className="text-kid-green">y</span>
-            <span className="text-kid-teal">Z</span>
-            <span className="text-kid-blue">o</span>
-            <span className="text-kid-purple">n</span>
-            <span className="text-kid-pink">e</span>
-            <span className="ml-2">🎮</span>
-          </h1>
-          <p className="text-lg md:text-xl font-body text-muted-foreground mt-2">
-            Games for little champions — pick a game, pick a level, have fun!
-          </p>
-        </div>
+      <div id="learning-content" className="max-w-6xl mx-auto p-4 md:p-8 scroll-mt-20">
+
 
         <RewardsShowcase />
 

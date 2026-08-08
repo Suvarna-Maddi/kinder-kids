@@ -7,6 +7,8 @@ import { vowels, consonants, TeluguLetter } from "../data/teluguData";
 import { IMG_MAP } from "../lib/images";
 import FreeDrawPad from "../components/learning/FreeDrawPad";
 
+import { CategoryHero } from "../components/CategoryHero";
+
 export const Route = createFileRoute("/telugu")({
   component: TeluguPage,
   head: () => {
@@ -193,19 +195,15 @@ function TeluguPage() {
   ] as const;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="text-center mb-12">
-        <motion.h1
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-4xl md:text-6xl font-display font-bold text-kid-purple mb-4"
-        >
-          తెలుగు ప్రపంచం
-        </motion.h1>
-        <p className="text-xl text-muted-foreground font-body">
-          Welcome to the Telugu Learning World! Let's play and learn.
-        </p>
-      </div>
+    <div className="w-full">
+      <CategoryHero
+        category="telugu"
+        title="తెలుగు నేర్చుకుందాం!"
+        description="కలిసి తెలుగు నేర్చుకుందాం, చదువుకుందాం, రాయడం నేర్చుకుందాం, సరదాగా ఆడుకుందాం!"
+        ctaText="తెలుగు నేర్చుకుందాం"
+      />
+      <div id="learning-content" className="max-w-6xl mx-auto px-4 py-8 scroll-mt-20">
+
 
       {/* Navigation Tabs */}
       <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -346,6 +344,8 @@ function TeluguPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
+

@@ -433,6 +433,8 @@ const QuizPanel = ({ num }: { num: number }) => {
   );
 };
 
+import { CategoryHero } from "@/components/CategoryHero";
+
 // --- Main -------------------------------------------------------------------
 const NumbersGame = () => {
   const [numbers, setNumbers] = useState<number[]>(() =>
@@ -466,13 +468,15 @@ const NumbersGame = () => {
   const gradient = selected ? gradients[(selected - 1) % gradients.length] : gradients[0];
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-            🔢 Learn Numbers!
-          </h1>
-        </div>
+    <div className="w-full">
+      <CategoryHero
+        category="numbers"
+        title="Let's Learn Numbers!"
+        description="Count, write, and explore numbers with fun activities, games, and real-life examples."
+        ctaText="Start Counting"
+      />
+      <div id="learning-content" className="p-4 md:p-8 max-w-5xl mx-auto scroll-mt-20">
+
 
         <AnimatePresence>
           {selected !== null && (

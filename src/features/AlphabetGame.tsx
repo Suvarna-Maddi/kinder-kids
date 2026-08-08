@@ -351,6 +351,8 @@ const QuizPanel = ({ letter, words }: { letter: string; words: LetterWord[] }) =
   );
 };
 
+import { CategoryHero } from "@/components/CategoryHero";
+
 // --- Main page (grid + expanded card + tabs) ------------------------------
 const AlphabetGame = () => {
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
@@ -375,8 +377,8 @@ const AlphabetGame = () => {
 
     setTimeout(() => {
       document
-        .getElementById("alphabet-details-panel")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          .getElementById("alphabet-details-panel")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
 
@@ -388,19 +390,15 @@ const AlphabetGame = () => {
   const gradient = selectedLetter ? gradientFor(selectedLetter) : gradients[0];
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <motion.div
-            animate={{ rotate: [0, 15, -15, 0] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-          >
-            <Sparkles className="w-8 h-8 text-kid-yellow" />
-          </motion.div>
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-            Learn Alphabets! 🔤
-          </h1>
-        </div>
+    <div className="w-full">
+      <CategoryHero
+        category="alphabets"
+        title="Learn Alphabets with Kindi!"
+        description="Explore A to Z, discover new words, and have fun learning!"
+        ctaText="Start Learning"
+      />
+      <div id="learning-content" className="p-4 md:p-8 max-w-5xl mx-auto scroll-mt-20">
+
 
         <AnimatePresence>
           {selectedLetter && (

@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import { Trophy, Star, Coins, Flame, BookOpen, Hash, Grid3X3, Sparkles } from "lucide-react";
 import { useProgress } from "@/lib/progress";
+import { CategoryHero } from "@/components/CategoryHero";
+
 
 export const BADGES: Array<{
   slug: string;
@@ -107,14 +109,15 @@ const Rewards = () => {
   ];
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <Trophy className="w-8 h-8 text-kid-yellow" />
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-            Your Rewards 🏆
-          </h1>
-        </div>
+    <div className="w-full">
+      <CategoryHero
+        category="rewards"
+        title="Celebrate Your Learning!"
+        description="Complete activities, earn stars, unlock achievements, and become a KinderKidsspace champion!"
+        ctaText="View My Rewards"
+      />
+      <div id="learning-content" className="p-4 md:p-8 max-w-5xl mx-auto scroll-mt-20">
+
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mb-10">
           {stats.map((s, i) => {

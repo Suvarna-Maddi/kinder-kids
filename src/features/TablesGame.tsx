@@ -5,6 +5,8 @@ import { playClick, playSuccess, playError, playPop } from "@/lib/sounds";
 import { recordAndSpeak, speak, speakAsync, praise, retryHint, cancelSpeech } from "@/lib/tts";
 import { awardCoin, awardStar, markTable, recordAttempt } from "@/lib/progress";
 import SettingsBar from "@/components/learning/SettingsBar";
+import { CategoryHero } from "@/components/CategoryHero";
+
 
 const gradients = [
   "from-kid-blue to-kid-teal",
@@ -148,14 +150,17 @@ const TablesGame = () => {
   const correct = question.a * question.b;
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-4 mb-8 flex-wrap">
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-            ✖️ Times Tables!
-          </h1>
+    <div className="w-full">
+      <CategoryHero
+        category="tables"
+        title="Let's Learn Tables!"
+        description="Learn multiplication tables in a fun and easy way, practice more, and become a math champion!"
+        ctaText="Practice Tables"
+      />
+      <div id="learning-content" className="p-4 md:p-8 max-w-5xl mx-auto scroll-mt-20">
+        <div className="flex items-center gap-4 mb-8 flex-wrap justify-end">
           {quizMode && (
-            <div className="ml-auto flex items-center gap-3">
+            <div className="flex items-center gap-3">
               {streak >= 3 && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -175,6 +180,7 @@ const TablesGame = () => {
             </div>
           )}
         </div>
+
 
         {!quizMode ? (
           <>

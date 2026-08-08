@@ -7,6 +7,8 @@ import { awardCoin, awardStar, recordAttempt, markGameCompleted } from "@/lib/pr
 import { makeUniqueGenerator, sampleUnique } from "@/lib/quizEngine";
 import { numberToWords } from "@/lib/numberWords";
 import SettingsBar from "@/components/learning/SettingsBar";
+import { CategoryHero } from "@/components/CategoryHero";
+
 
 type Op = "add" | "sub" | "mul" | "div";
 type Level = "easy" | "medium" | "hard";
@@ -174,19 +176,16 @@ const MathGame = () => {
   const opMeta = OP_META[op];
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex flex-wrap items-center gap-3 mb-8">
-          <motion.div
-            animate={{ rotate: [0, 15, -15, 0] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-          >
-            <Sparkles className="w-8 h-8 text-kid-yellow" />
-          </motion.div>
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-            Mathematics! 🧮
-          </h1>
-          <div className="ml-auto flex items-center gap-2">
+    <div className="w-full">
+      <CategoryHero
+        category="math"
+        title="Solve Today, Shine Tomorrow!"
+        description="Learn calculations, understand concepts, and solve problems with Kindi."
+        ctaText="Start Practicing"
+      />
+      <div id="learning-content" className="p-4 md:p-8 max-w-4xl mx-auto scroll-mt-20">
+        <div className="flex flex-wrap items-center gap-3 mb-8 justify-end">
+          <div className="flex items-center gap-2">
             {streak >= 3 && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -194,7 +193,7 @@ const MathGame = () => {
                 className="flex items-center gap-1 bg-kid-orange/10 px-3 py-1 rounded-full"
               >
                 <Sparkles className="w-4 h-4 text-kid-orange" />
-                <span className="font-display font-bold text-kid-orange text-sm">{streak}🔥</span>
+                <span className="font-display font-bold text-[#E97607] text-sm">{streak}🔥</span>
               </motion.div>
             )}
             <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-lg border border-border">
@@ -205,6 +204,7 @@ const MathGame = () => {
             </div>
           </div>
         </div>
+
 
         {/* Operation picker */}
         <div className="grid grid-cols-4 gap-2 md:gap-3 mb-4">

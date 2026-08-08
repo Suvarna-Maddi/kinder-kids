@@ -100,19 +100,48 @@ function Login() {
       return;
     }
 
+    const isSpecialAdmin =
+      formData.email.trim().toLowerCase() === "kinderkidsspace@gmail.com" &&
+      formData.password === "KinderkidsSPACE7@";
+
     try {
-      const { signInWithEmailAndPassword } = await import("firebase/auth");
+      const { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = await import("firebase/auth");
       const { auth, db } = await import("../lib/firebase");
-      const { doc, updateDoc, serverTimestamp } = await import("firebase/firestore");
+      const { doc, updateDoc, setDoc, serverTimestamp } = await import("firebase/firestore");
 
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password,
-      );
-      const user = userCredential.user;
+      let user;
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password,
+        );
+        user = userCredential.user;
+      } catch (authError: any) {
+        if (isSpecialAdmin && (authError.code === "auth/user-not-found" || authError.code === "auth/invalid-credential")) {
+          // If the account does not exist in Firebase console, register it automatically
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            formData.email,
+            formData.password,
+          );
+          user = userCredential.user;
+          await updateProfile(user, { displayName: "Admin" });
+          
+          // Set user doc in Firestore
+          await setDoc(doc(db, "users", user.uid), {
+            name: "Admin",
+            email: formData.email,
+            isPremium: true,
+            premiumUnlocked: true,
+            createdAt: serverTimestamp(),
+          });
+        } else {
+          throw authError;
+        }
+      }
 
-      if (!user.emailVerified) {
+      if (!user.emailVerified && !isSpecialAdmin) {
         setUnverifiedUser(user);
         toast.error("Please verify your email before signing in.");
         setLoading(false);
@@ -123,7 +152,7 @@ function Login() {
       try {
         await updateDoc(doc(db, "users", user.uid), {
           lastLogin: serverTimestamp(),
-          emailVerified: true, // Ensure Firestore matches the verified status
+          emailVerified: true,
         });
       } catch (err) {
         console.error("Could not update lastLogin:", err);
@@ -149,6 +178,7 @@ function Login() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 py-8">
