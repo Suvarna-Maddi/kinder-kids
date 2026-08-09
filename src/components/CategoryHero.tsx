@@ -55,6 +55,114 @@ const HERO_CONFIGS: Record<
   },
 };
 
+const RangoliMinimalDesign = () => (
+  <svg viewBox="0 0 100 300" className="w-full h-auto">
+    {/* Thin vertical layout helper line (golden dashed) */}
+    <line x1="50" y1="20" x2="50" y2="280" stroke="#FFDAC1" strokeWidth="1.2" strokeDasharray="4 6" />
+
+    {/* ---------------- CENTER MOTIF (y: 150) ---------------- */}
+    {/* Central soft lavender dot */}
+    <circle cx="50" cy="150" r="6" fill="#D6CFFF" />
+    <circle cx="50" cy="150" r="10" fill="none" stroke="#FFB7B2" strokeWidth="1.5" />
+    
+    {/* Outward peach petals (symmetrical 8-petal bloom) */}
+    {Array.from({ length: 8 }).map((_, i) => (
+      <path
+        key={`center-petal-${i}`}
+        d="M 50 150 Q 44 132, 50 132 Q 56 132, 50 150"
+        fill="#FFB7B2"
+        fillOpacity="0.12"
+        stroke="#FFB7B2"
+        strokeWidth="1.8"
+        transform={`rotate(${i * 45}, 50, 150)`}
+      />
+    ))}
+
+    {/* Light sky blue leaf sweeps */}
+    {Array.from({ length: 4 }).map((_, i) => (
+      <path
+        key={`center-sweep-${i}`}
+        d="M 50 150 Q 34 118, 50 118"
+        fill="#97DEFF"
+        fillOpacity="0.1"
+        stroke="#97DEFF"
+        strokeWidth="1.6"
+        transform={`rotate(${i * 90 + 45}, 50, 150)`}
+      />
+    ))}
+
+    {/* Tiny outer dots around center flower */}
+    {Array.from({ length: 8 }).map((_, i) => {
+      const angle = (i * 45 * Math.PI) / 180;
+      const x = 50 + 26 * Math.cos(angle);
+      const y = 150 + 26 * Math.sin(angle);
+      return <circle key={`center-dot-${i}`} cx={x} cy={y} r="2.5" fill="#B5EAD7" stroke="#FFFFFF" strokeWidth="0.5" />;
+    })}
+
+    {/* ---------------- TOP MOTIF (y: 65) ---------------- */}
+    {/* Connecting path to top */}
+    <path d="M 50 110 Q 40 95, 50 85" fill="none" stroke="#D6CFFF" strokeWidth="1.6" />
+    <path d="M 50 110 Q 60 95, 50 85" fill="none" stroke="#D6CFFF" strokeWidth="1.6" />
+    
+    {/* Top Flower base */}
+    <circle cx="50" cy="65" r="5.5" fill="#FFDAC1" />
+    
+    {/* Symmetrical baby pink floral loops */}
+    {Array.from({ length: 6 }).map((_, i) => (
+      <path
+        key={`top-loop-${i}`}
+        d="M 50 65 Q 46 48, 50 48 Q 54 48, 50 65"
+        fill="#FFC6FF"
+        fillOpacity="0.12"
+        stroke="#FFC6FF"
+        strokeWidth="1.6"
+        transform={`rotate(${i * 60}, 50, 65)`}
+      />
+    ))}
+    
+    {/* Delicate mint green wing accents */}
+    <path d="M 50 65 Q 25 45, 50 45" fill="#B5EAD7" fillOpacity="0.1" stroke="#B5EAD7" strokeWidth="1.8" />
+    <path d="M 50 65 Q 75 45, 50 45" fill="#B5EAD7" fillOpacity="0.1" stroke="#B5EAD7" strokeWidth="1.8" />
+
+    {/* Topmost crowning dots & leaf tip */}
+    <path d="M 50 40 Q 46 32, 50 24 Q 54 32, 50 40" fill="#97DEFF" fillOpacity="0.1" stroke="#97DEFF" strokeWidth="1.6" />
+    <circle cx="50" cy="18" r="3" fill="#FFC6FF" stroke="#FFFFFF" strokeWidth="0.5" />
+    <circle cx="38" cy="50" r="2.5" fill="#D6CFFF" stroke="#FFFFFF" strokeWidth="0.5" />
+    <circle cx="62" cy="50" r="2.5" fill="#D6CFFF" stroke="#FFFFFF" strokeWidth="0.5" />
+
+    {/* ---------------- BOTTOM MOTIF (y: 235) ---------------- */}
+    {/* Connecting path to bottom */}
+    <path d="M 50 190 Q 40 205, 50 215" fill="none" stroke="#D6CFFF" strokeWidth="1.6" />
+    <path d="M 50 190 Q 60 205, 50 215" fill="none" stroke="#D6CFFF" strokeWidth="1.6" />
+
+    {/* Bottom Flower base */}
+    <circle cx="50" cy="235" r="5.5" fill="#FFDAC1" />
+    
+    {/* Symmetrical baby pink floral loops */}
+    {Array.from({ length: 6 }).map((_, i) => (
+      <path
+        key={`bottom-loop-${i}`}
+        d="M 50 235 Q 46 218, 50 218 Q 54 218, 50 235"
+        fill="#FFC6FF"
+        fillOpacity="0.12"
+        stroke="#FFC6FF"
+        strokeWidth="1.6"
+        transform={`rotate(${i * 60}, 50, 235)`}
+      />
+    ))}
+    
+    {/* Delicate mint green wing accents */}
+    <path d="M 50 235 Q 25 255, 50 255" fill="#B5EAD7" fillOpacity="0.1" stroke="#B5EAD7" strokeWidth="1.8" />
+    <path d="M 50 235 Q 75 255, 50 255" fill="#B5EAD7" fillOpacity="0.1" stroke="#B5EAD7" strokeWidth="1.8" />
+
+    {/* Bottommost crowning dots & leaf tip */}
+    <path d="M 50 260 Q 46 268, 50 276 Q 54 268, 50 260" fill="#97DEFF" fillOpacity="0.1" stroke="#97DEFF" strokeWidth="1.6" />
+    <circle cx="50" cy="282" r="3" fill="#FFC6FF" stroke="#FFFFFF" strokeWidth="0.5" />
+    <circle cx="38" cy="250" r="2.5" fill="#D6CFFF" stroke="#FFFFFF" strokeWidth="0.5" />
+    <circle cx="62" cy="250" r="2.5" fill="#D6CFFF" stroke="#FFFFFF" strokeWidth="0.5" />
+  </svg>
+);
+
 export const CategoryHero: React.FC<CategoryHeroProps> = ({
   category,
   ctaText,
@@ -112,8 +220,18 @@ export const CategoryHero: React.FC<CategoryHeroProps> = ({
   }
 
   return (
-    <div className="w-full bg-background pt-4 pb-2 md:pt-6 md:pb-4 border-b border-border">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="w-full bg-background pt-4 pb-2 md:pt-6 md:pb-4 border-b border-border overflow-hidden xl:overflow-visible">
+      <div className="max-w-6xl mx-auto px-4 relative">
+        {/* Left Side Minimal Rangoli */}
+        <div className="absolute right-full mr-3 lg:mr-6 top-1/2 -translate-y-1/2 w-14 xl:w-20 hidden xl:block pointer-events-none select-none">
+          <RangoliMinimalDesign />
+        </div>
+
+        {/* Right Side Minimal Rangoli */}
+        <div className="absolute left-full ml-3 lg:ml-6 top-1/2 -translate-y-1/2 w-14 xl:w-20 hidden xl:block pointer-events-none select-none">
+          <RangoliMinimalDesign />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -121,11 +239,10 @@ export const CategoryHero: React.FC<CategoryHeroProps> = ({
           className="relative rounded-[2rem] overflow-hidden shadow-lg border-4 border-white dark:border-slate-800 hover:shadow-2xl transition-shadow duration-300 group cursor-pointer"
           onClick={handleCtaClick}
         >
-          {/* Main Full-Width banner image */}
           <img
             src={config.image}
             alt={category}
-            className="w-full h-auto object-cover aspect-[2.2/1] sm:aspect-[2.3/1] md:aspect-[2.4/1]"
+            className="w-full h-auto block"
             loading="eager"
           />
 

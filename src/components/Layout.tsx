@@ -70,6 +70,8 @@ const FloatingParticles = () => {
   );
 };
 
+
+
 const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
@@ -149,7 +151,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
     : navItems.filter((item) => item.path === "/" || item.path === "/signup"); // Only show home and signup for guests
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
+      <FloatingParticles />
       <PremiumPopup />
       <SubscriptionModal
         isOpen={isSubscriptionModalOpen}
