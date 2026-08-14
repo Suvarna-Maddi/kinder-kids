@@ -840,6 +840,7 @@ const VideoCard = ({
   color,
   isLocked,
   onClick,
+  videoKey,
 }: {
   title: string;
   duration: string;
@@ -847,44 +848,60 @@ const VideoCard = ({
   color: string;
   isLocked: boolean;
   onClick: () => void;
-}) => (
-  <motion.div
-    whileHover={{ scale: 1.05, y: -4 }}
-    whileTap={{ scale: 0.98 }}
-    onClick={onClick}
-    className="bg-card border border-border rounded-bubble overflow-hidden shadow-md cursor-pointer hover:shadow-xl transition-all flex flex-col h-full relative"
-  >
-    <div className={`h-36 bg-gradient-to-br ${color} relative flex items-center justify-center overflow-hidden`}>
-      <div className="absolute inset-0 bg-white/10 opacity-30 pointer-events-none" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        {isLocked ? (
-          <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <Lock className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-          </div>
-        ) : (
-          <div className="w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110">
-            <Play className="w-5 h-5 text-primary fill-primary ml-1" />
-          </div>
-        )}
+  videoKey: string;
+}) => {
+  const bannerUrl = `https://res.cloudinary.com/re4x0shq/video/upload/kinder/alphabet/${videoKey.toLowerCase()}.jpg`;
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.05, y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="bg-card border border-border rounded-bubble overflow-hidden shadow-md cursor-pointer hover:shadow-xl transition-all flex flex-col h-full relative"
+    >
+      <div className="h-36 relative flex items-center justify-center overflow-hidden bg-black">
+        {/* Banner Image Thumbnail */}
+        <img
+          src={bannerUrl}
+          alt={title}
+          className="absolute inset-0 w-full h-full object-cover opacity-80 transition-opacity duration-300 hover:opacity-95"
+          onError={(e) => {
+            // Hide image and fall back to solid gradient on error
+            e.currentTarget.style.display = "none";
+          }}
+        />
+        <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-40 mix-blend-multiply pointer-events-none`} />
+        
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          {isLocked ? (
+            <div className="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <Lock className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+            </div>
+          ) : (
+            <div className="w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110">
+              <Play className="w-5 h-5 text-primary fill-primary ml-1" />
+            </div>
+          )}
+        </div>
+        <span className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded-full font-mono z-10">
+          {duration}
+        </span>
       </div>
-      <span className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded-full font-mono">
-        {duration}
-      </span>
-    </div>
-    
-    <div className="p-4 flex-1 flex flex-col justify-between">
-      <div>
-        <h4 className="font-display font-bold text-foreground text-sm md:text-base mb-1 line-clamp-1 flex items-center justify-between gap-1">
-          {title}
-          {isLocked && <span className="text-[10px] bg-yellow-400/25 text-amber-800 dark:text-yellow-300 px-1.5 py-0.5 rounded-full font-bold">PRO</span>}
-        </h4>
-        <p className="text-xs text-muted-foreground line-clamp-2">
-          {description}
-        </p>
+      
+      <div className="p-4 flex-1 flex flex-col justify-between">
+        <div>
+          <h4 className="font-display font-bold text-foreground text-sm md:text-base mb-1 line-clamp-1 flex items-center justify-between gap-1">
+            {title}
+            {isLocked && <span className="text-[10px] bg-yellow-400/25 text-amber-800 dark:text-yellow-300 px-1.5 py-0.5 rounded-full font-bold">PRO</span>}
+          </h4>
+          <p className="text-xs text-muted-foreground line-clamp-2">
+            {description}
+          </p>
+        </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 const VideoTheaterModal = ({
   isOpen,
@@ -1297,6 +1314,7 @@ const AlphabetGame = () => {
                   description={video.description}
                   color={video.color}
                   isLocked={!hasPremium}
+                  videoKey={video.key.replace(".mp4", "")}
                   onClick={() => handleVideoClick(video)}
                 />
               ))}
