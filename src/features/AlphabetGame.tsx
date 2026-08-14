@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Hls from "hls.js";
 import {
   Volume2,
   Sparkles,
@@ -405,36 +404,41 @@ const syncProgressToFirebase = async (videoKey: string, time: number, duration: 
   }
 };
 
-let globalPreloadHls: Hls | null = null;
-let globalPreloadVideo: HTMLVideoElement | null = null;
-
-const preloadNextVideo = (nextKey: string) => {
-  if (typeof window === "undefined") return;
-  
-  if (globalPreloadHls) {
-    globalPreloadHls.destroy();
-    globalPreloadHls = null;
-  }
-  // Preloading temporarily disabled to optimize network buffering
-};
-
-// --- Reusable HLS VideoPlayer Component ------------------------------------
-const VideoPlayer = ({
+// --- Reusable Native VideoPlayer Component ------------------------------------
+const VideoPlayer = memo(({
   videoKey,
   className = "",
   onEnded,
+  nextKey,
 }: {
   videoKey: string;
   className?: string;
   onEnded?: () => void;
+  /** Optional key of the next video to preload */
+  nextKey?: string;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const hlsRef = useRef<Hls | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  // New flag to ensure user initiates playback (required for audio on many browsers)
+  const [userStarted, setUserStarted] = useState(false);
 
-  const videoUrl = `https://res.cloudinary.com/re4x0shq/video/upload/sp_auto:maxres_360p/kinder/alphabet/${videoKey.toLowerCase()}.m3u8`;
+  const videoUrl = useMemo(() => {
+    // Choose optimal width based on connection quality
+    // Choose width based on connection; default lower bandwidth for smoother playback
+    let width = "w_480"; // default lighter resolution
+    if (typeof navigator !== "undefined" && (navigator as any).connection) {
+      const conn = (navigator as any).connection;
+      if (conn.saveData || (conn.downlink && conn.downlink < 1.5) || ["2g", "3g"].includes(conn.effectiveType)) {
+        width = "w_360"; // fallback for very slow connections
+        console.log("[VideoPlayer Debug] Very slow connection, choosing 360p fallback.");
+      }
+    }
+    // Ultra‑optimized Cloudinary MP4 URL (eco compression, auto codec, balanced width)
+    return `https://res.cloudinary.com/re4x0shq/video/upload/q_auto:eco,f_auto,vc_auto,${width}/kinder/alphabet/${videoKey.toLowerCase()}.mp4`;
+  }, [videoKey]);
+
   const posterUrl = `https://res.cloudinary.com/re4x0shq/video/upload/kinder/alphabet/${videoKey.toLowerCase()}.jpg`;
 
   const onEndedRef = useRef(onEnded);
@@ -446,34 +450,76 @@ const VideoPlayer = ({
     const video = videoRef.current;
     if (!video) return;
 
-    console.log(`[HLS Debug] Initializing VideoPlayer for key: ${videoKey}`);
+    console.log(`[VideoPlayer Debug] Initializing for key: ${videoKey}`);
     setIsLoading(true);
     setHasError(false);
     setIsLoaded(false);
 
     // Safety timeout (5 seconds) to prevent infinite loaders
     const safetyTimeout = setTimeout(() => {
-      console.warn("[HLS Debug] Loading safety timeout (5s) reached, force-stopping loader");
+      console.warn("[VideoPlayer Debug] Loading safety timeout (5s) reached, force-stopping loader");
       setIsLoading(false);
       setIsLoaded(true);
     }, 5000);
 
-    // Clean up previous Hls player instance before creating a new one
-    if (hlsRef.current) {
-      console.log(`[HLS Debug] Destroying existing HLS instance before reload`);
-      hlsRef.current.destroy();
-      hlsRef.current = null;
-    }
+    // Handle buffering stalls — defined at effect scope so cleanup can remove it
+    const handleWaiting = () => {
+      console.warn("[VideoPlayer Debug] Buffering – waiting");
+      video.play().catch(() => {});
+    };
+
+    const handleLoadedMetadata = () => {
+      console.log("[VideoPlayer Debug] loadedmetadata event fired");
+      clearTimeout(safetyTimeout);
+      setIsLoading(false);
+      setIsLoaded(true);
+      
+      // Resume playback
+      const savedTime = getSavedTime(videoKey);
+      if (savedTime > 0) {
+        console.log(`[VideoPlayer Debug] Resuming playback from saved time: ${savedTime}s`);
+        video.currentTime = savedTime;
+      }
+
+      // Defer playback until sufficient buffer is ready (readyState >= 3)
+      const attemptPlay = () => {
+        if (video.readyState >= 3) {
+          video.play().catch((err) => {
+            console.warn("[VideoPlayer Debug] Playback failed: ", err);
+          });
+        } else {
+          // Wait for canplaythrough event
+          const onCanPlayThrough = () => {
+            video.play().catch((e) => console.warn("[VideoPlayer Debug] Playback after buffer failed: ", e));
+            video.removeEventListener("canplaythrough", onCanPlayThrough);
+          };
+          video.addEventListener("canplaythrough", onCanPlayThrough);
+        }
+        // Ensure normal speed
+        video.playbackRate = 1.0;
+      };
+      // Only auto‑play after user interaction to allow sound
+      if (userStarted) {
+        attemptPlay();
+      }
+    };
+
+    const handleLoadedData = () => {
+      console.log("[VideoPlayer Debug] loadeddata event fired");
+      clearTimeout(safetyTimeout);
+      setIsLoading(false);
+      setIsLoaded(true);
+    };
 
     const handleCanPlay = () => {
-      console.log("[HLS Debug] HTML5 canplay event fired");
+      console.log("[VideoPlayer Debug] canplay event fired");
       clearTimeout(safetyTimeout);
       setIsLoading(false);
       setIsLoaded(true);
     };
 
     const handleEnded = () => {
-      console.log("[HLS Debug] Video ended playback");
+      console.log("[VideoPlayer Debug] Video ended playback");
       syncProgressToFirebase(videoKey, video.currentTime, video.duration);
       if (onEndedRef.current) onEndedRef.current();
     };
@@ -484,173 +530,61 @@ const VideoPlayer = ({
       }
     };
 
+    const handleError = (e: any) => {
+      console.error("[VideoPlayer Debug] Native video element error: ", e);
+      clearTimeout(safetyTimeout);
+      setHasError(true);
+      setIsLoading(false);
+    };
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("loadeddata", handleLoadedData);
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleEnded);
     video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("error", handleError);
+    video.addEventListener("waiting", handleWaiting);
 
-    const applyResumePlayback = () => {
-      const savedTime = getSavedTime(videoKey);
-      if (savedTime > 0) {
-        console.log(`[HLS Debug] Resuming playback from saved time: ${savedTime}s`);
-        video.currentTime = savedTime;
-      }
-    };
-
-    if (Hls.isSupported()) {
-      const hls = new Hls({
-        maxBufferLength: 20,
-        maxMaxBufferLength: 40,
-        maxBufferHole: 0.5,
-        startLevel: -1,
-        capLevelToPlayerSize: true,
-        lowLatencyMode: true,
-      });
-      hlsRef.current = hls;
-      
-      console.log(`[HLS Debug] Loading HLS source: ${videoUrl}`);
-      hls.loadSource(videoUrl);
-      hls.attachMedia(video);
-      
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        console.log("[HLS Debug] MANIFEST_PARSED fired, video ready for playback");
-        clearTimeout(safetyTimeout);
-        setIsLoading(false);
-        setIsLoaded(true);
-        applyResumePlayback();
-        video.play().catch((err) => {
-          console.log("[HLS Debug] Autoplay prevented, user interaction required: ", err);
-        });
-      });
-
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error(`[HLS Debug] Hls.js error encountered:`, data);
-        if (data.fatal) {
-          clearTimeout(safetyTimeout);
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            console.warn("[HLS Debug] Fatal HLS network error, attempting recovery...");
-            hls.startLoad();
-          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            console.warn("[HLS Debug] Fatal HLS media error, attempting recovery...");
-            hls.recoverMediaError();
-          } else {
-            console.error("[HLS Debug] Unrecoverable HLS error, showing fallback UI.");
-            setHasError(true);
-            setIsLoading(false);
-            hls.destroy();
-          }
-        }
-      });
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      console.log(`[HLS Debug] Native HLS support detected, loading: ${videoUrl}`);
-      video.src = videoUrl;
-      
-      const handleMetadata = () => {
-        console.log("[HLS Debug] Native loadedmetadata fired");
-        clearTimeout(safetyTimeout);
-        setIsLoading(false);
-        setIsLoaded(true);
-        applyResumePlayback();
-        video.play().catch((err) => {
-          console.log("[HLS Debug] Native autoplay failed: ", err);
-        });
-      };
-      
-      video.addEventListener("loadedmetadata", handleMetadata);
-      
-      // Instant readyState fallback
-      if (video.readyState >= 2) {
-        console.log(`[HLS Debug] Native video has readyState >= 2 immediately`);
-        clearTimeout(safetyTimeout);
-        setIsLoading(false);
-        setIsLoaded(true);
-      }
-      
-      return () => {
-        clearTimeout(safetyTimeout);
-        video.removeEventListener("loadedmetadata", handleMetadata);
-        video.removeEventListener("canplay", handleCanPlay);
-        video.removeEventListener("ended", handleEnded);
-        video.removeEventListener("timeupdate", handleTimeUpdate);
-        if (video.duration) {
-          syncProgressToFirebase(videoKey, video.currentTime, video.duration);
-        }
-        if (hlsRef.current) {
-          hlsRef.current.destroy();
-          hlsRef.current = null;
-        }
-        video.pause();
-        video.removeAttribute("src");
-        video.load();
-      };
-    } else {
-      const fallbackUrl = `https://res.cloudinary.com/re4x0shq/video/upload/kinder/alphabet/${videoKey.toLowerCase()}.mp4`;
-      console.log(`[HLS Debug] No HLS support, falling back to mp4: ${fallbackUrl}`);
-      video.src = fallbackUrl;
-      
-      const handleMetadata = () => {
-        console.log("[HLS Debug] Fallback loadedmetadata fired");
-        clearTimeout(safetyTimeout);
-        setIsLoading(false);
-        setIsLoaded(true);
-        applyResumePlayback();
-      };
-      video.addEventListener("loadedmetadata", handleMetadata);
-      
-      // Instant readyState fallback
-      if (video.readyState >= 2) {
-        console.log(`[HLS Debug] Fallback video has readyState >= 2 immediately`);
-        clearTimeout(safetyTimeout);
-        setIsLoading(false);
-        setIsLoaded(true);
-      }
-      
-      return () => {
-        clearTimeout(safetyTimeout);
-        video.removeEventListener("loadedmetadata", handleMetadata);
-        video.removeEventListener("canplay", handleCanPlay);
-        video.removeEventListener("ended", handleEnded);
-        video.removeEventListener("timeupdate", handleTimeUpdate);
-        if (video.duration) {
-          syncProgressToFirebase(videoKey, video.currentTime, video.duration);
-        }
-        if (hlsRef.current) {
-          hlsRef.current.destroy();
-          hlsRef.current = null;
-        }
-        video.pause();
-        video.removeAttribute("src");
-        video.load();
-      };
-    }
-
-    // Instant readyState check for Hls setup
+    // If video is already loaded
     if (video.readyState >= 2) {
-      console.log(`[HLS Debug] HLS video readyState >= 2 immediately`);
+      console.log("[VideoPlayer Debug] readyState >= 2 immediately, skipping loader");
       clearTimeout(safetyTimeout);
       setIsLoading(false);
       setIsLoaded(true);
     }
 
     return () => {
-      console.log(`[HLS Debug] Cleaning up VideoPlayer for key: ${videoKey}`);
+      console.log(`[VideoPlayer Debug] Cleaning up for key: ${videoKey}`);
       clearTimeout(safetyTimeout);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("loadeddata", handleLoadedData);
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("timeupdate", handleTimeUpdate);
-      
+      video.removeEventListener("error", handleError);
+      video.removeEventListener("waiting", handleWaiting);
+
       if (video.duration) {
         syncProgressToFirebase(videoKey, video.currentTime, video.duration);
       }
-
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-      }
       video.pause();
-      video.removeAttribute("src");
-      video.load();
     };
-  }, [videoKey]);
+  }, [videoKey, userStarted]);
+
+  // Hidden preloader for the next video (if provided)
+  useEffect(() => {
+    if (!nextKey) return;
+    const hiddenVideo = document.createElement('video');
+    hiddenVideo.src = `https://res.cloudinary.com/re4x0shq/video/upload/q_auto:eco,f_auto,vc_auto,w_540/kinder/alphabet/${nextKey.toLowerCase()}.mp4`;
+    hiddenVideo.preload = 'auto';
+    hiddenVideo.style.display = 'none';
+    document.body.appendChild(hiddenVideo);
+    // Cleanup on unmount or when nextKey changes
+    return () => {
+      hiddenVideo.pause();
+      document.body.removeChild(hiddenVideo);
+    };
+  }, [nextKey]);
 
   if (hasError) {
     return (
@@ -665,8 +599,8 @@ const VideoPlayer = ({
             setHasError(false);
             setIsLoading(true);
             const video = videoRef.current;
-            if (video && hlsRef.current) {
-              hlsRef.current.loadSource(videoUrl);
+            if (video) {
+              video.load();
             }
           }}
           className="px-4 py-2 bg-primary text-primary-foreground text-xs font-display font-bold rounded-full"
@@ -678,26 +612,53 @@ const VideoPlayer = ({
   }
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-black rounded-2xl overflow-hidden shadow-lg border border-white/5">
+    <div className="relative w-full h-full flex items-center justify-center bg-black rounded-2xl overflow-hidden shadow-lg border border-white/5 video-container">
       {isLoading && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40">
           <Loader2 className="w-12 h-12 text-primary animate-spin" />
         </div>
       )}
+      {/* Show a big play button until the user initiates playback (required for audio) */}
+      {!userStarted && (
+        <button
+          onClick={() => {
+            setUserStarted(true);
+            // Reset loading state to show spinner until ready
+            setIsLoading(true);
+            const vid = videoRef.current;
+            if (vid) {
+              // Ensure volume is up
+              vid.volume = 1;
+              // Attempt play (will succeed once buffered)
+              vid.play().catch(() => {});
+            }
+          }}
+          className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 rounded-2xl"
+        >
+          <span className="text-4xl font-bold text-white">▶️ Play</span>
+        </button>
+      )}
       <video
         ref={videoRef}
+        src={videoUrl}
         poster={posterUrl}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
+        className={`w-full h-full max-h-[70vh] object-cover bg-black transition-opacity duration-500 ${
           isLoaded ? "opacity-100" : "opacity-0"
         } ${className}`}
+        style={{
+          transform: "translateZ(0)",
+          willChange: "transform",
+          backfaceVisibility: "hidden"
+        }}
         controls
         playsInline
-        muted
-        preload="none"
-      />
-    </div>
+        // Remove autoPlay to respect user‑initiated sound
+        preload="auto"
+        // Ensure the video is not muted; volume will be set on user click
+        muted={false}
+      />    </div>
   );
-};
+});
 
 // --- Story tab content -----------------------------------------------------
 const StoryPanel = ({
