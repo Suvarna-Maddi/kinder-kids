@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { registerUser } from "../lib/auth";
+
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Sparkles, User, Mail, Phone, Lock, ArrowRight } from "lucide-react";

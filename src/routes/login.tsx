@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { loginUser } from "../lib/auth";
+
 import { useAuth } from "../lib/auth-client";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
