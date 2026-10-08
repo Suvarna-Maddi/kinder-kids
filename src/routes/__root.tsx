@@ -9,7 +9,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+
 import Layout from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -41,9 +41,7 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+  // Lovable error reporting removed
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -86,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@id": "https://kinderkidsspace.in/#organization",
           name: "KinderKidsSpace",
           url: "https://kinderkidsspace.in/",
-          logo: "https://kinderkidsspace.in/favicon.png",
+          logo: "https://kinderkidsspace.in/favicon.jpg",
           description:
             "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
           sameAs: [
@@ -150,7 +148,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
-        { property: "og:image", content: "https://kinderkidsspace.in/favicon.png" },
+        { property: "og:image", content: "https://kinderkidsspace.in/favicon.jpg" },
         { property: "og:site_name", content: "KinderKidsspace" },
         { name: "twitter:card", content: "summary_large_image" },
         {
@@ -163,13 +161,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           content:
             "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
         },
-        { name: "twitter:image", content: "https://kinderkidsspace.in/favicon.png" },
+        { name: "twitter:image", content: "https://kinderkidsspace.in/favicon.jpg" },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
         { rel: "alternate", hrefLang: "en", href: canonicalUrl },
         { rel: "stylesheet", href: appCss },
-        { rel: "icon", href: "/favicon.png", type: "image/png" },
+        { rel: "icon", href: "/favicon.jpg", type: "image/jpeg" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {
