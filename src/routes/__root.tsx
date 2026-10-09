@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@id": "https://kinderkidsspace.in/#organization",
           name: "KinderKidsSpace",
           url: "https://kinderkidsspace.in/",
-          logo: "https://kinderkidsspace.in/favicon.jpg",
+          logo: "https://kinderkidsspace.in/favicon.png",
           description:
             "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
           sameAs: [
@@ -148,7 +148,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
-        { property: "og:image", content: "https://kinderkidsspace.in/favicon.jpg" },
+        { property: "og:image", content: "https://kinderkidsspace.in/favicon.png" },
         { property: "og:site_name", content: "KinderKidsspace" },
         { name: "twitter:card", content: "summary_large_image" },
         {
@@ -161,13 +161,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           content:
             "KinderKidsspace helps children learn ABC, numbers, phonics, stories, drawing, tracing, math, puzzles and educational games through fun AI-powered activities. Start your free 30-day trial today.",
         },
-        { name: "twitter:image", content: "https://kinderkidsspace.in/favicon.jpg" },
+        { name: "twitter:image", content: "https://kinderkidsspace.in/favicon.png" },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
         { rel: "alternate", hrefLang: "en", href: canonicalUrl },
         { rel: "stylesheet", href: appCss },
-        { rel: "icon", href: "/favicon.jpg", type: "image/jpeg" },
+        { rel: "icon", href: "/favicon.png", type: "image/png" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {
